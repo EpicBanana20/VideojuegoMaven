@@ -5,10 +5,10 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.videojuego</groupId>
-  <artifactId>lasthope</artifactId>
+  <artifactId>VideojuegoMaven</artifactId>
   <version>1.0-SNAPSHOT</version>
 
-  <name>lasthope</name>
+  <name>VideojuegoMaven</name>
   <!-- FIXME change it to the project's website -->
   <url>http://www.example.com</url>
 
