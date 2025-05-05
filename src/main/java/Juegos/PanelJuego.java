@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import Eventos.EventoMouse;
 import Eventos.EventoTeclado;
 import Eventos.EventosNivel;
+import Eventos.EventoGamepad;
 
 import java.awt.*;
 
@@ -12,12 +13,14 @@ public class PanelJuego extends JPanel {
     private EventoMouse ev;
     private EventoTeclado et;
     private EventosNivel en;
+    private EventoGamepad eg;
     Juego game;
 
     public PanelJuego(Juego game) {
         ev = new EventoMouse(this);
         et = new EventoTeclado(this);
         en = new EventosNivel(game);
+        eg = new EventoGamepad(this);
         this.game = game;
         setPanelSize();
         addKeyListener(et);
@@ -52,6 +55,7 @@ public class PanelJuego extends JPanel {
     void updateGame() {
         // Actualiza la información del mouse en el jugador antes de la actualización general
         game.updateMouseInfo(ev.getMouseX(), ev.getMouseY());
+        eg.update();
         // La actualización normal del juego continúa en el método update() de la clase Juego
     }
 
