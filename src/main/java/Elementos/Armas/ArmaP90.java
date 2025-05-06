@@ -52,7 +52,7 @@ public class ArmaP90 extends Arma {
                 posicionDisparo[0], 
                 posicionDisparo[1], 
                 rotacion, LoadSave.BULLET_P90,
-                10,
+                20,
                 2.0f
             );
             
