@@ -73,12 +73,25 @@ public class EstacionQuimica extends Decoracion {
     }
 
     private void renderizarInterfazCrafteo(Graphics g, int xLvlOffset, int yLvlOffset) {
-        // Centrar el menú en la pantalla
-        int panelX = Juego.GAME_WIDTH / 2 - upgradeMenuImg.getWidth() / 2;
-        int panelY = Juego.GAME_HEIGHT / 2 - upgradeMenuImg.getHeight() / 2;
 
-        // Dibujar imagen de fondo del menú
-        g.drawImage(upgradeMenuImg, panelX, panelY, null);
+        // Centrar el menú en la pantalla
+    
+        int panelX = Juego.GAME_WIDTH / 2 - upgradeMenuImg.getWidth() / 2;
+    
+        int panelY = Juego.GAME_HEIGHT / 2 - upgradeMenuImg.getHeight() / 2;
+    
+    
+        // Definir el nuevo tamaño para la imagen
+    
+        int nuevoAncho = upgradeMenuImg.getWidth() * 2; // Cambia 2 por el factor de escala que desees
+    
+        int nuevoAlto = upgradeMenuImg.getHeight() * 2; // Cambia 2 por el factor de escala que desees
+    
+    
+        // Dibujar imagen de fondo del menú escalada
+    
+        g.drawImage(upgradeMenuImg, panelX, panelY, nuevoAncho, nuevoAlto, null);
+    
     }
 
     public void interactuar() {
