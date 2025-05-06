@@ -67,11 +67,7 @@ public class EventoGamepad {
             case MENU:
             case PAUSA:
             case MUERTE:
-                procesarInputsMenu();
-                break;
             case SELECCION_PERSONAJE:
-                procesarInputsSeleccionPersonaje();
-                break;
         }
         
         // Actualizar estado anterior
@@ -126,100 +122,6 @@ public class EventoGamepad {
         // Pausa (botón Start)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_START) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_START]) {
             panelJuego.getGame().setEstadoJuego(EstadoJuego.PAUSA);
-        }
-    }
-    
-    private void procesarInputsMenu() {
-        // Navegar menús con D-pad o stick
-        boolean up = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1 || 
-                    gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y) < -deadzone;
-                    
-        boolean down = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1 || 
-                      gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y) > deadzone;
-                      
-        // Seleccionar con A
-        boolean select = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && 
-                        !prevButtonState[GLFW_GAMEPAD_BUTTON_A];
-                        
-        // Volver con B
-        boolean back = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_B) == 1 && 
-                      !prevButtonState[GLFW_GAMEPAD_BUTTON_B];
-        
-        // Implementar navegación simple basada en estado
-        if (select) {
-            simulateMouseClick();
-        }
-        
-        if (up || down) {
-            simulateMouseMove(down);
-        }
-        
-        // Despausa con Start (en estado PAUSA)
-        if (panelJuego.getGame().getEstadoJuego() == EstadoJuego.PAUSA && 
-            gamepadState.buttons(GLFW_GAMEPAD_BUTTON_START) == 1 && 
-            !prevButtonState[GLFW_GAMEPAD_BUTTON_START]) {
-            panelJuego.getGame().setEstadoJuego(EstadoJuego.PLAYING);
-        }
-    }
-    
-    private void procesarInputsSeleccionPersonaje() {
-        boolean up = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1 || 
-                    gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y) < -deadzone;
-                    
-        boolean down = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1 || 
-                      gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y) > deadzone;
-                      
-        boolean select = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && 
-                        !prevButtonState[GLFW_GAMEPAD_BUTTON_A];
-                        
-        boolean back = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_B) == 1 && 
-                      !prevButtonState[GLFW_GAMEPAD_BUTTON_B];
-        
-        if (up && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP]) {
-            simulateKey(java.awt.event.KeyEvent.VK_W);
-        }
-        
-        if (down && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]) {
-            simulateKey(java.awt.event.KeyEvent.VK_S);
-        }
-        
-        if (select) {
-            simulateKey(java.awt.event.KeyEvent.VK_ENTER);
-        }
-        
-        if (back) {
-            simulateKey(java.awt.event.KeyEvent.VK_ESCAPE);
-        }
-    }
-    
-    // Métodos para simular eventos de mouse/teclado
-    private void simulateMouseClick() {
-        try {
-            java.awt.Robot robot = new java.awt.Robot();
-            robot.mousePress(java.awt.event.InputEvent.BUTTON1_DOWN_MASK);
-            robot.mouseRelease(java.awt.event.InputEvent.BUTTON1_DOWN_MASK);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void simulateMouseMove(boolean down) {
-        try {
-            java.awt.Robot robot = new java.awt.Robot();
-            java.awt.Point p = java.awt.MouseInfo.getPointerInfo().getLocation();
-            robot.mouseMove(p.x, p.y + (down ? 50 : -50));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    
-    private void simulateKey(int keyCode) {
-        try {
-            java.awt.Robot robot = new java.awt.Robot();
-            robot.keyPress(keyCode);
-            robot.keyRelease(keyCode);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
     
