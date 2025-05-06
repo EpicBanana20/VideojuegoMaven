@@ -17,10 +17,11 @@ public class PanelJuego extends JPanel {
     Juego game;
 
     public PanelJuego(Juego game) {
-        ev = new EventoMouse(this);
-        et = new EventoTeclado(this);
-        en = new EventosNivel(game);
         eg = new EventoGamepad(this);
+        ev = new EventoMouse(this);
+        et = new EventoTeclado(this, eg);
+        en = new EventosNivel(game);
+        
         this.game = game;
         setPanelSize();
         addKeyListener(et);

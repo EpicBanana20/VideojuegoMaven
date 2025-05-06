@@ -14,6 +14,11 @@ public class EventoGamepad {
     
     // Para manejar estado anterior de botones
     private boolean[] prevButtonState = new boolean[GLFW_GAMEPAD_BUTTON_LAST + 1];
+    private float lastValidRightX = 0;
+    private float lastValidRightY = 0;
+    private boolean joystickAimActive = false;
+
+    private boolean gamepadEnabled = true;
     
     public EventoGamepad(PanelJuego panelJuego) {
         this.panelJuego = panelJuego;
@@ -38,15 +43,14 @@ public class EventoGamepad {
             }
         }
         System.out.println("No se detectó ningún mando. Conecta un mando y reinicia el juego.");
+        gamepadID = -1;
     }
     
     public void update() {
-        if (gamepadID == -1) {
-            // Intentar detectar nuevamente
-            detectarGamepad();
-            return;
+        if(!gamepadEnabled || gamepadID == -1) {
+            return; // Si el gamepad está deshabilitado, no procesar entradas
         }
-        
+
         // Comprobar si el mando sigue conectado
         if (!glfwJoystickPresent(gamepadID)) {
             System.out.println("Mando desconectado");
@@ -116,16 +120,48 @@ public class EventoGamepad {
         float rightY = gamepadState.axes(GLFW_GAMEPAD_AXIS_RIGHT_Y);
 
         if (Math.abs(rightX) > deadzone || Math.abs(rightY) > deadzone) {
-            // Use the new method instead of calculating coordinates directly
-            panelJuego.getGame().updateAimFromGamepad(rightX, rightY);
+            // Al mover el stick fuera del deadzone, actualizar las últimas posiciones válidas
+            lastValidRightX = rightX;
+            lastValidRightY = rightY;
+            joystickAimActive = true;
+        }
+        
+        // Siempre que el joystick esté activo, usamos la última posición válida
+        if (joystickAimActive) {
+            panelJuego.getGame().updateAimFromGamepad(lastValidRightX, lastValidRightY);
         }
         // Pausa (botón Start)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_START) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_START]) {
             panelJuego.getGame().setEstadoJuego(EstadoJuego.PAUSA);
         }
     }
+
+    public void toggleGamepad() {
+        gamepadEnabled = !gamepadEnabled;
+        
+        if (gamepadEnabled) {
+            // Re-detect gamepad only when specifically toggling on
+            detectarGamepad();
+            if (gamepadID != -1) {
+                System.out.println("Gamepad activado");
+            } else {
+                gamepadEnabled = false; // Couldn't find a gamepad
+            }
+        } else {
+            System.out.println("Gamepad desactivado - Usando teclado y mouse");
+            joystickAimActive = false; // Reset aim state
+        }
+    }
     
     public void shutdown() {
         glfwTerminate();
+    }
+
+    public boolean isGamepadEnabled() {
+        return gamepadEnabled;
+    }
+    
+    public boolean isJoystickAimActive() {
+        return joystickAimActive;
     }
 }

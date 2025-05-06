@@ -397,8 +397,8 @@ public class Juego {
             float playerScreenY = player.getYCenter() - camera.getyLvlOffset();
             
             // Calculate aim position relative to player's screen position
-            int mouseX = (int)(playerScreenX + (dirX * 300));
-            int mouseY = (int)(playerScreenY + (dirY * 300));
+            int mouseX = (int)(playerScreenX + (dirX * 1000));
+            int mouseY = (int)(playerScreenY + (dirY * 1000));
             
             updateMouseInfo(mouseX, mouseY);
         }

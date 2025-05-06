@@ -7,9 +7,11 @@ import Juegos.PanelJuego;
 
 public class EventoTeclado implements KeyListener {
     private PanelJuego pan;
+    private EventoGamepad gamepadController;
 
-    public EventoTeclado(PanelJuego pan) {
+    public EventoTeclado(PanelJuego pan, EventoGamepad gamepadController) {
         this.pan = pan;
+        this.gamepadController = gamepadController;
     }
 
     @Override
@@ -19,6 +21,10 @@ public class EventoTeclado implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_F10) {
+            gamepadController.toggleGamepad();
+            return;
+        }
         switch (pan.getGame().getEstadoJuego()) {
             case SELECCION_PERSONAJE:
                 pan.getGame().getSelectorPersonajes().keyPressed(e);
