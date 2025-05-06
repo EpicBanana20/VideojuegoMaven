@@ -1,14 +1,6 @@
 package Elementos;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
 import Juegos.Juego;
-import Utilz.LoadSave;
-import Utilz.Animaciones;
-import Utilz.MetodoAyuda;
-import java.awt.geom.AffineTransform;
 
 public class BalaCreciente extends Bala {
     // Parámetros para el crecimiento
