@@ -56,7 +56,6 @@ public class PanelJuego extends JPanel {
     void updateGame() {
         // Actualiza la información del mouse en el jugador antes de la actualización general
         game.updateMouseInfo(ev.getMouseX(), ev.getMouseY());
-        eg.update();
         // La actualización normal del juego continúa en el método update() de la clase Juego
     }
 
