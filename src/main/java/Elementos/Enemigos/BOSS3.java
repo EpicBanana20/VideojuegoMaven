@@ -24,6 +24,7 @@ public class BOSS3 extends Enemigo {
     // Estado actual
     private int faseActual = FASE_NORMAL;
     
+    private boolean activated = false;
     // Para ataques
     private BufferedImage[] explosion_sprites;
     private int explosion_duracion = 15;
@@ -123,7 +124,32 @@ public class BOSS3 extends Enemigo {
     
     @Override
     public void update() {
+        if (!activated && Juego.jugadorActual != null) {
+            // Check if player is within detection range
+            float playerX = Juego.jugadorActual.getXCenter();
+            float playerY = Juego.jugadorActual.getYCenter();
+            float bossX = hitbox.x + hitbox.width/2;
+            float bossY = hitbox.y + hitbox.height/2;
+            
+            float dx = playerX - bossX;
+            float dy = playerY - bossY;
+            float distance = (float) Math.sqrt(dx*dx + dy*dy);
+            
+            // Activation range - adjust as needed
+            float activationRange = 500 * Juego.SCALE;
+            
+            if (distance <= activationRange) {
+                activated = true;
+                System.out.println("¡BOSS3 ha sido activado!");
+            } else {
+                // If not activated yet, don't update any boss behaviors
+                return;
+            }
+        }
+
         if (!activo) return;
+
+
         
         // Actualizar fase según vida restante
         actualizarFase();
