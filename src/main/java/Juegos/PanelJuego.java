@@ -96,4 +96,8 @@ public class PanelJuego extends JPanel {
                      "/" + (int)game.getPlayer().getVidaMaxima(), 
                      barraX + 5, barraY + 15);
     }
+
+    public EventoGamepad getEg() {
+        return eg;
+    }
 }

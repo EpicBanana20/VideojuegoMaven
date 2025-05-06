@@ -11,6 +11,7 @@ import Elementos.Personaje;
 import Elementos.Administradores.AdministradorEnemigos;
 import Elementos.Decoraciones.Decoracion;
 import Elementos.Decoraciones.EstacionQuimica;
+import Eventos.EventoGamepad;
 import Elementos.Administradores.AdministradorBalas;
 import Elementos.Administradores.AdministradorDecoraciones;
 import Niveles.LevelManager;
@@ -54,6 +55,8 @@ public class Juego {
 
     private EstacionQuimica estacionQuimicaActiva = null;
 
+    private EventoGamepad eg;
+
     private EstadoJuego estadoJuego = EstadoJuego.MENU;
     private Menu menu;
     private MenuPausa menuPausa;
@@ -68,6 +71,7 @@ public class Juego {
         pan.requestFocus();
         gameLoop = new GameLoop(this);
         gameLoop.start();
+        eg = new EventoGamepad(pan);
     }
 
     private void inicializar() {
@@ -97,6 +101,7 @@ public class Juego {
     }
 
     public void updates() {
+        eg.update();
         switch (estadoJuego) {
             case MENU:
                 menu.update();

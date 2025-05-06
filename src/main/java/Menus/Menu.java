@@ -25,6 +25,9 @@ public class Menu {
     private static final int BOTON_OPCIONES = 1;
     private static final int BOTON_LOGROS = 2;
     private static final int BOTON_SALIR = 3;
+    
+    // Variables para navegación con gamepad
+    private int botonSeleccionadoIndex = 0; // Índice del botón seleccionado
 
     public Menu(Juego juego) {
         this.juego = juego;
@@ -49,7 +52,6 @@ public class Menu {
     }
 
     private void cargarBotones() {
-        
         for (int i = 0; i < botones.length; i++) {
             botones[i] = new Boton(
                 BOTON_X_POSICION, 
@@ -84,7 +86,8 @@ public class Menu {
 
     public void mouseReleased(MouseEvent e) {
         for (int i = 0; i < botones.length; i++) {
-            if (estaDentroBoton(e, botones[i])) {
+            if (e == null && i == botonSeleccionadoIndex || 
+                e != null && estaDentroBoton(e, botones[i])) {
                 if (botones[i].isMousePressed()) {
                     // Acciones según el botón presionado
                     switch (i) {
@@ -135,5 +138,40 @@ public class Menu {
     
     private boolean estaDentroBoton(MouseEvent e, Boton b) {
         return b.getBounds().contains(e.getX(), e.getY());
+    }
+    
+    // Métodos para navegación con gamepad
+    public void navegarArriba() {
+        botonSeleccionadoIndex--;
+        if (botonSeleccionadoIndex < 0)
+            botonSeleccionadoIndex = botones.length - 1;
+        
+        actualizarBotonesSeleccionados();
+    }
+
+    public void navegarAbajo() {
+        botonSeleccionadoIndex++;
+        if (botonSeleccionadoIndex >= botones.length)
+            botonSeleccionadoIndex = 0;
+        
+        actualizarBotonesSeleccionados();
+    }
+
+    public void actualizarBotonesSeleccionados() {
+        // Resetear todos los botones
+        for (int i = 0; i < botones.length; i++) {
+            if (i == botonSeleccionadoIndex) {
+                botones[i].setMouseOver(true);
+            } else {
+                botones[i].setMouseOver(false);
+            }
+        }
+    }
+
+    public void ejecutarBotonSeleccionado() {
+        if (botonSeleccionadoIndex >= 0 && botonSeleccionadoIndex < botones.length) {
+            botones[botonSeleccionadoIndex].setMousePressed(true);
+            mouseReleased(null); // Simulamos que el mouse se ha liberado en el botón
+        }
     }
 }

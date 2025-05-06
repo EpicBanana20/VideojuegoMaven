@@ -19,6 +19,8 @@ public class EventoGamepad {
     private boolean joystickAimActive = false;
 
     private boolean gamepadEnabled = true;
+    private long lastMenuNavigationTime = 0;
+    private static final long MENU_NAVIGATION_COOLDOWN = 200;
     
     public EventoGamepad(PanelJuego panelJuego) {
         this.panelJuego = panelJuego;
@@ -63,15 +65,20 @@ public class EventoGamepad {
             return;
         }
         
-        // Procesar según el estado del juego
+        System.out.println("Estado juego: " + panelJuego.getGame().getEstadoJuego());
         switch (panelJuego.getGame().getEstadoJuego()) {
             case PLAYING:
                 procesarInputsJuego();
                 break;
             case MENU:
+                procesarInputsMenu();
+                System.out.println("ESTOY EN EL MENU");
+                break;
             case PAUSA:
             case MUERTE:
             case SELECCION_PERSONAJE:
+            default:
+                break;
         }
         
         // Actualizar estado anterior
@@ -133,6 +140,40 @@ public class EventoGamepad {
         // Pausa (botón Start)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_START) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_START]) {
             panelJuego.getGame().setEstadoJuego(EstadoJuego.PAUSA);
+        }
+    }
+
+    private void procesarInputsMenu() {
+        // Cooldown para la navegación en el menú
+        long currentTime = System.currentTimeMillis();
+        boolean cooldownElapsed = (currentTime - lastMenuNavigationTime) > MENU_NAVIGATION_COOLDOWN;
+        
+        // Navegación vertical (stick izquierdo o d-pad)
+        float axisY = gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y);
+        boolean dpadUp = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1;
+        boolean dpadDown = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1;
+        
+        if (cooldownElapsed && (axisY < -deadzone || dpadUp) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP]) {
+            panelJuego.getGame().getMenu().navegarArriba();
+            lastMenuNavigationTime = currentTime; // Actualizar tiempo de último movimiento
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = true;
+        } else if (cooldownElapsed && (axisY > deadzone || dpadDown) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]) {
+            panelJuego.getGame().getMenu().navegarAbajo();
+            lastMenuNavigationTime = currentTime; // Actualizar tiempo de último movimiento
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = true;
+        }
+        
+        // Resetear estado prev si se suelta el botón
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 0) {
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = false;
+        }
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 0) {
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = false;
+        }
+        
+        // Seleccionar botón con A
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
+            panelJuego.getGame().getMenu().ejecutarBotonSeleccionado();
         }
     }
 
