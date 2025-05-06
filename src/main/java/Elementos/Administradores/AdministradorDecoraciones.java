@@ -216,7 +216,7 @@ public class AdministradorDecoraciones {
             case 57: //BANDERA
                 crearDecoracionAnimada(x, y, ancho, alto, "decoraciones/BANDERA.png", 0, new int[]{4});
                 break;
-            case 58: //BANDERA
+            case 58: //PARTICULAS
                 crearDecoracionAnimada(x, y, ancho, alto, "decoraciones/PARTICULAS.png", 0, new int[]{16});
                 break;
 
