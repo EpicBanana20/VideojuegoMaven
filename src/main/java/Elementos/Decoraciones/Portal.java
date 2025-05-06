@@ -5,11 +5,17 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import Juegos.Juego;
 import Utilz.LoadSave;
+import Utilz.MetodoAyuda;
 
 public class Portal extends DecoracionAnimada {
     private boolean activo = true;
     private float distanciaInteraccion = 50f * Juego.SCALE;
     private boolean jugadorCerca = false;
+    
+    // Variables para controlar la caída
+    private float gravedad = 0.5f * Juego.SCALE;
+    private float velocidadY = 0;
+    private boolean cayendo = true;
     
     public Portal(float x, float y) {
         super(x, y, 
@@ -36,6 +42,20 @@ public class Portal extends DecoracionAnimada {
     public void update() {
         super.update();
         
+        // Aplicar gravedad si está cayendo
+        if (cayendo) {
+            velocidadY += gravedad;
+            
+            // Verificar si hay colisión con un bloque sólido debajo
+            if (estaEnSuelo()) {
+                cayendo = false;
+                velocidadY = 0;
+            } else {
+                // Mover el portal hacia abajo
+                y += velocidadY;
+            }
+        }
+        
         if (Juego.jugadorActual != null && activo) {
             float playerX = Juego.jugadorActual.getXCenter();
             float playerY = Juego.jugadorActual.getYCenter();
@@ -53,6 +73,23 @@ public class Portal extends DecoracionAnimada {
                 activarPortal();
             }
         }
+    }
+    
+    private boolean estaEnSuelo() {
+        // Crear un pequeño rectángulo debajo del portal para verificar colisión
+        float checkX = x;
+        float checkY = y + height;
+        int checkWidth = width;
+        int checkHeight = 4; // Pequeña altura para verificar justo debajo
+        
+        // Verificar si hay un bloque sólido debajo
+        return !MetodoAyuda.CanMoveHere(
+            checkX, 
+            checkY, 
+            checkWidth, 
+            checkHeight, 
+            Juego.NIVEL_ACTUAL_DATA
+        );
     }
     
     @Override

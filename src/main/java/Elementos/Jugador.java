@@ -125,7 +125,7 @@ public class Jugador extends Cascaron {
             morir();
             return;
         }
-        
+
         if (personaje.isHabilidadValthorActiva() && !habilidadValthorActiva) {
             activarHabilidadValthor();
         } else if (!personaje.isHabilidadValthorActiva() && habilidadValthorActiva) {
