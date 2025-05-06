@@ -9,7 +9,7 @@ import Elementos.AimController;
 
 public class ArmaP90 extends Arma {
     // Cadencia en disparos por segundo
-    private float cadenciaDisparo = 1.0f;
+    private float cadenciaDisparo = 1.2f;
     private int contadorRecarga = 0;
     
     // Sistema de munición
@@ -53,7 +53,7 @@ public class ArmaP90 extends Arma {
                 posicionDisparo[1], 
                 rotacion, LoadSave.BULLET_P90,
                 10,
-                2.2f
+                2.0f
             );
             
             // Añadir la bala al administrador

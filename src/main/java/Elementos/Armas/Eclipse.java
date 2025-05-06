@@ -13,8 +13,8 @@ public class Eclipse extends Arma {
     private int contadorRecarga = 0;
     
     // Sistema de munición
-    private int municionActual = 30;
-    private int capacidadCargador = 30;
+    private int municionActual = 20;
+    private int capacidadCargador = 20;
     private boolean recargando = false;
     private int tiempoRecargaCompleta = 120; // 2 segundos a 60 FPS
     private int contadorRecargaCompleta = 0;
@@ -53,7 +53,7 @@ public class Eclipse extends Arma {
                 posicionDisparo[1], 
                 rotacion, LoadSave.BULLET_ECLIPSE,
                 10,
-                2.2f
+                2.0f
             );
             
             // Añadir la bala al administrador

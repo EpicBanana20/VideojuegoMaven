@@ -14,7 +14,7 @@ public class EnemigoYbirth extends Enemigo{
      // Constantes específicas de este tipo de enemigo
     private static final int ANCHO_DEFAULT = 120;
     private static final int ALTO_DEFAULT = 90;
-    private static final int VIDA_DEFAULT = 50;
+    private static final int VIDA_DEFAULT = 300;
     private int INACTIVO = 0;
     private int DISPARO = 1;
     private int HERIDO = 2;
@@ -40,8 +40,8 @@ public class EnemigoYbirth extends Enemigo{
         this.checkOffset = 20 * Juego.SCALE; // Ajustar el offset de verificación para el salto
         this.patrullando = false;
         this.puedeDisparar = true;
-        this.disparoMaxCooldown = 30; // Cada 3 segundos
-        this.rangoDeteccionJugador = 400 * Juego.SCALE; // Mayor rango
+        this.disparoMaxCooldown = 20; // Cada 3 segundos
+        this.rangoDeteccionJugador = 600 * Juego.SCALE; // Mayor rango
         
         // Cargar animaciones
         cargarAnimaciones();
@@ -206,8 +206,8 @@ public class EnemigoYbirth extends Enemigo{
                 origenY, 
                 anguloDisparo,
                 LoadSave.BULLET_YIBIRTH,
-                4, // Daño enemigo
-                1.2f // Velocidad
+                5, // Daño enemigo
+                1.5f // Velocidad
             );
             adminBalas.agregarBala(nuevaBala);
             

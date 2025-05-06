@@ -37,7 +37,7 @@ public class EnemigoThor extends Enemigo{
         this.checkOffset = 20 * Juego.SCALE; // Ajustar el offset de verificación para el salto
 
         this.puedeDisparar = true;
-        this.disparoMaxCooldown = 180; // Cada 3 segundos
+        this.disparoMaxCooldown = 90; // Cada 3 segundos
         this.rangoDeteccionJugador = 400 * Juego.SCALE; // Mayor rango
         
         // Cargar animaciones
@@ -228,8 +228,8 @@ protected void manejarDisparo(Jugador jugador) {
             origenY, 
             anguloDisparo,
             LoadSave.BULLET_THOR,
-            4, // Daño enemigo
-            1.2f // Velocidad
+            5, // Daño enemigo
+            1.5f // Velocidad
         );
             adminBalas.agregarBala(nuevaBala);
             

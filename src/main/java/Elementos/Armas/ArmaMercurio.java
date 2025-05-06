@@ -9,10 +9,10 @@ import Elementos.AimController;
 
 public class ArmaMercurio extends Arma {
     // Cadencia en disparos por segundo
-    private float cadenciaDisparo = 5.0f; // 5 disparos por segundo
+    private float cadenciaDisparo = 1.2f; // 5 disparos por segundo
     private int contadorRecarga = 0;
-    private int municionActual = 50;
-    private int capacidadCargador = 50;
+    private int municionActual = 30;
+    private int capacidadCargador = 30;
     private boolean recargando = false;
     private int tiempoRecargaCompleta = 60; // 2 segundos a 60 FPS
     private int contadorRecargaCompleta = 0;
@@ -47,7 +47,7 @@ public class ArmaMercurio extends Arma {
                 posicionDisparo[0], 
                 posicionDisparo[1], 
                 rotacion, LoadSave.BULLET_MERCURIO,
-                8,
+                10,
                 2.0f
             );
             
