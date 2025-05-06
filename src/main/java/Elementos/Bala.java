@@ -16,7 +16,7 @@ public class Bala extends Cascaron {
     private float velocidad = 2.0f * Juego.SCALE; // Velocidad base de la bala
     private boolean activa = true; // Indica si la bala está activa o debe eliminarse
     private int daño = 6; // Daño que causa la bala
-    private float angulo; // Ángulo de disparo
+    public float angulo; // Ángulo de disparo
     private String tipoDaño;
     
     // Propiedades para la animación

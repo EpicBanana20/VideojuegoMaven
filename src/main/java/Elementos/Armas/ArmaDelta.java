@@ -1,7 +1,7 @@
 package Elementos.Armas;
 
 import Elementos.Arma;
-import Elementos.Bala;
+import Elementos.BalaBounce;
 import Elementos.Administradores.AdministradorBalas;
 import Juegos.Juego;
 import Utilz.LoadSave;
@@ -22,9 +22,12 @@ public class ArmaDelta extends Arma {
     // Convertimos la cadencia en tiempo entre disparos (en frames)
     private int armaCooldown;
     private static final int FRAMES_POR_SEGUNDO = 60;
+    
+    // Propiedades para las balas que rebotan
+    private int rebotesMaximos = 4;
 
     public ArmaDelta(AdministradorBalas adminBalas) {
-        super("armas/DELTA.png", 30 * Juegos.Juego.SCALE, 2.4f,adminBalas);
+        super("armas/DELTA.png", 30 * Juegos.Juego.SCALE, 2.4f, adminBalas);
         this.nombre = "Eclipse";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";
@@ -34,7 +37,7 @@ public class ArmaDelta extends Arma {
     public void disparar() {
         // Verificar si podemos disparar (no en cooldown Y tenemos munición)
         if(contadorRecarga <= 0 && municionActual > 0 && !recargando) {
-            System.out.println("¡Disparando ametralladora! Munición restante: " + (municionActual-1));
+            System.out.println("¡Disparando arma Delta! Munición restante: " + (municionActual-1));
             
             // Calcular la posición exacta del origen de la bala
             float[] posicionDisparo = new float[2];
@@ -47,13 +50,16 @@ public class ArmaDelta extends Arma {
                 posicionDisparo
             );
             
-            // Crear una nueva bala
-            Bala nuevaBala = new Bala(
+            // Crear una bala que rebota
+            BalaBounce nuevaBala = new BalaBounce(
                 posicionDisparo[0], 
                 posicionDisparo[1], 
-                rotacion, LoadSave.BULLET_DELTA,
+                rotacion, 
+                LoadSave.BULLET_DELTA,
                 10,
-                2.2f
+                2.2f,
+                tipoDaño,
+                rebotesMaximos
             );
             
             // Añadir la bala al administrador
@@ -97,7 +103,7 @@ public class ArmaDelta extends Arma {
         if(!recargando && municionActual < capacidadCargador) {
             recargando = true;
             contadorRecargaCompleta = tiempoRecargaCompleta;
-            System.out.println("Recargando ametralladora...");
+            System.out.println("Recargando arma Delta...");
         }
     }
     
@@ -106,6 +112,15 @@ public class ArmaDelta extends Arma {
         municionActual = capacidadCargador;
         recargando = false;
         System.out.println("¡Recarga completa! Munición: " + municionActual);
+    }
+    
+    // Método para configurar el número máximo de rebotes
+    public void setRebotesMaximos(int rebotesMaximos) {
+        this.rebotesMaximos = rebotesMaximos;
+    }
+    
+    public int getRebotesMaximos() {
+        return rebotesMaximos;
     }
     
     // Getters
