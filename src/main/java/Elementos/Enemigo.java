@@ -265,9 +265,6 @@ private boolean portalCreado = false;
         if (animaciones != null) {
             renderizarConAnimacion(g, xLvlOffset, yLvlOffset);
         }
-
-        // Para debugging
-        drawHitBox(g, xLvlOffset, yLvlOffset);
     }
 
     public void recibirDaño(int cantidad, String tipoDaño) {

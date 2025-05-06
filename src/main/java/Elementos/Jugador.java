@@ -257,7 +257,6 @@ public class Jugador extends Cascaron {
                     (int) (hitbox.y - yDrawOffset) - yLvlOffset,
                     w, h, null);
         }
-        drawHitBox(g, xlvlOffset, yLvlOffset);
         renderAim(g, xlvlOffset, yLvlOffset);
         if (habilidadValthorActiva) {
             espadaBoomerang.render(g, xlvlOffset, yLvlOffset);

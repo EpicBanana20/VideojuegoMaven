@@ -40,13 +40,6 @@ public class PanelJuego extends JPanel {
         Juego game = getGame();
         game.render(g);
         dibujarBarraVida(g);
-        
-        // Dibujar información del nivel actual (opcional)
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 16));
-        g.drawString("Nivel: " + (game.getLevelManager().getCurrentLevelIndex() + 1) + 
-                     "/" + game.getLevelManager().getTotalLevels(), 20, 30);
-        g.drawString("Usa F1-F4 para cambiar de nivel, F5 para siguiente nivel", 20, 50);
     }
 
     public Juego getGame() {
