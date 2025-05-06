@@ -53,6 +53,9 @@ public abstract class Enemigo extends Cascaron {
     protected int atravesarPlataformaCooldown = 0;
     protected static final int MAX_ATRAVESAR_COOLDOWN = 20;
 
+        // Add as class variables
+private boolean portalCreado = false;
+
     public Enemigo(float x, float y, int width, int height, int vidaMaxima) {
         super(x, y, width, height);
         this.vidaMaxima = vidaMaxima;
@@ -64,24 +67,24 @@ public abstract class Enemigo extends Cascaron {
         if (!activo) {
             if (animaciones != null) {
                 animaciones.actualizarAnimacion();
-                
+
                 // Si terminó la animación de muerte, marcarla como completada
                 if (animaciones.getAccionActual() == MUERTE && animaciones.esUltimoFrame()) {
                     animacionMuerteTerminada = true;
                 }
             }
-        return;
+            return;
         }
-        
+
         aplicarGravedad();
         if (!enAire && patrullando) {
             patrullar();
         }
         mover();
-        
+
         // Actualizar balas
         updateBalas();
-        
+
         // Actualizar animaciones
         if (animaciones != null) {
             animaciones.actualizarAnimacion();
@@ -92,17 +95,17 @@ public abstract class Enemigo extends Cascaron {
     protected void aplicarGravedad() {
         // Verificar si estamos sobre una plataforma atravesable
         sobrePlataforma = MetodoAyuda.isEntityOnPlatform(hitbox, Juego.NIVEL_ACTUAL_DATA);
-        
+
         // Actualizar cooldown para atravesar plataformas
         if (atravesarPlataformaCooldown > 0) {
             atravesarPlataformaCooldown--;
         }
-        
+
         // Decidir si queremos atravesar la plataforma (puedes personalizar esta lógica)
         if (sobrePlataforma && !enAire && atravesarPlataformaCooldown == 0) {
-                iniciarAtravesarPlataforma();
+            iniciarAtravesarPlataforma();
         }
-        
+
         // Verificar primero si estamos en el suelo
         boolean enSuelo;
         if (quiereAtravesarPlataforma) {
@@ -112,7 +115,7 @@ public abstract class Enemigo extends Cascaron {
             // Caso normal, considerar tanto suelo normal como plataformas
             enSuelo = MetodoAyuda.isEntityOnFloor(hitbox, Juego.NIVEL_ACTUAL_DATA, false) || sobrePlataforma;
         }
-    
+
         if (enSuelo) {
             enAire = false;
             velocidadAire = 0;
@@ -120,7 +123,7 @@ public abstract class Enemigo extends Cascaron {
             enAire = true;
             // Aplicar gravedad SOLO si estamos en el aire
             velocidadAire += gravedad;
-    
+
             // Verificar si podemos movernos hacia abajo
             boolean movimientoExitoso = MetodoAyuda.CanMoveHere(
                     hitbox.x,
@@ -128,28 +131,28 @@ public abstract class Enemigo extends Cascaron {
                     hitbox.width,
                     hitbox.height,
                     Juego.NIVEL_ACTUAL_DATA);
-    
+
             if (movimientoExitoso) {
                 hitbox.y += velocidadAire;
             } else {
                 if (quiereAtravesarPlataforma) {
-                    int tileY = (int)((hitbox.y + hitbox.height) / Juego.TILES_SIZE);
-                    int xIndex1 = (int)(hitbox.x / Juego.TILES_SIZE);
-                    int xIndex2 = (int)((hitbox.x + hitbox.width) / Juego.TILES_SIZE);
-                    
+                    int tileY = (int) ((hitbox.y + hitbox.height) / Juego.TILES_SIZE);
+                    int xIndex1 = (int) (hitbox.x / Juego.TILES_SIZE);
+                    int xIndex2 = (int) ((hitbox.x + hitbox.width) / Juego.TILES_SIZE);
+
                     boolean colisionConPlataforma = false;
 
                     if (tileY < Juego.NIVEL_ACTUAL_DATA.length) {
                         if (xIndex1 < Juego.NIVEL_ACTUAL_DATA[0].length) {
-                            colisionConPlataforma = colisionConPlataforma || 
-                                MetodoAyuda.esPlataformaAtravesable(Juego.NIVEL_ACTUAL_DATA[tileY][xIndex1]);
+                            colisionConPlataforma = colisionConPlataforma ||
+                                    MetodoAyuda.esPlataformaAtravesable(Juego.NIVEL_ACTUAL_DATA[tileY][xIndex1]);
                         }
                         if (xIndex2 < Juego.NIVEL_ACTUAL_DATA[0].length) {
-                            colisionConPlataforma = colisionConPlataforma || 
-                                MetodoAyuda.esPlataformaAtravesable(Juego.NIVEL_ACTUAL_DATA[tileY][xIndex2]);
+                            colisionConPlataforma = colisionConPlataforma ||
+                                    MetodoAyuda.esPlataformaAtravesable(Juego.NIVEL_ACTUAL_DATA[tileY][xIndex2]);
                         }
                     }
-                    
+
                     if (colisionConPlataforma) {
                         // Empujar hacia abajo para atravesar la plataforma
                         hitbox.y += Math.max(1, velocidadAire);
@@ -167,7 +170,7 @@ public abstract class Enemigo extends Cascaron {
                 } else {
                     // Comportamiento normal para colisiones
                     hitbox.y = MetodoAyuda.GetEntityYPosUnderRoofOrAboveFloor(hitbox, velocidadAire);
-                    
+
                     if (velocidadAire > 0) {
                         velocidadAire = 0;
                         enAire = false;
@@ -177,11 +180,11 @@ public abstract class Enemigo extends Cascaron {
                 }
             }
         }
-    
+
         // Actualizar la coordenada y
         y = hitbox.y;
     }
-    
+
     // Método para iniciar el atravesado de plataforma
     protected void iniciarAtravesarPlataforma() {
         enAire = true;
@@ -194,30 +197,29 @@ public abstract class Enemigo extends Cascaron {
     }
 
     protected void patrullar() {
-    if (!puedeMoverseEnAlgunaDireccion()) {
-        velocidadX = 0;
-        return;
+        if (!puedeMoverseEnAlgunaDireccion()) {
+            velocidadX = 0;
+            return;
+        }
+
+        // Verificar dirección actual
+        boolean hayPared = MetodoAyuda.hayParedAdelante(
+                hitbox,
+                Juego.NIVEL_ACTUAL_DATA,
+                movimientoHaciaIzquierda ? -checkOffset : checkOffset);
+
+        boolean haySueloAdelante = MetodoAyuda.haySueloAdelante(
+                hitbox,
+                Juego.NIVEL_ACTUAL_DATA,
+                movimientoHaciaIzquierda ? -checkOffset : checkOffset);
+
+        if (hayPared || !haySueloAdelante) {
+            cambiarDireccion();
+        }
     }
-    
-    // Verificar dirección actual
-    boolean hayPared = MetodoAyuda.hayParedAdelante(
-        hitbox, 
-        Juego.NIVEL_ACTUAL_DATA, 
-        movimientoHaciaIzquierda ? -checkOffset : checkOffset
-    );
-    
-    boolean haySueloAdelante = MetodoAyuda.haySueloAdelante(
-        hitbox, 
-        Juego.NIVEL_ACTUAL_DATA, 
-        movimientoHaciaIzquierda ? -checkOffset : checkOffset
-    );
-    
-    if (hayPared || !haySueloAdelante) {
-        cambiarDireccion();
-    }
-}
+
     protected boolean puedeMoverseEnAlgunaDireccion() {
-        if(firstUpdate) {
+        if (firstUpdate) {
             firstUpdate = false;
             return true; // Permitir movimiento en el primer update
         }
@@ -251,18 +253,19 @@ public abstract class Enemigo extends Cascaron {
     }
 
     public void render(Graphics g, int xLvlOffset, int yLvlOffset) {
-        if (!activo && animacionMuerteTerminada) return;
-        
+        if (!activo && animacionMuerteTerminada)
+            return;
+
         // Dibujar balas
         if (adminBalas != null) {
             adminBalas.render(g, xLvlOffset, yLvlOffset);
         }
-        
+
         // Para animaciones
         if (animaciones != null) {
             renderizarConAnimacion(g, xLvlOffset, yLvlOffset);
         }
-        
+
         // Para debugging
         drawHitBox(g, xLvlOffset, yLvlOffset);
     }
@@ -272,7 +275,7 @@ public abstract class Enemigo extends Cascaron {
             return;
 
         float multiplicador = obtenerMultiplicadorDaño(tipoDaño);
-        int dañoFinal = (int)(cantidad * multiplicador);
+        int dañoFinal = (int) (cantidad * multiplicador);
 
         vida -= dañoFinal;
 
@@ -325,82 +328,80 @@ public abstract class Enemigo extends Cascaron {
             adminBalas.update();
         }
     }
-    
+
     // Método para verificar si puede disparar al jugador
     protected boolean puedeVerJugador(Jugador jugador) {
-        if (jugador == null) return false;
-        
+        if (jugador == null)
+            return false;
+
         // Verificar distancia
-        float distanciaX = Math.abs(jugador.getXCenter() - (hitbox.x + hitbox.width/2));
-        float distanciaY = Math.abs(jugador.getYCenter() - (hitbox.y + hitbox.height/2));
+        float distanciaX = Math.abs(jugador.getXCenter() - (hitbox.x + hitbox.width / 2));
+        float distanciaY = Math.abs(jugador.getYCenter() - (hitbox.y + hitbox.height / 2));
         float distanciaTotal = (float) Math.sqrt(distanciaX * distanciaX + distanciaY * distanciaY);
-        
+
         return distanciaTotal <= rangoDeteccionJugador;
     }
-    
+
     // Método para calcular ángulo hacia el jugador
     protected float calcularAnguloHaciaJugador(Jugador jugador) {
-        float dx = jugador.getXCenter() - (hitbox.x + hitbox.width/2);
-        float dy = jugador.getYCenter() - (hitbox.y + hitbox.height/2);
+        float dx = jugador.getXCenter() - (hitbox.x + hitbox.width / 2);
+        float dy = jugador.getYCenter() - (hitbox.y + hitbox.height / 2);
         return (float) Math.atan2(dy, dx);
     }
-    
+
     protected boolean esSeguroMoverse() {
         // Verificar dirección según orientación
         boolean haciaIzquierda = movimientoHaciaIzquierda;
-        
+
         // Verificar si hay pared adelante
         boolean hayPared = MetodoAyuda.hayParedAdelante(
-            hitbox, 
-            Juego.NIVEL_ACTUAL_DATA, 
-            haciaIzquierda ? -checkOffset : checkOffset
-        );
-        
+                hitbox,
+                Juego.NIVEL_ACTUAL_DATA,
+                haciaIzquierda ? -checkOffset : checkOffset);
+
         // Verificar si hay suelo adelante
         boolean haySuelo = MetodoAyuda.haySueloAdelante(
-            hitbox, 
-            Juego.NIVEL_ACTUAL_DATA, 
-            haciaIzquierda ? -checkOffset : checkOffset
-        );
-        
+                hitbox,
+                Juego.NIVEL_ACTUAL_DATA,
+                haciaIzquierda ? -checkOffset : checkOffset);
+
         // Es seguro moverse si no hay pared y hay suelo
         return !hayPared && haySuelo;
     }
 
     // Método abstracto que implementarán las subclases
     protected abstract void disparar(float angulo);
-    
+
     protected void manejarDisparo(Jugador jugador) {
-        if (!puedeDisparar || !activo) return;
-        
+        if (!puedeDisparar || !activo)
+            return;
+
         // Reducir cooldown si está activo
         if (disparoCooldown > 0) {
             disparoCooldown--;
             return;
         }
 
-        
         // Verificar si el jugador está en rango
-        if (puedeVerJugador(jugador) ) {
+        if (puedeVerJugador(jugador)) {
             // Orientar el enemigo hacia el jugador
             orientarHaciaJugador(jugador);
-            
+
             // Calcular ángulo y disparar
             float angulo = calcularAnguloHaciaJugador(jugador);
             disparar(angulo);
             disparoCooldown = disparoMaxCooldown;
         }
     }
-    
+
     // Nuevo método para orientar hacia el jugador
     protected void orientarHaciaJugador(Jugador jugador) {
         float jugadorX = jugador.getXCenter();
-        float enemigoX = hitbox.x + hitbox.width/2;
-        
+        float enemigoX = hitbox.x + hitbox.width / 2;
+
         // Actualizar orientación según posición relativa
         movimientoHaciaIzquierda = jugadorX < enemigoX;
     }
-    
 
     // Métodos para configurar el comportamiento
     public void setPatrullando(boolean patrullando) {
@@ -462,5 +463,14 @@ public abstract class Enemigo extends Cascaron {
 
     public AdministradorBalas getAdminBalas() {
         return adminBalas;
+    }
+
+    // Add these methods
+    public boolean hayPortalCreado() {
+        return portalCreado;
+    }
+
+    public void setPortalCreado(boolean creado) {
+        portalCreado = creado;
     }
 }

@@ -11,6 +11,10 @@ import Elementos.Personaje;
 import Elementos.Administradores.AdministradorEnemigos;
 import Elementos.Decoraciones.Decoracion;
 import Elementos.Decoraciones.EstacionQuimica;
+import Elementos.Decoraciones.Portal;
+import Elementos.Enemigos.BOSS1;
+import Elementos.Enemigos.BOSS2;
+import Elementos.Enemigos.BOSS3;
 import Eventos.EventoGamepad;
 import Elementos.Administradores.AdministradorBalas;
 import Elementos.Administradores.AdministradorDecoraciones;
@@ -62,6 +66,8 @@ public class Juego {
     private MenuPausa menuPausa;
     private MenuMuerte menuMuerte;
     private SelectorPersonajes selectorPersonajes;
+    public static Juego INSTANCIA_ACTUAL;
+
 
     public Juego() {
         inicializar();
@@ -72,6 +78,7 @@ public class Juego {
         gameLoop = new GameLoop(this);
         gameLoop.start();
         eg = new EventoGamepad(pan);
+        INSTANCIA_ACTUAL = this;
     }
 
     private void inicializar() {
@@ -110,6 +117,7 @@ public class Juego {
                 selectorPersonajes.update();
                 break;
             case PLAYING:
+            verificarJefesDerrotados();
                 if(necesitaReinicio) {
                     reiniciarJuego();
                     return;
@@ -459,6 +467,26 @@ public class Juego {
         this.estadoJuego = estadoJuego;
     }
 
+    public void crearPortalEnPosicion(float x, float y) {
+        Portal portal = new Portal(x, y);
+        adminDecoraciones.agregarDecoracion(portal);
+        System.out.println("¡Portal creado tras derrotar al jefe!");
+    }
+
+    // Add new method
+    public void verificarJefesDerrotados() {
+        for (Enemigo enemigo : adminEnemigos.getEnemigos()) {
+            if (!enemigo.estaActivo() && 
+                (enemigo instanceof BOSS1 || enemigo instanceof BOSS2 || enemigo instanceof BOSS3) && 
+                !enemigo.hayPortalCreado()) {
+                // Ajustar posición para que el portal quede bien ubicado
+                float portalX = (float) (enemigo.getHitBox().getX() + enemigo.getHitBox().getWidth()/2 - (16 * Juego.SCALE));
+                float portalY = (float) (enemigo.getHitBox().getY() + enemigo.getHitBox().getHeight() - (64 * Juego.SCALE));
+                crearPortalEnPosicion(portalX, portalY);
+                enemigo.setPortalCreado(true);
+            }
+        }
+    }
     
     public Menu getMenu() {
         return menu;
