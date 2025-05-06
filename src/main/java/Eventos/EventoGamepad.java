@@ -21,6 +21,7 @@ public class EventoGamepad {
     private boolean gamepadEnabled = true;
     private long lastMenuNavigationTime = 0;
     private static final long MENU_NAVIGATION_COOLDOWN = 200;
+    private static final long SELECTOR_NAVIGATION_COOLDOWN = 800;
     
     public EventoGamepad(PanelJuego panelJuego) {
         this.panelJuego = panelJuego;
@@ -75,6 +76,7 @@ public class EventoGamepad {
             case PAUSA:
             case MUERTE:
             case SELECCION_PERSONAJE:
+                procesarInputsSeleccionPersonaje();
             default:
                 break;
         }
@@ -179,6 +181,46 @@ public class EventoGamepad {
             // Soltar botón - ahora ejecutar la acción
             panelJuego.getGame().getMenu().ejecutarBotonSeleccionado();
             prevButtonState[GLFW_GAMEPAD_BUTTON_A] = false;
+        }
+    }
+
+    private void procesarInputsSeleccionPersonaje() {
+        // Usar el mismo cooldown del menú
+        long currentTime = System.currentTimeMillis();
+        boolean cooldownElapsed = (currentTime - lastMenuNavigationTime) > SELECTOR_NAVIGATION_COOLDOWN;
+        
+        // Navegación con stick izquierdo o d-pad
+        float axisY = gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y);
+        boolean dpadUp = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1;
+        boolean dpadDown = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1;
+        
+        // Solo navegar si ha pasado el tiempo de cooldown
+        if (cooldownElapsed && (axisY < -deadzone || dpadUp) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP]) {
+            panelJuego.getGame().getSelectorPersonajes().seleccionarAnterior();
+            lastMenuNavigationTime = currentTime; // Actualizar tiempo
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = true;
+        } else if (cooldownElapsed && (axisY > deadzone || dpadDown) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]) {
+            panelJuego.getGame().getSelectorPersonajes().seleccionarSiguiente();
+            lastMenuNavigationTime = currentTime; // Actualizar tiempo
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = true;
+        }
+        
+        // Resetear estado prev si se suelta el botón
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 0) {
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = false;
+        }
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 0) {
+            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = false;
+        }
+        
+        // Seleccionar personaje con A
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
+            panelJuego.getGame().getSelectorPersonajes().iniciarJuegoConPersonaje();
+        }
+        
+        // Volver al menú principal con B
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_B) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_B]) {
+            panelJuego.getGame().setEstadoJuego(EstadoJuego.MENU);
         }
     }
 

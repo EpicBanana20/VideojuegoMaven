@@ -111,14 +111,14 @@ public class SelectorPersonajes {
         }
     }
     
-    private void seleccionarSiguiente() {
+    public void seleccionarSiguiente() {
         personajeSeleccionado = (personajeSeleccionado + 1) % TOTAL_PERSONAJES;
         posicionObjetivoY -= (MARCO_HEIGHT + MARGEN_VERTICAL);
         enTransicion = true;
 
     }
     
-    private void seleccionarAnterior() {
+    public void seleccionarAnterior() {
         personajeSeleccionado = (personajeSeleccionado - 1 + TOTAL_PERSONAJES) % TOTAL_PERSONAJES;
         posicionObjetivoY += (MARCO_HEIGHT + MARGEN_VERTICAL);
         enTransicion = true;
@@ -137,7 +137,7 @@ public class SelectorPersonajes {
         }
     }
 
-    private void iniciarJuegoConPersonaje() {
+    public void iniciarJuegoConPersonaje() {
         juego.configurarJugadorConPersonaje(getTipoPersonajeSeleccionado());
         juego.setEstadoJuego(EstadoJuego.PLAYING);
     }
