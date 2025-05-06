@@ -5,7 +5,7 @@ import Utilz.LoadSave;
 
 public class Personaje {
     public enum TipoPersonaje {
-        ECLIPSA("Eclipsa (Mujer Loba)", LoadSave.PLAYER_ATLAS, 150f, 3.5f),
+        ECLIPSA("Eclipsa (Mujer Loba)", LoadSave.PLAYER_ATLAS, 150f, 20f),
         HALAN("Dr. Halan (Científico)", LoadSave.PLAYER_ATLAS_HALAN, 100f, 3f),
         VALTHOR("Valthor (Caballero)", LoadSave.PLAYER_ATLAS_VALTHOR, 200f, 2f);
         
