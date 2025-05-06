@@ -9,7 +9,7 @@ import Elementos.AimController;
 
 public class ArmaIon extends Arma {
     // Cadencia en disparos por segundo
-    private float cadenciaDisparo = 3.0f;
+    private float cadenciaDisparo = 2.0f;
     private int contadorRecarga = 0;
     
     // Sistema de munición
@@ -52,8 +52,8 @@ public class ArmaIon extends Arma {
                 posicionDisparo[0], 
                 posicionDisparo[1], 
                 rotacion, LoadSave.BULLET_ION,
-                100,
-                3.5f
+                50,
+                3.0f
             );
             
             // Añadir la bala al administrador

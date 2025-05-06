@@ -56,7 +56,7 @@ public class ArmaDelta extends Arma {
                 posicionDisparo[1], 
                 rotacion, 
                 LoadSave.BULLET_DELTA,
-                20,
+                50,
                 2.2f,
                 tipoDaño,
                 rebotesMaximos

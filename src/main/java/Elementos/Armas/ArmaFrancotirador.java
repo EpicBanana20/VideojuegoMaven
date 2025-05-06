@@ -44,7 +44,7 @@ public class ArmaFrancotirador extends Arma {
                 posicionDisparo[1], 
                 rotacion,
                 LoadSave.BULLET_MACHINEGUN, // Usar sprite temporal
-                50, // Alto daño
+                200, // Alto daño
                 10.0f // Alta velocidad
             );
             
