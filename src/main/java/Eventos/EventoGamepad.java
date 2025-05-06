@@ -74,11 +74,7 @@ public class EventoGamepad {
                 procesarInputsMenu();
                 break;
             case PAUSA:
-                procesarInputsPausa();
-                break;
             case MUERTE:
-                procesarInputsMuerte();
-                break;
             case SELECCION_PERSONAJE:
                 procesarInputsSeleccionPersonaje();
             default:
@@ -225,92 +221,6 @@ public class EventoGamepad {
         // Volver al menú principal con B
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_B) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_B]) {
             panelJuego.getGame().setEstadoJuego(EstadoJuego.MENU);
-        }
-    }
-
-    private void procesarInputsPausa() {
-        // Cooldown para la navegación en el menú
-        long currentTime = System.currentTimeMillis();
-        boolean cooldownElapsed = (currentTime - lastMenuNavigationTime) > MENU_NAVIGATION_COOLDOWN;
-        
-        // Navegación vertical (stick izquierdo o d-pad)
-        float axisY = gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y);
-        boolean dpadUp = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1;
-        boolean dpadDown = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1;
-        
-        if (cooldownElapsed && (axisY < -deadzone || dpadUp) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP]) {
-            panelJuego.getGame().getMenuPausa().navegarArriba();
-            lastMenuNavigationTime = currentTime; // Actualizar tiempo de último movimiento
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = true;
-        } else if (cooldownElapsed && (axisY > deadzone || dpadDown) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]) {
-            panelJuego.getGame().getMenuPausa().navegarAbajo();
-            lastMenuNavigationTime = currentTime; // Actualizar tiempo de último movimiento
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = true;
-        }
-        
-        // Resetear estado prev si se suelta el botón
-        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 0) {
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = false;
-        }
-        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 0) {
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = false;
-        }
-        
-        // Seleccionar botón con A
-        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
-            // Solo marcar el botón como presionado visualmente
-            panelJuego.getGame().getMenuPausa().presionarBotonSeleccionado();
-            prevButtonState[GLFW_GAMEPAD_BUTTON_A] = true;
-        } 
-        else if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 0 && prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
-            // Soltar botón - ahora ejecutar la acción
-            panelJuego.getGame().getMenuPausa().ejecutarBotonSeleccionado();
-            prevButtonState[GLFW_GAMEPAD_BUTTON_A] = false;
-        }
-        
-        // Salir del menú de pausa con B o Start
-        if ((gamepadState.buttons(GLFW_GAMEPAD_BUTTON_B) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_B]) ||
-            (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_START) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_START])) {
-            panelJuego.getGame().setEstadoJuego(EstadoJuego.PLAYING);
-        }
-    }
-    
-    private void procesarInputsMuerte() {
-        // Cooldown para la navegación en el menú
-        long currentTime = System.currentTimeMillis();
-        boolean cooldownElapsed = (currentTime - lastMenuNavigationTime) > MENU_NAVIGATION_COOLDOWN;
-        
-        // Navegación vertical (stick izquierdo o d-pad)
-        float axisY = gamepadState.axes(GLFW_GAMEPAD_AXIS_LEFT_Y);
-        boolean dpadUp = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1;
-        boolean dpadDown = gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1;
-        
-        if (cooldownElapsed && (axisY < -deadzone || dpadUp) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP]) {
-            panelJuego.getGame().getMenuMuerte().navegarArriba();
-            lastMenuNavigationTime = currentTime;
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = true;
-        } else if (cooldownElapsed && (axisY > deadzone || dpadDown) && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]) {
-            panelJuego.getGame().getMenuMuerte().navegarAbajo();
-            lastMenuNavigationTime = currentTime;
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = true;
-        }
-        
-        // Resetear estado prev si se suelta el botón
-        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 0) {
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP] = false;
-        }
-        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 0) {
-            prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN] = false;
-        }
-        
-        // Seleccionar botón con A
-        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
-            panelJuego.getGame().getMenuMuerte().presionarBotonSeleccionado();
-            prevButtonState[GLFW_GAMEPAD_BUTTON_A] = true;
-        } 
-        else if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 0 && prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
-            panelJuego.getGame().getMenuMuerte().ejecutarBotonSeleccionado();
-            prevButtonState[GLFW_GAMEPAD_BUTTON_A] = false;
         }
     }
 

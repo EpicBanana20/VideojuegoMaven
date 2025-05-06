@@ -21,7 +21,7 @@ public class EventoTeclado implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_F6) {
+        if (e.getKeyCode() == KeyEvent.VK_F10) {
             gamepadController.toggleGamepad();
             return;
         }
