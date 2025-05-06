@@ -1,7 +1,6 @@
 package Elementos.Armas;
 
 import Elementos.Arma;
-import Elementos.Bala;
 import Elementos.BalaCreciente;
 import Elementos.Administradores.AdministradorBalas;
 import Juegos.Juego;
