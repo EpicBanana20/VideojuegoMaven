@@ -368,11 +368,11 @@ public class BOSS3 extends Enemigo {
         
         switch (tipoDaño) {
             case "Corrosivo":
-                return 0.8f; // Resistente a corrosión
+                return 0.5f; // Resistente a corrosión
             case "Luz":
-                return 2.0f; // Débil a luz
-            case "Fuego":
-                return 0.5f; // Muy resistente a fuego
+                return 0.5f; // Débil a luz
+            case "Mutagenico":
+                return 1.5f; // Muy resistente a fuego
             default:
                 return 1.0f;
         }

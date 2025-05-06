@@ -22,7 +22,7 @@ public class BOSS2 extends Enemigo {
     // Constantes específicas
     private static final int ANCHO_DEFAULT = 130;
     private static final int ALTO_DEFAULT = 130;
-    private static final int VIDA_DEFAULT = 250;
+    private static final int VIDA_DEFAULT = 4000;
     
     // Estados del jefe
     private static final int FASE_NORMAL = 0;  // Fase inicial
@@ -641,6 +641,44 @@ public class BOSS2 extends Enemigo {
             g.drawImage(animaciones.getImagenActual(),
                 drawX, drawY,
                 w, h, null);
+        }
+    }
+
+@Override
+    protected float obtenerMultiplicadorDaño(String tipoDaño) {
+        if (tipoDaño == null) return 1.0f;
+        
+        switch (tipoDaño) {
+            case "Corrosivo":
+                return 0.5f;
+            case "Luz":
+                return 1.5f;
+            case "Mutagenico":
+                return 0.5f;
+            default:
+                return 1.0f;
+        }
+    }
+
+    @Override
+    public void recibirDaño(int cantidad, String tipoDaño) {
+        if (!activo)
+            return;
+
+        float multiplicador = obtenerMultiplicadorDaño(tipoDaño);
+        int dañoFinal = (int)(cantidad * multiplicador);
+
+        vida -= dañoFinal;
+
+        // Cambiar a animación de herido temporalmente
+        if (animaciones != null && vida > 0) {
+            animaciones.setAccion(HERIDO);
+            animaciones.resetearAnimacion();
+        }
+
+        if (vida <= 0) {
+            vida = 0;
+            morir();
         }
     }
 }

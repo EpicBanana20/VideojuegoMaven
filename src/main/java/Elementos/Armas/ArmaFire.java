@@ -13,10 +13,10 @@ public class ArmaFire extends Arma {
     private int contadorRecarga = 0;
     
     // Sistema de munición
-    private int municionActual = 30;
-    private int capacidadCargador = 30;
+    private int municionActual = 10;
+    private int capacidadCargador = 10;
     private boolean recargando = false;
-    private int tiempoRecargaCompleta = 120; // 2 segundos a 60 FPS
+    private int tiempoRecargaCompleta = 220; // 2 segundos a 60 FPS
     private int contadorRecargaCompleta = 0;
     
     // Convertimos la cadencia en tiempo entre disparos (en frames)
@@ -58,7 +58,7 @@ public class ArmaFire extends Arma {
                 posicionDisparo[1], 
                 rotacion, 
                 LoadSave.BULLET_FIRE,
-                10,
+                4,
                 2.2f,
                 tipoDaño,
                 factorCrecimientoInicial,

@@ -14,7 +14,7 @@ public class EnemigoAranara extends Enemigo{
      // Constantes específicas de este tipo de enemigo
     private static final int ANCHO_DEFAULT = 100;
     private static final int ALTO_DEFAULT = 84;
-    private static final int VIDA_DEFAULT = 50;
+    private static final int VIDA_DEFAULT = 500;
 
     private boolean disparoEnProceso = false;
     private int frameDisparo = 2; // El disparo ocurrirá en el tercer frame (0,1,2,3)
@@ -37,8 +37,8 @@ public class EnemigoAranara extends Enemigo{
         this.checkOffset = 20 * Juego.SCALE; // Ajustar el offset de verificación para el salto
 
         this.puedeDisparar = true;
-        this.disparoMaxCooldown = 120; // Cada 3 segundos
-        this.rangoDeteccionJugador = 400 * Juego.SCALE; // Mayor rango
+        this.disparoMaxCooldown = 90; // Cada 3 segundos
+        this.rangoDeteccionJugador = 500 * Juego.SCALE; // Mayor rango
         
         // Cargar animaciones
         cargarAnimaciones();
@@ -234,7 +234,7 @@ public class EnemigoAranara extends Enemigo{
             origenY, 
             anguloDisparo,
             LoadSave.BULLET_ARANARA,
-            4, // Daño enemigo
+            8, // Daño enemigo
             2.0f // Velocidad
         );
             adminBalas.agregarBala(nuevaBala);

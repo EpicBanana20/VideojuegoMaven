@@ -13,14 +13,14 @@ import java.awt.BasicStroke;
 
 public class ArmaLaser extends Arma {
     private boolean disparando = false;
-    private float energiaActual = 100f;
-    private float energiaMaxima = 100f;
-    private float consumoEnergia = 1.5f; // Consumo por frame
-    private float recargaEnergia = 0.5f; // Recarga por frame
+    private float energiaActual = 1000f;
+    private float energiaMaxima = 1000f;
+    private float consumoEnergia = 1.0f; // Consumo por frame
+    private float recargaEnergia = 0.4f; // Recarga por frame
     
     // Propiedades del láser
-    private float longitudMaxima = 500f * Juego.SCALE;
-    private int dañoPorTick = 2; // Daño por frame
+    private float longitudMaxima = 1200f * Juego.SCALE;
+    private int dañoPorTick = 1; // Daño por frame
     private float[] puntoImpacto = new float[2];
     private float alcanceReal = 0f; // Distancia hasta el punto de impacto
     private Enemigo enemigoImpactado = null; // Enemigo que está siendo impactado

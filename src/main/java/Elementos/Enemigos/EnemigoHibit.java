@@ -14,7 +14,7 @@ public class EnemigoHibit extends Enemigo{
      // Constantes específicas de este tipo de enemigo
     private static final int ANCHO_DEFAULT = 96;
     private static final int ALTO_DEFAULT = 72;
-    private static final int VIDA_DEFAULT = 50;
+    private static final int VIDA_DEFAULT = 400;
 
     private boolean disparoEnProceso = false;
     private int frameDisparo = 0; // El disparo ocurrirá en el tercer frame (0,1,2,3)
@@ -38,7 +38,7 @@ public class EnemigoHibit extends Enemigo{
 
         this.puedeDisparar = true;
         this.disparoMaxCooldown = 60; // Cada 3 segundos
-        this.rangoDeteccionJugador = 400 * Juego.SCALE; // Mayor rango
+        this.rangoDeteccionJugador = 500 * Juego.SCALE; // Mayor rango
         
         // Cargar animaciones
         cargarAnimaciones();
@@ -233,7 +233,7 @@ protected void manejarDisparo(Jugador jugador) {
             origenY, 
             anguloDisparo,
             LoadSave.BULLET_HIBIT,
-            4, // Daño enemigo
+            5, // Daño enemigo
             1.4f // Velocidad
         );
             adminBalas.agregarBala(nuevaBala);

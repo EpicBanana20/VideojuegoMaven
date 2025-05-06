@@ -12,7 +12,7 @@ public class EnemigoSkeler extends Enemigo {
     // Constantes específicas de este tipo de enemigo
     private static final int ANCHO_DEFAULT = 64;
     private static final int ALTO_DEFAULT = 48;
-    private static final int VIDA_DEFAULT = 50;
+    private static final int VIDA_DEFAULT = 200;
     
     // Ajuste específico para este enemigo
     private int ajuste = -30;

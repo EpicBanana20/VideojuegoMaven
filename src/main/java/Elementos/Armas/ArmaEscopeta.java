@@ -27,7 +27,7 @@ public class ArmaEscopeta extends Arma {
     public ArmaEscopeta(AdministradorBalas adminBalas) {
         super("armas/escopeta.png", 30 * Juego.SCALE, 3.0f, adminBalas);
         this.nombre = "Escopeta";
-        this.tipoDaño = ""; //TODO: agregar daño
+        this.tipoDaño = "Luz";
     }
     
     @Override
@@ -55,7 +55,7 @@ public class ArmaEscopeta extends Arma {
                     posicionDisparo[1], 
                     anguloDispersion,
                     LoadSave.BULLET_ESCOPETA, // Usar sprite temporal
-                    3, // Menos daño por perdigón
+                    6, // Menos daño por perdigón
                     3.5f, // Velocidad alta
                     "fuego"
                 );
