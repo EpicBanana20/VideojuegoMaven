@@ -278,6 +278,10 @@ public class Jugador extends Cascaron {
 
 
     public void cambiarArma() {
+        if (inventarioArmas.isEmpty() || habilidadValthorActiva) {
+            // Cannot change weapons when inventory is empty or ability is active
+            return;
+        }
         indiceArmaActual = (indiceArmaActual + 1) % inventarioArmas.size();
         armaActual = inventarioArmas.get(indiceArmaActual);
         System.out.println("Cambiado a: " + armaActual.getNombre());
