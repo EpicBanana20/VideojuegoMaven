@@ -216,6 +216,9 @@ public class AdministradorDecoraciones {
             case 57: //BANDERA
                 crearDecoracionAnimada(x, y, ancho, alto, "decoraciones/BANDERA.png", 0, new int[]{4});
                 break;
+            case 58: //BANDERA
+                crearDecoracionAnimada(x, y, ancho, alto, "decoraciones/PARTICULAS.png", 0, new int[]{16});
+                break;
 
             // En AdministradorDecoraciones.java, dentro del método crearDecoracion
             case 100: // Estación Química
