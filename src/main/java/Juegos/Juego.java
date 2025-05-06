@@ -459,6 +459,7 @@ public class Juego {
         this.estadoJuego = estadoJuego;
     }
 
+    
     public Menu getMenu() {
         return menu;
     }

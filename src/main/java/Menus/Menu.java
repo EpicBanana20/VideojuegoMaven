@@ -174,4 +174,10 @@ public class Menu {
             mouseReleased(null); // Simulamos que el mouse se ha liberado en el botón
         }
     }
+
+    public void presionarBotonSeleccionado() {
+        if (botonSeleccionadoIndex >= 0 && botonSeleccionadoIndex < botones.length) {
+            botones[botonSeleccionadoIndex].setMousePressed(true);
+        }
+    }
 }

@@ -64,15 +64,13 @@ public class EventoGamepad {
         if (!glfwGetGamepadState(gamepadID, gamepadState)) {
             return;
         }
-        
-        System.out.println("Estado juego: " + panelJuego.getGame().getEstadoJuego());
+
         switch (panelJuego.getGame().getEstadoJuego()) {
             case PLAYING:
                 procesarInputsJuego();
                 break;
             case MENU:
                 procesarInputsMenu();
-                System.out.println("ESTOY EN EL MENU");
                 break;
             case PAUSA:
             case MUERTE:
@@ -173,7 +171,14 @@ public class EventoGamepad {
         
         // Seleccionar botón con A
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
+            // Solo marcar el botón como presionado visualmente
+            panelJuego.getGame().getMenu().presionarBotonSeleccionado();
+            prevButtonState[GLFW_GAMEPAD_BUTTON_A] = true;
+        } 
+        else if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 0 && prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
+            // Soltar botón - ahora ejecutar la acción
             panelJuego.getGame().getMenu().ejecutarBotonSeleccionado();
+            prevButtonState[GLFW_GAMEPAD_BUTTON_A] = false;
         }
     }
 
