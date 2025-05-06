@@ -118,17 +118,11 @@ public class EventoGamepad {
         // Apuntar con stick derecho
         float rightX = gamepadState.axes(GLFW_GAMEPAD_AXIS_RIGHT_X);
         float rightY = gamepadState.axes(GLFW_GAMEPAD_AXIS_RIGHT_Y);
-        
+
         if (Math.abs(rightX) > deadzone || Math.abs(rightY) > deadzone) {
-            int centerX = panelJuego.getWidth() / 2;
-            int centerY = panelJuego.getHeight() / 2;
-            
-            int mouseX = centerX + (int)(rightX * 300);
-            int mouseY = centerY + (int)(rightY * 300);
-            
-            panelJuego.getGame().updateMouseInfo(mouseX, mouseY);
+            // Use the new method instead of calculating coordinates directly
+            panelJuego.getGame().updateAimFromGamepad(rightX, rightY);
         }
-        
         // Pausa (botón Start)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_START) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_START]) {
             panelJuego.getGame().setEstadoJuego(EstadoJuego.PAUSA);

@@ -389,6 +389,20 @@ public class Juego {
             }
         }
     }
+
+    public void updateAimFromGamepad(float dirX, float dirY) {
+        if (player != null) {
+            // Get player's screen position instead of using screen center
+            float playerScreenX = player.getXCenter() - camera.getxLvlOffset();
+            float playerScreenY = player.getYCenter() - camera.getyLvlOffset();
+            
+            // Calculate aim position relative to player's screen position
+            int mouseX = (int)(playerScreenX + (dirX * 300));
+            int mouseY = (int)(playerScreenY + (dirY * 300));
+            
+            updateMouseInfo(mouseX, mouseY);
+        }
+    }
     
     public Jugador getPlayer() {
         return player;
