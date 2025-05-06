@@ -398,7 +398,7 @@ public class Juego {
     public void procesarTeclaEstacionQuimica(int keyCode) {
         if (estacionQuimicaActiva != null && estacionQuimicaActiva.isEstacionAbierta()) {
             // Si se presiona un número (1-5) para crear un compuesto
-            if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_5) {
+            if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
                 boolean compuestoCreado = estacionQuimicaActiva.procesarTecla(keyCode);
                 
                 // Si se creó un compuesto, intentar crear un arma

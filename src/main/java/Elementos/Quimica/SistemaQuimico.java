@@ -66,21 +66,21 @@ public class SistemaQuimico {
         cloruroCesio.agregarElemento("Cl", 1);
         recetasCompuestos.add(cloruroCesio);
 
-        RecetaCompuesto arsenitoSodio = new RecetaCompuesto("Arsenito de sodio", "NaAsO3");
-        arsenitoSodio.agregarElemento("Na", 1);
-        arsenitoSodio.agregarElemento("As", 1);
-        arsenitoSodio.agregarElemento("O", 2);
-        recetasCompuestos.add(arsenitoSodio);
+        RecetaCompuesto tetacloruroCarbono = new RecetaCompuesto("Tetacloruro de carbono", "CCl4");
+        tetacloruroCarbono.agregarElemento("C", 1);
+        tetacloruroCarbono.agregarElemento("Cl", 4);
+        recetasCompuestos.add(tetacloruroCarbono);
 
         RecetaCompuesto cloruroPlatinoII = new RecetaCompuesto("Cloruro de platino(II)", "PtCl2");
         cloruroPlatinoII.agregarElemento("Pt", 1);
         cloruroPlatinoII.agregarElemento("Cl", 2);
         recetasCompuestos.add(cloruroPlatinoII);
 
-        RecetaCompuesto tetacloruroCarbono = new RecetaCompuesto("Tetacloruro de carbono", "CCl4");
-        tetacloruroCarbono.agregarElemento("C", 1);
-        tetacloruroCarbono.agregarElemento("Cl", 4);
-        recetasCompuestos.add(tetacloruroCarbono);
+        RecetaCompuesto arsenitoSodio = new RecetaCompuesto("Arsenito de sodio", "NaAsO2");
+        arsenitoSodio.agregarElemento("Na", 1);
+        arsenitoSodio.agregarElemento("As", 1);
+        arsenitoSodio.agregarElemento("O", 2);
+        recetasCompuestos.add(arsenitoSodio);
     }
     
     private void inicializarRecetasArmas() {
@@ -93,7 +93,7 @@ public class SistemaQuimico {
         recetasArmas.put("CuSO4",ArmaFire.class);
         recetasArmas.put("CCl4", ArmaDelta.class);
         recetasArmas.put("PtCl2", ArmaFrancotirador.class);
-        recetasArmas.put("NaAsO3", ArmaIon.class);
+        recetasArmas.put("NaAsO2", ArmaIon.class);
         // Añadir más recetas de armas
     }
     

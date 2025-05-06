@@ -119,10 +119,43 @@ public class EventoGamepad {
         // Cambiar arma (botón Y - solo al presionar)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_Y) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_Y]) {
             panelJuego.getGame().getPlayer().cambiarArma();
+            panelJuego.getGame().procesarTeclaEstacionQuimica(49);
         }
         
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_B) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_B]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(50);
+        }
+
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_A) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_A]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(51);
+        }
+
         // Interactuar (botón X - solo al presionar)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_X) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_X]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(52);
+        }
+
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_UP) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_UP]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(53);
+        }
+        
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_RIGHT) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_RIGHT]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(54);
+        }
+        
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_DOWN) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_DOWN]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(55);
+        }
+
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_DPAD_LEFT) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_DPAD_LEFT]) {
+            panelJuego.getGame().procesarTeclaEstacionQuimica(56);
+        }
+        
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_RIGHT_BUMPER]){
+            panelJuego.getGame().procesarTeclaEstacionQuimica(57);
+        }
+
+        if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_LEFT_BUMPER) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_LEFT_BUMPER]){
             panelJuego.getGame().interactuarConEstacionQuimica();
         }
         
