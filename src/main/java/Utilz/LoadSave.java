@@ -55,6 +55,9 @@ public class LoadSave {
     public static final String BULLET_ION = "balas/Bala_ION.png";
     public static final String BULLET_ESCOPETA = "balas/Bala_Escopeta.png";
     public static final String BULLET_P90 = "balas/Bala_P90.png";
+    public static final String BULLET_DELTA = "balas/Bala_Delta.png";
+    public static final String BULLET_FIRE = "balas/Bala_Fire.png";
+    public static final String BULLET_TERR = "balas/Bala_Terr.png";
     
     
     

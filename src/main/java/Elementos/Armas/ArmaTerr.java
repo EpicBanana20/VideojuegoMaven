@@ -7,7 +7,7 @@ import Juegos.Juego;
 import Utilz.LoadSave;
 import Elementos.AimController;
 
-public class ArmaP90 extends Arma {
+public class ArmaTerr extends Arma {
     // Cadencia en disparos por segundo
     private float cadenciaDisparo = 1.0f;
     private int contadorRecarga = 0;
@@ -22,9 +22,12 @@ public class ArmaP90 extends Arma {
     // Convertimos la cadencia en tiempo entre disparos (en frames)
     private int armaCooldown;
     private static final int FRAMES_POR_SEGUNDO = 60;
+    
+    // Parámetros para el disparo en cono
+    private float anguloDispersion = 0.08f; // Ángulo de dispersión en grados (ajustable)
 
-    public ArmaP90(AdministradorBalas adminBalas) {
-        super("armas/P90p.png", 30 * Juegos.Juego.SCALE, 1.8f,adminBalas);
+    public ArmaTerr(AdministradorBalas adminBalas) {
+        super("armas/TERR.png", 30 * Juegos.Juego.SCALE, 3.0f, adminBalas);
         this.nombre = "Eclipse";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";
@@ -47,19 +50,32 @@ public class ArmaP90 extends Arma {
                 posicionDisparo
             );
             
-            // Crear una nueva bala
-            Bala nuevaBala = new Bala(
+            // Crear dos balas con ángulos ligeramente diferentes para formar un cono
+            // Primera bala - desviada a la izquierda
+            Bala bala1 = new Bala(
                 posicionDisparo[0], 
                 posicionDisparo[1], 
-                rotacion, LoadSave.BULLET_P90,
+                rotacion - anguloDispersion / 2, // Rotación ligeramente a la izquierda
+                LoadSave.BULLET_TERR,
                 10,
                 2.2f
             );
             
-            // Añadir la bala al administrador
-            adminBalas.agregarBala(nuevaBala);
+            // Segunda bala - desviada a la derecha
+            Bala bala2 = new Bala(
+                posicionDisparo[0], 
+                posicionDisparo[1], 
+                rotacion + anguloDispersion / 2, // Rotación ligeramente a la derecha
+                LoadSave.BULLET_TERR,
+                10,
+                2.2f
+            );
             
-            // Consumir munición
+            // Añadir las balas al administrador
+            adminBalas.agregarBala(bala1);
+            adminBalas.agregarBala(bala2);
+            
+            // Consumir munición (solo se consume una bala aunque dispare dos)
             municionActual--;
             
             // Reiniciar contador de cooldown
@@ -106,6 +122,15 @@ public class ArmaP90 extends Arma {
         municionActual = capacidadCargador;
         recargando = false;
         System.out.println("¡Recarga completa! Munición: " + municionActual);
+    }
+    
+    // Métodos para ajustar el ángulo de dispersión
+    public void setAnguloDispersion(float angulo) {
+        this.anguloDispersion = angulo;
+    }
+    
+    public float getAnguloDispersion() {
+        return anguloDispersion;
     }
     
     // Getters

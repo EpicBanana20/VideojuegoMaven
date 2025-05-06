@@ -24,7 +24,7 @@ public class Eclipse extends Arma {
     private static final int FRAMES_POR_SEGUNDO = 60;
 
     public Eclipse(AdministradorBalas adminBalas) {
-        super("armas/PistolaMercurio.png", 30 * Juegos.Juego.SCALE, 3.0f,adminBalas);
+        super("armas/Eclipse.png", 30 * Juegos.Juego.SCALE, 3.0f,adminBalas);
         this.nombre = "Eclipse";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";

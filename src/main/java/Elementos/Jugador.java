@@ -293,12 +293,16 @@ public class Jugador extends Cascaron {
         //ARMAS MUNDO 1
         inventarioArmas.add(new Elementos.Armas.ArmaMercurio(adminBalasCentral));
         inventarioArmas.add(new Elementos.Armas.ArmaP90(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaTerr(adminBalasCentral));
         //ARMAS MUNDO 2
         inventarioArmas.add(new Elementos.Armas.ArmaEscopeta(adminBalasCentral));
         inventarioArmas.add(new Elementos.Armas.ArmaLaser(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaFire(adminBalasCentral));
         //ARMAS MUNDO 3
+        inventarioArmas.add(new Elementos.Armas.ArmaDelta(adminBalasCentral));
         inventarioArmas.add(new Elementos.Armas.ArmaFrancotirador(adminBalasCentral));
         inventarioArmas.add(new Elementos.Armas.ArmaIon(adminBalasCentral));
+        
 
         //HABILIDAD
         espadaBoomerang = new Elementos.Armas.ArmaEspadaBoomerang(adminBalasCentral);

@@ -7,7 +7,7 @@ import Juegos.Juego;
 import Utilz.LoadSave;
 import Elementos.AimController;
 
-public class ArmaP90 extends Arma {
+public class ArmaDelta extends Arma {
     // Cadencia en disparos por segundo
     private float cadenciaDisparo = 1.0f;
     private int contadorRecarga = 0;
@@ -23,8 +23,8 @@ public class ArmaP90 extends Arma {
     private int armaCooldown;
     private static final int FRAMES_POR_SEGUNDO = 60;
 
-    public ArmaP90(AdministradorBalas adminBalas) {
-        super("armas/P90p.png", 30 * Juegos.Juego.SCALE, 1.8f,adminBalas);
+    public ArmaDelta(AdministradorBalas adminBalas) {
+        super("armas/DELTA.png", 30 * Juegos.Juego.SCALE, 2.4f,adminBalas);
         this.nombre = "Eclipse";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";
@@ -51,7 +51,7 @@ public class ArmaP90 extends Arma {
             Bala nuevaBala = new Bala(
                 posicionDisparo[0], 
                 posicionDisparo[1], 
-                rotacion, LoadSave.BULLET_P90,
+                rotacion, LoadSave.BULLET_DELTA,
                 10,
                 2.2f
             );

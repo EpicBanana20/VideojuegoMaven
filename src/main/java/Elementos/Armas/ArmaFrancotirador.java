@@ -19,7 +19,7 @@ public class ArmaFrancotirador extends Arma {
     private float cadenciaDisparo = 0.3f;
     
     public ArmaFrancotirador(AdministradorBalas adminBalas) {
-        super("armas/francotirador.png", 35 * Juego.SCALE, 3.5f, adminBalas);
+        super("armas/francotirador.png", 35 * Juego.SCALE, 2.0f, adminBalas);
         this.nombre = "Francotirador";
         this.tipoDaño = ""; //TODO: agregar daño
     }

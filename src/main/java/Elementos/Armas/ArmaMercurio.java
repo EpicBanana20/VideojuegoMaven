@@ -21,7 +21,7 @@ public class ArmaMercurio extends Arma {
     private static final int FRAMES_POR_SEGUNDO = 60;
 
     public ArmaMercurio(AdministradorBalas adminBalas) {
-        super("armas/PistolaMercurio.png", 30 * Juegos.Juego.SCALE, 3.0f, adminBalas);
+        super("armas/PISTOLAPRO.png", 30 * Juegos.Juego.SCALE, 1.4f, adminBalas);
         this.nombre = "MachineGun";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
     }

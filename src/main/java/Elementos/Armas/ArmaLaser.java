@@ -27,7 +27,7 @@ public class ArmaLaser extends Arma {
     private boolean intentandoDisparar = false; // Si el usuario mantiene presionado
     
     public ArmaLaser(AdministradorBalas adminBalas) {
-        super("armas/laser.png", 30 * Juego.SCALE, 3.0f, adminBalas);
+        super("armas/laser.png", 30 * Juego.SCALE, 2.0f, adminBalas);
         this.nombre = "Laser";
         this.tipoDaño = "Luz";
     }
