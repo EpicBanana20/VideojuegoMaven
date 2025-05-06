@@ -390,7 +390,6 @@ public class BOSS1 extends Enemigo {
 
         // Cambiar a animación de herido temporalmente
         if (animaciones != null && vida > 0) {
-            animaciones.setAccion(HERIDO);
             animaciones.resetearAnimacion();
         }
 
