@@ -13,10 +13,10 @@ public class ArmaDelta extends Arma {
     private int contadorRecarga = 0;
     
     // Sistema de munición
-    private int municionActual = 30;
-    private int capacidadCargador = 30;
+    private int municionActual = 20;
+    private int capacidadCargador = 20;
     private boolean recargando = false;
-    private int tiempoRecargaCompleta = 120; // 2 segundos a 60 FPS
+    private int tiempoRecargaCompleta = 360; // 2 segundos a 60 FPS
     private int contadorRecargaCompleta = 0;
     
     // Convertimos la cadencia en tiempo entre disparos (en frames)
@@ -30,7 +30,7 @@ public class ArmaDelta extends Arma {
         super("armas/DELTA.png", 30 * Juegos.Juego.SCALE, 2.4f, adminBalas);
         this.nombre = "Eclipse";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
-        this.tipoDaño = "Corrosivo";
+        this.tipoDaño = "Mutagenico";
     }
     
     @Override
@@ -56,7 +56,7 @@ public class ArmaDelta extends Arma {
                 posicionDisparo[1], 
                 rotacion, 
                 LoadSave.BULLET_DELTA,
-                10,
+                20,
                 2.2f,
                 tipoDaño,
                 rebotesMaximos

@@ -24,6 +24,7 @@ public class ArmaMercurio extends Arma {
         super("armas/PISTOLAPRO.png", 30 * Juegos.Juego.SCALE, 1.4f, adminBalas);
         this.nombre = "MachineGun";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
+        this.tipoDaño = "Corrosivo";
     }
     
     @Override

@@ -27,7 +27,7 @@ public class ArmaIon extends Arma {
         super("armas/ION.png", 30 * Juegos.Juego.SCALE, 2.6f,adminBalas);
         this.nombre = "Eclipse";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
-        this.tipoDaño = "Corrosivo";
+        this.tipoDaño = "Mutagenico";
     }
     
     @Override

@@ -12,7 +12,7 @@ public class EnemigoHielitos extends Enemigo {
     // Constantes específicas de este tipo de enemigo
     private static final int ANCHO_DEFAULT = 110;
     private static final int ALTO_DEFAULT = 80;
-    private static final int VIDA_DEFAULT = 50;
+    private static final int VIDA_DEFAULT = 800;
     
     // Ajuste específico para este enemigo
     private int ajuste = -30;
