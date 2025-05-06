@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import Elementos.Arma;
 import Elementos.Bala;
 import Elementos.Enemigo;
 import Elementos.Jugador;
@@ -15,6 +16,7 @@ import Elementos.Decoraciones.Portal;
 import Elementos.Enemigos.BOSS1;
 import Elementos.Enemigos.BOSS2;
 import Elementos.Enemigos.BOSS3;
+import Elementos.Quimica.SistemaQuimico;
 import Eventos.EventoGamepad;
 import Elementos.Administradores.AdministradorBalas;
 import Elementos.Administradores.AdministradorDecoraciones;
@@ -395,12 +397,43 @@ public class Juego {
 
     public void procesarTeclaEstacionQuimica(int keyCode) {
         if (estacionQuimicaActiva != null && estacionQuimicaActiva.isEstacionAbierta()) {
-            boolean procesado = estacionQuimicaActiva.procesarTecla(keyCode);
-            if (procesado && keyCode == KeyEvent.VK_ESCAPE) {
+            // Si se presiona un número (1-5) para crear un compuesto
+            if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_5) {
+                boolean compuestoCreado = estacionQuimicaActiva.procesarTecla(keyCode);
+                
+                // Si se creó un compuesto, intentar crear un arma
+                if (compuestoCreado) {
+                    intentarCrearArmaDesdeUltimoCompuesto();
+                }
+            } else if (keyCode == KeyEvent.VK_ESCAPE) {
+                estacionQuimicaActiva.procesarTecla(keyCode);
                 estacionQuimicaActiva = null;
             }
         }
     }
+
+    private void intentarCrearArmaDesdeUltimoCompuesto() {
+    // Iterar sobre los compuestos recién creados
+    SistemaQuimico sistemaQuimico = player.getSistemaQuimico();
+    for (String formula : sistemaQuimico.getInventarioCompuestos().getCompuestos().keySet()) {
+        if (sistemaQuimico.getInventarioCompuestos().tieneCompuestoSuficiente(formula, 1)) {
+            try {
+                // Intentar crear un arma con este compuesto
+                Arma nuevaArma = sistemaQuimico.crearArma(formula, player.getArmaActual().getAdminBalas());
+                if (nuevaArma != null) {
+                    boolean armaNueva = player.agregarArmaAlInventario(nuevaArma);
+                    if (armaNueva) {
+                        // Mensaje de éxito
+                        System.out.println("¡Has creado un arma nueva: " + nuevaArma.getNombre() + "!");
+                    }
+                    break;
+                }
+            } catch (Exception e) {
+                System.err.println("Error al crear arma: " + e.getMessage());
+            }
+        }
+    }
+}
 
     public void updateAimFromGamepad(float dirX, float dirY) {
         if (player != null) {

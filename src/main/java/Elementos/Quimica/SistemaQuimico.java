@@ -162,4 +162,20 @@ public class SistemaQuimico {
     public InventarioCompuestos getInventarioCompuestos() {
         return inventarioCompuestos;
     }
+    public boolean puedeCrearArma(String formula) {
+        return recetasArmas.containsKey(formula);
+    }
+    
+    public String getNombreArmaDeFormula(String formula) {
+        Class<? extends Arma> claseArma = recetasArmas.get(formula);
+        if (claseArma == null) return "Desconocida";
+        
+        try {
+            // Intentar obtener el nombre a partir de una instancia temporal
+            Arma armaTemp = claseArma.getConstructor(AdministradorBalas.class).newInstance(new AdministradorBalas());
+            return armaTemp.getNombre();
+        } catch (Exception e) {
+            return claseArma.getSimpleName();
+        }
+    }
 }
