@@ -6,7 +6,15 @@ import java.util.List;
 import java.util.Map;
 
 import Elementos.Arma;
+import Elementos.Armas.ArmaDelta;
+import Elementos.Armas.ArmaEscopeta;
+import Elementos.Armas.ArmaFire;
+import Elementos.Armas.ArmaFrancotirador;
+import Elementos.Armas.ArmaIon;
+import Elementos.Armas.ArmaLaser;
 import Elementos.Armas.ArmaMercurio;
+import Elementos.Armas.ArmaP90;
+import Elementos.Armas.ArmaTerr;
 import Elementos.Administradores.AdministradorBalas;
 
 public class SistemaQuimico {
@@ -58,7 +66,7 @@ public class SistemaQuimico {
         cloruroCesio.agregarElemento("Cl", 1);
         recetasCompuestos.add(cloruroCesio);
 
-        RecetaCompuesto arsenitoSodio = new RecetaCompuesto("Arsenito de sodio", "Na3AsO3");
+        RecetaCompuesto arsenitoSodio = new RecetaCompuesto("Arsenito de sodio", "NaAsO3");
         arsenitoSodio.agregarElemento("Na", 1);
         arsenitoSodio.agregarElemento("As", 1);
         arsenitoSodio.agregarElemento("O", 2);
@@ -77,7 +85,15 @@ public class SistemaQuimico {
     
     private void inicializarRecetasArmas() {
         // Asociar compuestos con armas
-        recetasArmas.put("CuSO4", ArmaMercurio.class);
+        recetasArmas.put("P4O10", ArmaMercurio.class);
+        recetasArmas.put("SO3", ArmaP90.class);
+        recetasArmas.put("BBr3", ArmaTerr.class);
+        recetasArmas.put("AgI", ArmaEscopeta.class);
+        recetasArmas.put("CsCl", ArmaLaser.class);
+        recetasArmas.put("CuSO4",ArmaFire.class);
+        recetasArmas.put("CCl4", ArmaDelta.class);
+        recetasArmas.put("PtCl2", ArmaFrancotirador.class);
+        recetasArmas.put("NaAsO3", ArmaIon.class);
         // Añadir más recetas de armas
     }
     
