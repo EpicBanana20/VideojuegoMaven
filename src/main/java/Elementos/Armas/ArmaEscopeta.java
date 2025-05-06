@@ -54,7 +54,7 @@ public class ArmaEscopeta extends Arma {
                     posicionDisparo[0], 
                     posicionDisparo[1], 
                     anguloDispersion,
-                    LoadSave.BULLET_MACHINEGUN, // Usar sprite temporal
+                    LoadSave.BULLET_ESCOPETA, // Usar sprite temporal
                     3, // Menos daño por perdigón
                     3.5f, // Velocidad alta
                     "fuego"
