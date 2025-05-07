@@ -47,8 +47,8 @@ public class ArmaMercurio extends Arma {
             Bala nuevaBala = new Bala(
                 posicionDisparo[0], 
                 posicionDisparo[1], 
-                rotacion, LoadSave.BULLET_BOSS1,
-                15,
+                rotacion, LoadSave.BULLET_MERCURIO,
+                10,
                 2.0f
             );
             

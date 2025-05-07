@@ -34,50 +34,50 @@ public class SistemaQuimico {
     }
     
     private void inicializarRecetasCompuestos() {
-        RecetaCompuesto decaoxidoTetrafosforo = new RecetaCompuesto("Decaoxido de tetrafósforo", "1");//P4O10
+        RecetaCompuesto decaoxidoTetrafosforo = new RecetaCompuesto("Decaoxido de tetrafósforo", "P4O10");
         decaoxidoTetrafosforo.agregarElemento("P", 4);
         decaoxidoTetrafosforo.agregarElemento("O", 10);
         recetasCompuestos.add(decaoxidoTetrafosforo);
         
 
-        RecetaCompuesto trioxidoAzufre = new RecetaCompuesto("Trióxido de azufre", "2");//SO3
-        trioxidoAzufre.agregarElemento("S", 0);
-        trioxidoAzufre.agregarElemento("O", 0);
+        RecetaCompuesto trioxidoAzufre = new RecetaCompuesto("Trióxido de azufre", "SO3");
+        trioxidoAzufre.agregarElemento("S", 1);
+        trioxidoAzufre.agregarElemento("O", 3);
         recetasCompuestos.add(trioxidoAzufre);
 
-        RecetaCompuesto tribromuroBoro = new RecetaCompuesto("Tribromuro de boro", "3");//BBr3
+        RecetaCompuesto tribromuroBoro = new RecetaCompuesto("Tribromuro de boro", "BBr3");
         tribromuroBoro.agregarElemento("B", 1);
         tribromuroBoro.agregarElemento("Br", 3);
         recetasCompuestos.add(tribromuroBoro);
 
-        RecetaCompuesto yoduroPlata = new RecetaCompuesto("Yoduro de plata", "4");//AgI
+        RecetaCompuesto yoduroPlata = new RecetaCompuesto("Yoduro de plata", "AgI");
         yoduroPlata.agregarElemento("Ag", 1);
         yoduroPlata.agregarElemento("I", 1);
         recetasCompuestos.add(yoduroPlata);
 
-        RecetaCompuesto sulfatoCobreIII = new RecetaCompuesto("Sulfato de cobre(III)", "5");//CuSO4
-        sulfatoCobreIII.agregarElemento("Cu", 1);//1
-        sulfatoCobreIII.agregarElemento("S", 1);//1
-        sulfatoCobreIII.agregarElemento("O", 4);//4
+        RecetaCompuesto sulfatoCobreIII = new RecetaCompuesto("Sulfato de cobre(III)", "CuSO4");
+        sulfatoCobreIII.agregarElemento("Cu", 1);
+        sulfatoCobreIII.agregarElemento("S", 1);
+        sulfatoCobreIII.agregarElemento("O", 4);
         recetasCompuestos.add(sulfatoCobreIII);
 
-        RecetaCompuesto cloruroCesio = new RecetaCompuesto("Cloruro de cesio", "6");//CsCl
+        RecetaCompuesto cloruroCesio = new RecetaCompuesto("Cloruro de cesio", "CsCl");
         cloruroCesio.agregarElemento("Cs", 1);
         cloruroCesio.agregarElemento("Cl", 1);
         recetasCompuestos.add(cloruroCesio);
 
-        RecetaCompuesto arsenitoSodio = new RecetaCompuesto("Arsenito de sodio", "7");//NaAsO3
+        RecetaCompuesto arsenitoSodio = new RecetaCompuesto("Arsenito de sodio", "NaAsO3");
         arsenitoSodio.agregarElemento("Na", 1);
         arsenitoSodio.agregarElemento("As", 1);
         arsenitoSodio.agregarElemento("O", 2);
         recetasCompuestos.add(arsenitoSodio);
 
-        RecetaCompuesto cloruroPlatinoII = new RecetaCompuesto("Cloruro de platino(II)", "8");//PtCl2
+        RecetaCompuesto cloruroPlatinoII = new RecetaCompuesto("Cloruro de platino(II)", "PtCl2");
         cloruroPlatinoII.agregarElemento("Pt", 1);
         cloruroPlatinoII.agregarElemento("Cl", 2);
         recetasCompuestos.add(cloruroPlatinoII);
 
-        RecetaCompuesto tetacloruroCarbono = new RecetaCompuesto("Tetacloruro de carbono", "9");//CCl4
+        RecetaCompuesto tetacloruroCarbono = new RecetaCompuesto("Tetacloruro de carbono", "CCl4");
         tetacloruroCarbono.agregarElemento("C", 1);
         tetacloruroCarbono.agregarElemento("Cl", 4);
         recetasCompuestos.add(tetacloruroCarbono);
@@ -85,15 +85,15 @@ public class SistemaQuimico {
     
     private void inicializarRecetasArmas() {
         // Asociar compuestos con armas
-        recetasArmas.put("1", ArmaMercurio.class);
-        recetasArmas.put("2", ArmaP90.class);
-        recetasArmas.put("3", ArmaTerr.class);
-        recetasArmas.put("4", ArmaEscopeta.class);
-        recetasArmas.put("5", ArmaLaser.class);
-        recetasArmas.put("6",ArmaFire.class);
-        recetasArmas.put("7", ArmaDelta.class);
-        recetasArmas.put("8", ArmaFrancotirador.class);
-        recetasArmas.put("9", ArmaIon.class);
+        recetasArmas.put("P4O10", ArmaMercurio.class);
+        recetasArmas.put("SO3", ArmaP90.class);
+        recetasArmas.put("BBr3", ArmaTerr.class);
+        recetasArmas.put("AgI", ArmaEscopeta.class);
+        recetasArmas.put("CsCl", ArmaLaser.class);
+        recetasArmas.put("CuSO4",ArmaFire.class);
+        recetasArmas.put("CCl4", ArmaDelta.class);
+        recetasArmas.put("PtCl2", ArmaFrancotirador.class);
+        recetasArmas.put("NaAsO3", ArmaIon.class);
         // Añadir más recetas de armas
     }
     
