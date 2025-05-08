@@ -48,7 +48,7 @@ public class ArmaMercurio extends Arma {
                 posicionDisparo[0], 
                 posicionDisparo[1], 
                 rotacion, LoadSave.BULLET_MERCURIO,
-                10,
+                20,
                 2.0f
             );
             

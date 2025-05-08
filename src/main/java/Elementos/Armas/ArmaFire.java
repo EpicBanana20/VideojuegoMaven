@@ -58,7 +58,7 @@ public class ArmaFire extends Arma {
                 posicionDisparo[1], 
                 rotacion, 
                 LoadSave.BULLET_FIRE,
-                4,
+                10,
                 2.2f,
                 tipoDaño,
                 factorCrecimientoInicial,

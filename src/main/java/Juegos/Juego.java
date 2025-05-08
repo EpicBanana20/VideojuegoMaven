@@ -96,6 +96,7 @@ public class Juego {
         jugadorActual = player;
         hudQuimico = new HUDQuimico(player.getSistemaQuimico());
         player.loadLvlData(levelMan.getCurrentLevel().getLvlData());
+        
 
         camera = new Camera(GAME_WIDTH, GAME_HEIGHT, NIVEL_ACTUAL_ANCHO, NIVEL_ACTUAL_ALTO);
         background = new Background(levelMan.getCurrentLevelIndex());

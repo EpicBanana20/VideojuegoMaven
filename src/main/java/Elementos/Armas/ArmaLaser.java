@@ -13,8 +13,8 @@ import java.awt.BasicStroke;
 
 public class ArmaLaser extends Arma {
     private boolean disparando = false;
-    private float energiaActual = 1000f;
-    private float energiaMaxima = 1000f;
+    private float energiaActual = 1500f;
+    private float energiaMaxima = 1500f;
     private float consumoEnergia = 1.0f; // Consumo por frame
     private float recargaEnergia = 0.4f; // Recarga por frame
     

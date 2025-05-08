@@ -5,9 +5,9 @@ import Utilz.LoadSave;
 
 public class Personaje {
     public enum TipoPersonaje {
-        ECLIPSA("Eclipsa (Mujer Loba)", LoadSave.PLAYER_ATLAS, 100f, 3.5f),
-        HALAN("Dr. Halan (Científico)", LoadSave.PLAYER_ATLAS_HALAN, 150f, 3f),
-        VALTHOR("Valthor (Caballero)", LoadSave.PLAYER_ATLAS_VALTHOR, 200f, 2f);
+        ECLIPSA("Eclipsa (Mujer Loba)", LoadSave.PLAYER_ATLAS, 300f, 2.5f),
+        HALAN("Dr. Halan (Científico)", LoadSave.PLAYER_ATLAS_HALAN, 300f, 2f),
+        VALTHOR("Valthor (Caballero)", LoadSave.PLAYER_ATLAS_VALTHOR, 400f, 2f);
         
         private final String nombre;
         private final String spriteAtlas;
