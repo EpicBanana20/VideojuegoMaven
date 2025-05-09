@@ -10,6 +10,7 @@ import Elementos.Enemigo;
 import Elementos.Jugador;
 import Elementos.Personaje;
 import Elementos.Administradores.AdministradorEnemigos;
+import Elementos.Audio.AudioManager;
 import Elementos.Decoraciones.Decoracion;
 import Elementos.Decoraciones.EstacionQuimica;
 import Elementos.Decoraciones.Portal;
@@ -68,6 +69,7 @@ public class Juego {
     private MenuPausa menuPausa;
     private MenuMuerte menuMuerte;
     private SelectorPersonajes selectorPersonajes;
+    private AudioManager audioManager;
     public static Juego INSTANCIA_ACTUAL;
 
     public Juego() {
@@ -80,7 +82,27 @@ public class Juego {
         gameLoop.start();
         eg = new EventoGamepad(pan);
         INSTANCIA_ACTUAL = this;
+        audioManager = AudioManager.getInstance();
+        cargarAudios();
     }
+    private void cargarAudios() {
+    // Cargar música
+    audioManager.loadMusic("menu", "recursos/audio/sonido/musica/MENUSONG.wav");
+    audioManager.loadMusic("world1", "recursos/audio/sonido/musica/AMBIENTE-1.wav");
+    audioManager.loadMusic("world2", "recursos/audio/sonido/musica/AMBIENTE-2.wav");
+    audioManager.loadMusic("world3", "recursos/audio/sonido/musica/AMBIENTE-3.wav");
+    
+    // Cargar efectos de sonido
+    audioManager.loadSoundEffect("jump", "audio/efectos/jump.wav");
+    audioManager.loadSoundEffect("shoot", "audio/efectos/shoot.wav");
+    audioManager.loadSoundEffect("hit", "audio/efectos/hit.wav");
+    audioManager.loadSoundEffect("death", "audio/efectos/death.wav");
+    audioManager.loadSoundEffect("select", "audio/efectos/select.wav");
+    audioManager.loadSoundEffect("confirm", "audio/efectos/confirm.wav");
+    
+    // Reproducir música inicial según el estado
+    audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());
+}
 
     private void inicializar() {
         levelMan = new LevelManager(this);
@@ -300,17 +322,23 @@ public class Juego {
                 break;
         }
     }
+    
 
     // Método para iniciar un cambio de nivel
     public void cambiarNivel(int nivelIndex) {
-        if (nivelIndex >= 0 && nivelIndex < levelMan.getTotalLevels()) {
-            cambiandoNivel = true;
-            nivelDestino = nivelIndex;
-
-            // Desactivar controles del jugador durante la transición
-            player.resetDirBooleans();
+    if (nivelIndex >= 0 && nivelIndex < levelMan.getTotalLevels()) {
+        cambiandoNivel = true;
+        nivelDestino = nivelIndex;
+        
+        // Desactivar controles del jugador durante la transición
+        player.resetDirBooleans();
+        
+        // Reproducir música del nuevo nivel
+        if (estadoJuego == EstadoJuego.PLAYING && audioManager != null) {
+            audioManager.updateGameState(estadoJuego, nivelIndex);
         }
     }
+}
 
     // Cambiar al siguiente nivel
     public void siguienteNivel() {
@@ -488,6 +516,7 @@ public class Juego {
                 || this.estadoJuego == EstadoJuego.PAUSA)
                 && estadoJuego == EstadoJuego.MENU) {
             necesitaReinicio = true;
+            
         }
 
         // Si iniciamos un nuevo juego desde el menú, asegurar que esté reiniciado
@@ -498,7 +527,11 @@ public class Juego {
         }
 
         this.estadoJuego = estadoJuego;
+        if (audioManager != null) {
+        audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());
     }
+}
+    
 
     public void crearPortalEnPosicion(float x, float y) {
         Portal portal = new Portal(x, y);
@@ -528,6 +561,13 @@ public void verificarJefesDerrotados() {
             enemigo.setPortalCreado(true);
         }
     }
+}
+
+public void cleanup() {
+    // Si existe un gestor de audio, limpiarlo
+    if (audioManager != null) {
+        audioManager.cleanup();
+    } 
 }
 
     public Menu getMenu() {
