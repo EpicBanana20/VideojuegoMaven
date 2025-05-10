@@ -35,7 +35,6 @@ public class ArmaLaser extends Arma {
     
     @Override
     public void disparar() {
-        AudioManager.getInstance().playSoundEffect("laser");
         intentandoDisparar = true;
         if (energiaActual > 0) {
             disparando = true;
