@@ -294,6 +294,11 @@ public class Jugador extends Cascaron {
         // Solo añadir el arma básica (Eclipse)
         inventarioArmas.add(new Elementos.Armas.Eclipse(adminBalasCentral));
 
+        inventarioArmas.add(new Elementos.Armas.ArmaDelta(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaIon(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaFrancotirador(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaLaser(adminBalasCentral));
+
         // Inicializar espada boomerang (para habilidad especial)
         espadaBoomerang = new Elementos.Armas.ArmaEspadaBoomerang(adminBalasCentral);
         AudioManager.getInstance().playSoundEffect("personaje");
