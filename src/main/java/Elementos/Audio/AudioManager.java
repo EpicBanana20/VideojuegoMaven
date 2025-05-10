@@ -15,7 +15,7 @@ public class AudioManager {
     private Map<String, Music> musicTracks = new HashMap<>();
     private Map<String, SoundEffect> soundEffects = new HashMap<>();
     
-    private float musicVolume = 0.05f;
+    private float musicVolume = 0.1f;
     private float sfxVolume = 0.05f;
     
     private Map<EstadoJuego, String> gameStateMusicMap = new HashMap<>();

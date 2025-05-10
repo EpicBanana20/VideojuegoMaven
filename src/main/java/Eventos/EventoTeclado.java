@@ -90,8 +90,9 @@ public class EventoTeclado implements KeyListener {
                 pan.getGame().getPlayer().setHacerDodgeRoll(false);
                 break;
         }
-        if (e.getKeyCode() >= KeyEvent.VK_1 && e.getKeyCode() <= KeyEvent.VK_5 || 
+        if (e.getKeyCode() >= KeyEvent.VK_1 && e.getKeyCode() <= KeyEvent.VK_9 || 
             e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                System.out.println(e.getKeyCode());
             pan.getGame().procesarTeclaEstacionQuimica(e.getKeyCode());
         }
     }

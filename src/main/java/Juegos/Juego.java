@@ -102,6 +102,7 @@ public class Juego {
     audioManager.loadSoundEffect("shootfranco", "recursos/audio/sonido/musica/FRANCOTIRADOR.wav");
     audioManager.loadSoundEffect("laser", "recursos/audio/sonido/musica/LASER.wav");
     audioManager.loadSoundEffect("hit", "recursos/audio/sonido/musica/HIT-PLAYER.wav");
+    audioManager.loadSoundEffect("pause", "recursos/audio/sonido/musica/MENUSONG.wav");
     audioManager.loadSoundEffect("death", "recursos/audio/sonido/musica/DEATH.wav");
     audioManager.loadSoundEffect("select", "recursos/audio/sonido/musica/SELECT.wav");
     audioManager.loadSoundEffect("confirm", "recursos/audio/sonido/musica/CONFIRM.wav");

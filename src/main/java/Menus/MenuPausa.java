@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
+import Elementos.Audio.AudioManager;
 import Juegos.EstadoJuego;
 import Juegos.Juego;
 import Utilz.LoadSave;
@@ -33,8 +34,10 @@ public class MenuPausa {
     private int botonSeleccionadoIndex = 0;
 
     private BufferedImage pausaImg;
+    
 
     public MenuPausa(Juego juego) {
+        
         this.juego = juego;
         cargarImagenes();
         cargarBotones();
@@ -111,6 +114,7 @@ public class MenuPausa {
             if (e == null && i == botonSeleccionadoIndex || 
                 e != null && estaDentroBoton(e, botones[i])) {
                 if (botones[i].isMousePressed()) {
+                    AudioManager.getInstance().playSoundEffect("confirm");
                     // Acciones según el botón presionado
                     switch (i) {
                         case BOTON_REINTENTAR:
@@ -133,16 +137,19 @@ public class MenuPausa {
     }
 
     public void mouseMoved(MouseEvent e) {
-        for (Boton b : botones)
-            b.setMouseOver(false);
-
-        for (Boton b : botones) {
-            if (estaDentroBoton(e, b)) {
-                b.setMouseOver(true);
-                break;
+    for (int i = 0; i < botones.length; i++) {
+        boolean wasHighlighted = botones[i].isMouseOver();
+        botones[i].setMouseOver(false);
+        
+        if (estaDentroBoton(e, botones[i])) {
+            botones[i].setMouseOver(true);
+            // Si el botón no estaba resaltado antes, reproducir sonido
+            if (!wasHighlighted) {
+                AudioManager.getInstance().playSoundEffect("select");
             }
         }
     }
+}
 
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
