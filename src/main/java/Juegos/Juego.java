@@ -98,6 +98,7 @@ public class Juego {
     
     // Cargar efectos de sonido
     audioManager.loadSoundEffect("jump", "recursos/audio/sonido/musica/JUMP.wav");
+    audioManager.loadSoundEffect("bulletenemy", "recursos/audio/sonido/musica/BULLETENEMY.wav");
     audioManager.loadSoundEffect("shoot", "recursos/audio/sonido/musica/BULLET.wav");
     audioManager.loadSoundEffect("shootfranco", "recursos/audio/sonido/musica/FRANCOTIRADOR.wav");
     audioManager.loadSoundEffect("laser", "recursos/audio/sonido/musica/LASER.wav");

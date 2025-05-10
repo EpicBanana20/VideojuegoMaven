@@ -34,13 +34,15 @@ public class EnemigoVerde extends Enemigo {
     
     @Override
     protected void determinarAnimacion() {
+        
         // Si la animación actual es HERIDO y no ha terminado, no cambiar
         if (animaciones.getAccionActual() == HERIDO && !animaciones.esUltimoFrame()) {
             return;
+            
         }
         
         // De lo contrario, determinar animación basada en el estado
-        int nuevaAnimacion = INACTIVO; // Por defecto, estamos inactivos
+        int nuevaAnimacion = INACTIVO; // Por defecto, estamos inactivos}
         
         if (enAire) {
             // Si tuviéramos una animación de salto/caída, la usaríamos aquí
@@ -114,5 +116,6 @@ public class EnemigoVerde extends Enemigo {
 
     @Override
     protected void disparar(float angulo) {}
+    
     
 }
