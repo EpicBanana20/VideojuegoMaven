@@ -2,7 +2,6 @@ package Elementos.Audio;
 
 import java.io.IOException;
 import javax.sound.sampled.*;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,24 +9,16 @@ import Juegos.EstadoJuego;
 
 public class AudioManager {
     
-    // Singleton para acceso global
     private static AudioManager instance;
     
-    // Música actual reproduciéndose
     private Music currentMusic;
-    
-    // Mapas para almacenar música y efectos de sonido
     private Map<String, Music> musicTracks = new HashMap<>();
     private Map<String, SoundEffect> soundEffects = new HashMap<>();
     
-    // Controles de volumen (0.0 a 1.0)
-    private float musicVolume = 0.5f;
-    private float sfxVolume = 0.7f;
+    private float musicVolume = 0.05f;
+    private float sfxVolume = 0.05f;
     
-    // Mapa para asociar estados del juego con pistas de música
     private Map<EstadoJuego, String> gameStateMusicMap = new HashMap<>();
-    
-    // Mapa para asociar niveles con pistas de música
     private Map<Integer, String> levelMusicMap = new HashMap<>();
     
     private boolean musicEnabled = true;
@@ -38,11 +29,8 @@ public class AudioManager {
     }
     
     private void initializeMusicMappings() {
-        // Mapeo de estados del juego a pistas de música
         gameStateMusicMap.put(EstadoJuego.MENU, "menu");
-        gameStateMusicMap.put(EstadoJuego.SELECCION_PERSONAJE, "menu");
-        
-        // Mapeo de niveles a pistas de música
+
         levelMusicMap.put(0, "world1");
         levelMusicMap.put(1, "world2");
         levelMusicMap.put(2, "world3");
@@ -77,16 +65,20 @@ public class AudioManager {
     
     public void playMusic(String id) {
         if (!musicEnabled) return;
-        
-        // Detener la música actual si hay alguna
-        stopMusic();
-        
+
+        System.out.println(">>> Cambiando música a: " + id); // para depuración
+
+        // Detener la música actual si existe
+        if (currentMusic != null) {
+            currentMusic.stop();  // Esto asegura que la anterior se detenga
+            currentMusic.cleanup();  // Cierra completamente el clip anterior
+        }
+
         Music music = musicTracks.get(id);
         if (music != null) {
             currentMusic = music;
-            music.setVolume(musicVolume);
-            music.play();
-            System.out.println("Reproduciendo música: " + id);
+            currentMusic.setVolume(musicVolume);
+            currentMusic.play();
         } else {
             System.err.println("Música no encontrada: " + id);
         }
@@ -94,7 +86,7 @@ public class AudioManager {
     
     public void playSoundEffect(String id) {
         if (!soundEnabled) return;
-        
+
         SoundEffect sound = soundEffects.get(id);
         if (sound != null) {
             sound.setVolume(sfxVolume);
@@ -122,25 +114,20 @@ public class AudioManager {
             currentMusic.resume();
         }
     }
-    
+
     public void updateGameState(EstadoJuego state, int currentLevel) {
-        // Si es PLAYING, usar la música del nivel actual
         if (state == EstadoJuego.PLAYING) {
             String musicId = levelMusicMap.get(currentLevel);
             if (musicId != null) {
                 playMusic(musicId);
             }
-        } 
-        // Para otros estados, usar la música asociada al estado
-        else {
+        } else {
             String musicId = gameStateMusicMap.get(state);
             if (musicId != null) {
                 playMusic(musicId);
             } else if (state == EstadoJuego.PAUSA) {
-                // En pausa, simplemente pausar la música actual
                 pauseMusic();
             } else if (state == EstadoJuego.MUERTE) {
-                // Posiblemente efecto de sonido de muerte y pausar música
                 playSoundEffect("death");
                 pauseMusic();
             }
@@ -162,9 +149,6 @@ public class AudioManager {
         this.musicEnabled = enabled;
         if (!enabled) {
             stopMusic();
-        } else {
-            // Reanudar la música del estado actual si está disponible
-            // (Esto requeriría acceso al estado actual del juego)
         }
     }
     
@@ -174,15 +158,12 @@ public class AudioManager {
     
     public void cleanup() {
         stopMusic();
-        
-        // Liberar recursos
         for (Music music : musicTracks.values()) {
             music.cleanup();
         }
         for (SoundEffect sound : soundEffects.values()) {
             sound.cleanup();
         }
-        
         musicTracks.clear();
         soundEffects.clear();
     }

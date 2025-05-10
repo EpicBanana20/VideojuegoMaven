@@ -5,6 +5,7 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 import Elementos.Personaje;
+import Elementos.Audio.AudioManager;
 import Juegos.EstadoJuego;
 import Juegos.Juego;
 import Utilz.LoadSave;
@@ -61,6 +62,7 @@ public class SelectorPersonajes {
                 } else if (posicionActualY >= alturaTotal * TOTAL_PERSONAJES) {
                     posicionActualY = 0;
                     posicionObjetivoY = 0;
+                    AudioManager.getInstance().playSoundEffect("confirm");
                 }
             } else {
                 posicionActualY += diferencia * velocidadTransicion / 100f;
@@ -94,14 +96,18 @@ public class SelectorPersonajes {
         
         switch(e.getKeyCode()) {
             case KeyEvent.VK_W:
+            AudioManager.getInstance().playSoundEffect("select");
                 seleccionarAnterior();
                 break;
                 
             case KeyEvent.VK_S:
+            AudioManager.getInstance().playSoundEffect("select");
                 seleccionarSiguiente();
                 break;
             case KeyEvent.VK_ENTER:
             case KeyEvent.VK_SPACE:
+            AudioManager.getInstance().playSoundEffect("personaje");
+
                 iniciarJuegoConPersonaje();
                 break;
                 

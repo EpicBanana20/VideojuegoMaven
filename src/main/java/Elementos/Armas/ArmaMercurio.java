@@ -3,6 +3,7 @@ package Elementos.Armas;
 import Elementos.Arma;
 import Elementos.Bala;
 import Elementos.Administradores.AdministradorBalas;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Elementos.AimController;
@@ -31,6 +32,7 @@ public class ArmaMercurio extends Arma {
     public void disparar() {
         // Verificar si podemos disparar (no en cooldown Y tenemos munición)
         if(contadorRecarga <= 0 && municionActual > 0 && !recargando) {
+            AudioManager.getInstance().playSoundEffect("shoot");
             
             // Calcular la posición exacta del origen de la bala
             float[] posicionDisparo = new float[2];

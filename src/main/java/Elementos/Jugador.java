@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import Elementos.Administradores.AdministradorBalas;
 import Elementos.Armas.ArmaEspadaBoomerang;
+import Elementos.Audio.AudioManager;
 import Elementos.Quimica.SistemaQuimico;
 import Juegos.Juego;
 import Utilz.LoadSave;
@@ -296,8 +297,17 @@ public class Jugador extends Cascaron {
         inventarioArmas.add(new Elementos.Armas.ArmaFrancotirador(adminBalasCentral));
         inventarioArmas.add(new Elementos.Armas.ArmaIon(adminBalasCentral));
 
+        inventarioArmas.add(new Elementos.Armas.ArmaTerr(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaP90(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaMercurio(adminBalasCentral));
+        
+        inventarioArmas.add(new Elementos.Armas.ArmaLaser(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaEscopeta(adminBalasCentral));
+        inventarioArmas.add(new Elementos.Armas.ArmaFire(adminBalasCentral));
+
         // Inicializar espada boomerang (para habilidad especial)
         espadaBoomerang = new Elementos.Armas.ArmaEspadaBoomerang(adminBalasCentral);
+        AudioManager.getInstance().playSoundEffect("personaje");
 
         if (!inventarioArmas.isEmpty()) {
             indiceArmaActual = 0;
@@ -506,11 +516,14 @@ public class Jugador extends Cascaron {
     }
 
     private void jump() {
-        if (inAir)
-            return;
-        inAir = true;
-        airSpeed = jumpSpeed;
-    }
+    if (inAir)
+        return;
+    inAir = true;
+    airSpeed = jumpSpeed;
+    
+    // Reproducir efecto de sonido
+    AudioManager.getInstance().playSoundEffect("jump");
+}
 
     private void iniciarDodgeRoll() {
         if (dodgeCooldown > 0)
@@ -569,25 +582,30 @@ public class Jugador extends Cascaron {
             animaciones.setAnimVelocidad(30); // Ajusta este valor según necesites
         }
     }
+public void recibirDaño(float cantidad) {
+    if (invulnerable || muerto || dodgeInvulnerabilidad)
+        return;
 
-    public void recibirDaño(float cantidad) {
-        if (invulnerable || muerto || dodgeInvulnerabilidad)
-            return;
+    vidaActual -= cantidad;
+    invulnerable = true;
+    invulnerabilidadTimer = INVULNERABILIDAD_DURACION;
+    
+    // Reproducir efecto de sonido
+    AudioManager.getInstance().playSoundEffect("hit");
 
-        vidaActual -= cantidad;
-        invulnerable = true;
-        invulnerabilidadTimer = INVULNERABILIDAD_DURACION;
-
-        if (vidaActual <= 0) {
-            vidaActual = 0;
-            morir();
-        }
+    if (vidaActual <= 0) {
+        vidaActual = 0;
+        morir();
     }
+}
 
-    private void morir() {
-        muerto = true;
-        resetDirBooleans();
-    }
+   private void morir() {
+    muerto = true;
+    resetDirBooleans();
+    
+    // Reproducir efecto de sonido
+    AudioManager.getInstance().playSoundEffect("death");
+}
 
     // GETTERS Y SETTERS
     public void setMoving(boolean moving) {

@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import Elementos.Enemigo;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Utilz.Animaciones;
@@ -14,7 +15,7 @@ public class BOSS3 extends Enemigo {
     // Constantes específicas
     private static final int ANCHO_DEFAULT = 246;
     private static final int ALTO_DEFAULT = 190;
-    private static final int VIDA_DEFAULT = 800;
+    private static final int VIDA_DEFAULT = 1600000;
     
     // Estados del jefe
     private static final int FASE_NORMAL = 0;
@@ -60,7 +61,7 @@ public class BOSS3 extends Enemigo {
         // Inicializar propiedades - sin movimiento
         inicializarEnemigo(50, 50, 146, 140, false, false);
         this.patrullando = false; // No patrulla
-        this.rangoDeteccionJugador = 2000 * Juego.SCALE; // Rango muy amplio
+        this.rangoDeteccionJugador = 300 * Juego.SCALE; // Rango muy amplio
         
         // Cargar sprites de explosión
         cargarSpritesExplosion();
@@ -141,6 +142,7 @@ public class BOSS3 extends Enemigo {
             if (distance <= activationRange) {
                 activated = true;
                 System.out.println("¡BOSS3 ha sido activado!");
+                AudioManager.getInstance().playMusic("boss3");
             } else {
                 // If not activated yet, don't update any boss behaviors
                 return;

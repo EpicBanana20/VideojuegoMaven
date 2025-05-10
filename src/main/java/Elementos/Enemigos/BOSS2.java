@@ -11,6 +11,7 @@ import Utilz.LoadSave;
 import Utilz.MetodoAyuda;
 import Utilz.Animaciones;
 import Elementos.Administradores.AdministradorEnemigos;
+import Elementos.Audio.AudioManager;
 
 // Zefir, el jefe del segundo nivel (FANTASMA)
 // Basado en Cesio (Cs) kriptón (Kr) Fosforo (P32)
@@ -101,6 +102,7 @@ public class BOSS2 extends Enemigo {
             if (puedeVerJugador(Juego.jugadorActual)) {
                 activado = true;
                 System.out.println("¡Zefir ha sido despertado!");
+                AudioManager.getInstance().playMusic("boss2");
             } else {
                 // Si aún no está activado, solo actualizar animación básica
                 if (animaciones != null) {

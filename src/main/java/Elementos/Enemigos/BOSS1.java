@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import Elementos.Bala;
 import Elementos.Enemigo;
 import Elementos.Jugador;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Utilz.MetodoAyuda;

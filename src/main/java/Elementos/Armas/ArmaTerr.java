@@ -3,6 +3,7 @@ package Elementos.Armas;
 import Elementos.Arma;
 import Elementos.Bala;
 import Elementos.Administradores.AdministradorBalas;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Elementos.AimController;
@@ -38,6 +39,7 @@ public class ArmaTerr extends Arma {
         // Verificar si podemos disparar (no en cooldown Y tenemos munición)
         if(contadorRecarga <= 0 && municionActual > 0 && !recargando) {
             System.out.println("¡Disparando ametralladora! Munición restante: " + (municionActual-1));
+            AudioManager.getInstance().playSoundEffect("shoot");
             
             // Calcular la posición exacta del origen de la bala
             float[] posicionDisparo = new float[2];

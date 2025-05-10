@@ -3,6 +3,7 @@ package Elementos.Armas;
 import Elementos.Arma;
 import Elementos.Bala;
 import Elementos.Administradores.AdministradorBalas;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Elementos.AimController;
@@ -33,6 +34,7 @@ public class ArmaEscopeta extends Arma {
     @Override
     public void disparar() {
         if (contadorRecarga <= 0 && municionActual > 0 && !recargando) {
+            AudioManager.getInstance().playSoundEffect("shoot");
             // Calcular posición base del disparo
             float[] posicionDisparo = new float[2];
             float distanciaCañon = 20 * Juego.SCALE;

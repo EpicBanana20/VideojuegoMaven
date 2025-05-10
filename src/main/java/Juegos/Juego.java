@@ -92,13 +92,23 @@ public class Juego {
     audioManager.loadMusic("world2", "recursos/audio/sonido/musica/AMBIENTE-2.wav");
     audioManager.loadMusic("world3", "recursos/audio/sonido/musica/AMBIENTE-3.wav");
     
+    audioManager.loadMusic("boss1", "recursos/audio/sonido/musica/BOSS-1.wav");
+    audioManager.loadMusic("boss2", "recursos/audio/sonido/musica/BOSS-2.wav");
+    audioManager.loadMusic("boss3", "recursos/audio/sonido/musica/BOSS-3.wav");
+    
     // Cargar efectos de sonido
-    audioManager.loadSoundEffect("jump", "audio/efectos/jump.wav");
-    audioManager.loadSoundEffect("shoot", "audio/efectos/shoot.wav");
-    audioManager.loadSoundEffect("hit", "audio/efectos/hit.wav");
-    audioManager.loadSoundEffect("death", "audio/efectos/death.wav");
-    audioManager.loadSoundEffect("select", "audio/efectos/select.wav");
-    audioManager.loadSoundEffect("confirm", "audio/efectos/confirm.wav");
+    audioManager.loadSoundEffect("jump", "recursos/audio/sonido/musica/JUMP.wav");
+    audioManager.loadSoundEffect("shoot", "recursos/audio/sonido/musica/BULLET.wav");
+    audioManager.loadSoundEffect("shootfranco", "recursos/audio/sonido/musica/FRANCOTIRADOR.wav");
+    audioManager.loadSoundEffect("laser", "recursos/audio/sonido/musica/LASER.wav");
+    audioManager.loadSoundEffect("hit", "recursos/audio/sonido/musica/HIT-PLAYER.wav");
+    audioManager.loadSoundEffect("death", "recursos/audio/sonido/musica/DEATH.wav");
+    audioManager.loadSoundEffect("select", "recursos/audio/sonido/musica/SELECT.wav");
+    audioManager.loadSoundEffect("confirm", "recursos/audio/sonido/musica/CONFIRM.wav");
+    audioManager.loadSoundEffect("hitenemy", "recursos/audio/sonido/musica/HIT-ENEMY.wav");
+    audioManager.loadSoundEffect("dash", "recursos/audio/sonido/musica/DASH.wav");
+    audioManager.loadSoundEffect("ultimate", "recursos/audio/sonido/musica/.wav");
+    audioManager.loadSoundEffect("personaje", "recursos/audio/sonido/musica/PERSONAJE.wav");
     
     // Reproducir música inicial según el estado
     audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());

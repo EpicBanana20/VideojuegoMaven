@@ -3,6 +3,7 @@ package Elementos.Armas;
 import Elementos.Arma;
 import Elementos.Enemigo;
 import Elementos.Administradores.AdministradorBalas;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Elementos.AimController;
 import java.awt.Graphics;
@@ -34,6 +35,7 @@ public class ArmaLaser extends Arma {
     
     @Override
     public void disparar() {
+        AudioManager.getInstance().playSoundEffect("laser");
         intentandoDisparar = true;
         if (energiaActual > 0) {
             disparando = true;

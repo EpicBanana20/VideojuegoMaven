@@ -3,6 +3,7 @@ package Elementos.Armas;
 import Elementos.Arma;
 import Elementos.Bala;
 import Elementos.Administradores.AdministradorBalas;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Elementos.AimController;
@@ -16,7 +17,7 @@ public class ArmaFrancotirador extends Arma {
     private int armaCooldown;
     private static final int FRAMES_POR_SEGUNDO = 60;
     private int contadorRecarga = 0;
-    private float cadenciaDisparo = 0.3f;
+    private float cadenciaDisparo = 0.1f;
     
     public ArmaFrancotirador(AdministradorBalas adminBalas) {
         super("armas/francotirador.png", 35 * Juego.SCALE, 2.0f, adminBalas);
@@ -30,6 +31,7 @@ public class ArmaFrancotirador extends Arma {
             // Calcular posición del disparo
             float[] posicionDisparo = new float[2];
             float distanciaCañon = 30 * Juego.SCALE;
+            AudioManager.getInstance().playSoundEffect("shootfranco");
             
             AimController.getPositionAtDistance(
                 x, y,
@@ -44,7 +46,7 @@ public class ArmaFrancotirador extends Arma {
                 posicionDisparo[1], 
                 rotacion,
                 LoadSave.BULLET_MACHINEGUN, // Usar sprite temporal
-                200, // Alto daño
+                1000, // Alto daño
                 10.0f // Alta velocidad
             );
             
