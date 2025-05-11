@@ -96,13 +96,21 @@ public class EstacionQuimica extends Decoracion {
 
     public void interactuar() {
         if (jugadorCerca) {
-            estacionAbierta = !estacionAbierta;
+        // Asegurarse de que sistemaQuimico esté actualizado al momento de interactuar
+        if (Juego.jugadorActual != null && Juego.jugadorActual.getSistemaQuimico() != null) {
+            sistemaQuimico = Juego.jugadorActual.getSistemaQuimico();
         }
+        estacionAbierta = !estacionAbierta;
+    }
     }
 
     public boolean procesarTecla(int keyCode) {
         if (!estacionAbierta)
             return false;
+
+        if (sistemaQuimico == null && Juego.jugadorActual != null) {
+        sistemaQuimico = Juego.jugadorActual.getSistemaQuimico();
+    }
 
         boolean compuestoCreado = false;
 
