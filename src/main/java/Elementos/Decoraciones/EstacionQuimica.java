@@ -120,7 +120,9 @@ public class EstacionQuimica extends Decoracion {
             List<RecetaCompuesto> recetas = sistemaQuimico.getRecetasDisponibles();
             if (index < recetas.size()) {
                 String formula = recetas.get(index).getFormula();
+                System.out.println(formula);
                 compuestoCreado = sistemaQuimico.crearCompuesto(formula);
+                System.out.println(compuestoCreado);
             }
         }
 

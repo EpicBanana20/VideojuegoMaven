@@ -55,16 +55,16 @@ public class SistemaQuimico {
         yoduroPlata.agregarElemento("I", 1);
         recetasCompuestos.add(yoduroPlata);
 
+        RecetaCompuesto cloruroCesio = new RecetaCompuesto("Cloruro de cesio", "CsCl");
+        cloruroCesio.agregarElemento("Cs", 1);
+        cloruroCesio.agregarElemento("Cl", 1);
+        recetasCompuestos.add(cloruroCesio);
+
         RecetaCompuesto sulfatoCobreIII = new RecetaCompuesto("Sulfato de cobre(III)", "CuSO4");
         sulfatoCobreIII.agregarElemento("Cu", 1);
         sulfatoCobreIII.agregarElemento("S", 1);
         sulfatoCobreIII.agregarElemento("O", 4);
         recetasCompuestos.add(sulfatoCobreIII);
-
-        RecetaCompuesto cloruroCesio = new RecetaCompuesto("Cloruro de cesio", "CsCl");
-        cloruroCesio.agregarElemento("Cs", 1);
-        cloruroCesio.agregarElemento("Cl", 1);
-        recetasCompuestos.add(cloruroCesio);
 
         RecetaCompuesto tetacloruroCarbono = new RecetaCompuesto("Tetacloruro de carbono", "CCl4");
         tetacloruroCarbono.agregarElemento("C", 1);

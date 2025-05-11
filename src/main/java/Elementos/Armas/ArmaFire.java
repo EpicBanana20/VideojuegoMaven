@@ -30,7 +30,7 @@ public class ArmaFire extends Arma {
 
     public ArmaFire(AdministradorBalas adminBalas) {
         super("armas/FIRE.png", 30 * Juegos.Juego.SCALE, 3.0f, adminBalas);
-        this.nombre = "Eclipse";
+        this.nombre = "Fire";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Luz";
     }
