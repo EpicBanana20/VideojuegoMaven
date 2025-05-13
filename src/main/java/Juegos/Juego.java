@@ -459,10 +459,10 @@ public class Juego {
         scoreTracker = new ScoreTracker();
 
         if (audioManager != null) {
-        // Detener completamente cualquier música anterior
-        audioManager.stopMusic();
-        // Forzar la actualización de música para el nivel 0
-        audioManager.updateGameState(EstadoJuego.PLAYING, 0);
+            // Detener completamente cualquier música anterior
+            audioManager.stopMusic();
+            // Forzar la actualización de música para el nivel 0
+            audioManager.updateGameState(EstadoJuego.PLAYING, 0);
         }
 
         necesitaReinicio = false;
@@ -630,13 +630,16 @@ public class Juego {
 
         scoreTracker.gameCompleted();
 
+        logrosTracker.gameCompleted(
+                player.getPersonaje().getTipo(),
+                scoreTracker.getElapsedTimeSeconds());
         // Save previous game state to return to after viewing scores
         estadoJuegoAnterior = estadoJuego;
 
         // Show scoreboard
         setEstadoJuego(EstadoJuego.SCOREBOARD);
     }
-    
+
     public Menu getMenu() {
         return menu;
     }
@@ -671,5 +674,9 @@ public class Juego {
 
     public void playerTookDamage() {
         logrosTracker.playerTookDamage();
+    }
+
+    public MenuLogros getMenuLogros() {
+        return menuLogros;
     }
 }

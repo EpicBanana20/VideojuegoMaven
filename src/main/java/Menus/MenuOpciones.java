@@ -156,11 +156,7 @@ public class MenuOpciones {
         
         // Dibujar botón de regreso
         botonRegresar.draw(g);
-        
-        // Instrucciones gamepad
-        g.setFont(new Font("Arial", Font.PLAIN, 16));
-        g.drawString("Usa ← → para ajustar volumen", sliderMusicaFondo.x, sliderMusicaFondo.y + 60);
-        g.drawString("Usa ↑ ↓ para cambiar opción", sliderMusicaFondo.x, sliderMusicaFondo.y + 85);
+    
     }
     
     public void mousePressed(MouseEvent e) {

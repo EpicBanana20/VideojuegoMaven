@@ -46,8 +46,8 @@ public class MenuLogros {
         try {
             achievementImages[0] = resizeImage(LoadSave.GetSpriteAtlas("logros/THE_LAST_HOPE.png"), BADGE_SIZE, BADGE_SIZE);
             achievementImages[1] = resizeImage(LoadSave.GetSpriteAtlas("logros/CABALLERO_CAIDO.png"), BADGE_SIZE, BADGE_SIZE);
-            achievementImages[2] = resizeImage(LoadSave.GetSpriteAtlas("logros/AULLIDO_INTERNO.png"), BADGE_SIZE, BADGE_SIZE);
-            achievementImages[3] = resizeImage(LoadSave.GetSpriteAtlas("logros/LA_CURA_FATAL.png"), BADGE_SIZE, BADGE_SIZE);
+            achievementImages[2] = resizeImage(LoadSave.GetSpriteAtlas("logros/AULLIDO_INTERNO.jpeg"), BADGE_SIZE, BADGE_SIZE);
+            achievementImages[3] = resizeImage(LoadSave.GetSpriteAtlas("logros/LA_CURA_FATAL.jpeg"), BADGE_SIZE, BADGE_SIZE);
             achievementImages[4] = resizeImage(LoadSave.GetSpriteAtlas("logros/VELOCIDAD_LETAL.png"), BADGE_SIZE, BADGE_SIZE);
             achievementImages[5] = resizeImage(LoadSave.GetSpriteAtlas("logros/COLECCIONISTA.png"), BADGE_SIZE, BADGE_SIZE);
             achievementImages[6] = resizeImage(LoadSave.GetSpriteAtlas("logros/INTOCABLE.png"), BADGE_SIZE, BADGE_SIZE);
@@ -189,4 +189,6 @@ public class MenuLogros {
         int stringWidth = g.getFontMetrics().stringWidth(text);
         g.drawString(text, x - stringWidth / 2, y);
     }
+
+    
 }

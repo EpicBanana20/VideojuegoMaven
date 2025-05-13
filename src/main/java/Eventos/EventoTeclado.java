@@ -30,6 +30,12 @@ public class EventoTeclado implements KeyListener {
             pan.getGame().getScoreboardScreen().keyPressed(e);
             return;
         }
+
+        if (pan.getGame().getEstadoJuego() == EstadoJuego.LOGROS) {
+            pan.getGame().getMenuLogros().keyPressed(e);
+            return;
+        }
+
         switch (pan.getGame().getEstadoJuego()) {
             case SELECCION_PERSONAJE:
                 pan.getGame().getSelectorPersonajes().keyPressed(e);
@@ -55,22 +61,22 @@ public class EventoTeclado implements KeyListener {
                         pan.getGame().getPlayer().cambiarArma();
                         break;
                     case KeyEvent.VK_E:
-                            pan.getGame().interactuarConEstacionQuimica();
+                        pan.getGame().interactuarConEstacionQuimica();
                         break;
                     case KeyEvent.VK_SHIFT:
                         pan.getGame().getPlayer().setHacerDodgeRoll(true);
                         break;
                 }
-                default:
+            default:
                 break;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            if (pan.getGame().getEstadoJuego() == EstadoJuego.PLAYING) {
+                pan.getGame().setEstadoJuego(EstadoJuego.PAUSA);
+            } else if (pan.getGame().getEstadoJuego() == EstadoJuego.PAUSA) {
+                pan.getGame().setEstadoJuego(EstadoJuego.PLAYING);
             }
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                if (pan.getGame().getEstadoJuego() == EstadoJuego.PLAYING) {
-                    pan.getGame().setEstadoJuego(EstadoJuego.PAUSA);
-                } else if (pan.getGame().getEstadoJuego() == EstadoJuego.PAUSA) {
-                    pan.getGame().setEstadoJuego(EstadoJuego.PLAYING);
-                }
-            }
+        }
     }
 
     @Override
@@ -89,14 +95,15 @@ public class EventoTeclado implements KeyListener {
                 pan.getGame().getPlayer().setRight(false);
                 break;
             case KeyEvent.VK_SPACE:
-                pan.getGame().getPlayer().setJump(false);;
+                pan.getGame().getPlayer().setJump(false);
+                ;
                 break;
             case KeyEvent.VK_SHIFT:
                 pan.getGame().getPlayer().setHacerDodgeRoll(false);
                 break;
         }
-        if (e.getKeyCode() >= KeyEvent.VK_1 && e.getKeyCode() <= KeyEvent.VK_9 || 
-            e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+        if (e.getKeyCode() >= KeyEvent.VK_1 && e.getKeyCode() <= KeyEvent.VK_9 ||
+                e.getKeyCode() == KeyEvent.VK_ESCAPE) {
             pan.getGame().procesarTeclaEstacionQuimica(e.getKeyCode());
         }
     }
