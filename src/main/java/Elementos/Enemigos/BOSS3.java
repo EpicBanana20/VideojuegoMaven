@@ -339,6 +339,10 @@ public class BOSS3 extends Enemigo {
     public void render(Graphics g, int xLvlOffset, int yLvlOffset) {
         // Renderizar al jefe
         if (!activo) return;
+        super.render(g, xLvlOffset, yLvlOffset);
+        if (activated) {
+            renderHealthBar(g, xLvlOffset, yLvlOffset);
+        }
         
         // Dibujar BOSS3
         int drawX = (int) (hitbox.x - xDrawOffset) - xLvlOffset;
@@ -361,6 +365,28 @@ public class BOSS3 extends Enemigo {
                     explosionSize, explosionSize, null);
             }
         }
+    }
+
+    @Override
+    protected void renderHealthBar(Graphics g, int xLvlOffset, int yLvlOffset) {
+        if (!healthBarLoaded) {
+            loadHealthBarSprites();
+        }
+        
+        // Calculate health percentage
+        float healthPercentage = (float) vida / vidaMaxima;
+        
+        // Select the appropriate sprite (0 = full health, 10 = empty)
+        int spriteIndex = Math.min(10, 10 - (int)(healthPercentage * 10));
+        
+        // Position the health bar above the enemy
+        int barX = (int) (hitbox.x + hitbox.width/2 - 32*Juego.SCALE) - xLvlOffset;
+        int barY = (int) (hitbox.y - 60*Juego.SCALE) - yLvlOffset;
+        
+        // Draw the health bar with scaling
+        g.drawImage(healthBarSprites[spriteIndex], 
+                    barX, barY, 
+                    (int)(64*Juego.SCALE), (int)(32*Juego.SCALE), null);
     }
 
     @Override
@@ -404,5 +430,10 @@ public class BOSS3 extends Enemigo {
             default:
                 return 1.0f;
         }
+    }
+
+    
+    public boolean isActivated() {
+        return activated;
     }
 }

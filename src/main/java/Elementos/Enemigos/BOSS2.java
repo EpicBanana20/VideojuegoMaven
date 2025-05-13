@@ -683,4 +683,18 @@ public class BOSS2 extends Enemigo {
             morir();
         }
     }
+
+    @Override
+    public void render(Graphics g, int xLvlOffset, int yLvlOffset) {
+        super.render(g, xLvlOffset, yLvlOffset);
+
+
+        if (activo) {
+        renderHealthBar(g, xLvlOffset, yLvlOffset);
+        }
+    }
+    
+    public boolean isActivated() {
+        return activo;
+    }
 }

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import Elementos.Bala;
 import Elementos.Enemigo;
 import Elementos.Jugador;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Utilz.MetodoAyuda;
@@ -37,6 +38,8 @@ public class BOSS1 extends Enemigo {
     private float anguloDisparo = 0;
     private int frameDisparo = 1;
 
+    private boolean activated = false;
+
     public BOSS1(float x, float y) {
         super(x, y, 
             (int)(ANCHO_DEFAULT * Juego.SCALE), 
@@ -56,11 +59,28 @@ public class BOSS1 extends Enemigo {
     
     @Override
     public void update() {
-        super.update();
-        
+
+        if (!activated && Juego.jugadorActual != null) {
+            // Check if player is within detection range
+            float playerX = Juego.jugadorActual.getXCenter();
+            float playerY = Juego.jugadorActual.getYCenter();
+            float bossX = hitbox.x + hitbox.width/2;
+            float bossY = hitbox.y + hitbox.height/2;
+            
+            float dx = playerX - bossX;
+            float dy = playerY - bossY;
+            float distance = (float) Math.sqrt(dx*dx + dy*dy);
+            
+            if (distance <= rangoDeteccionJugador) {
+                activated = true;
+                System.out.println("¡BOSS1 ha sido activado!");
+                AudioManager.getInstance().playMusic("boss1");
+            }
+        }
+
         // Si está muerto, no hacer nada más
-        if (!activo) return;
-        
+        if (!activated && !activo) return;
+        super.update();
         // Verificar cambios de fase según salud restante
         actualizarFase();
         actualizarPatron();
@@ -392,5 +412,20 @@ public class BOSS1 extends Enemigo {
             vida = 0;
             morir();
         }
+    }
+
+
+    @Override
+    public void render(Graphics g, int xLvlOffset, int yLvlOffset) {
+        super.render(g, xLvlOffset, yLvlOffset);
+
+
+        if (activated) {
+        renderHealthBar(g, xLvlOffset, yLvlOffset);
+        }
+    }
+    
+    public boolean isActivated() {
+        return activated;
     }
 }

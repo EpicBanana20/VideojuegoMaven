@@ -68,6 +68,7 @@ public class LoadSave {
 
 
     public static final String BARRA_VIDA_SPRITES = "HP.png";
+    public static final String BOSS_HEALTH_BAR = "HUDVIDABOSS.png";
     // Información de niveles: maxTileIndex, y lista de tiles sin hitbox
     public static final int[][] LEVEL_INFO = {
         {60, 58, 6, 10}, // Nivel 1: max=60, air=58

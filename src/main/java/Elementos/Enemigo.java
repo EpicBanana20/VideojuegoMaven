@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import Elementos.Administradores.AdministradorBalas;
 import Juegos.Juego;
 import Utilz.Animaciones;
+import Utilz.LoadSave;
 import Utilz.MetodoAyuda;
 
 public abstract class Enemigo extends Cascaron {
@@ -53,8 +54,10 @@ public abstract class Enemigo extends Cascaron {
     protected int atravesarPlataformaCooldown = 0;
     protected static final int MAX_ATRAVESAR_COOLDOWN = 20;
 
-        // Add as class variables
-private boolean portalCreado = false;
+
+    private boolean portalCreado = false;
+    protected BufferedImage[] healthBarSprites;
+    protected boolean healthBarLoaded = false;
 
     public Enemigo(float x, float y, int width, int height, int vidaMaxima) {
         super(x, y, width, height);
@@ -408,6 +411,39 @@ private boolean portalCreado = false;
         } else if (velocidadX == 0) {
             velocidadX = movimientoHaciaIzquierda ? -velocidadMovimiento : velocidadMovimiento;
         }
+    }
+
+    protected void loadHealthBarSprites() {
+        if (!healthBarLoaded) {
+        BufferedImage healthBarsImg = LoadSave.GetSpriteAtlas(LoadSave.BOSS_HEALTH_BAR);
+        healthBarSprites = new BufferedImage[11]; // 11 frames from 100% to 0%
+        
+        for (int i = 0; i < 11; i++) {
+            healthBarSprites[i] = healthBarsImg.getSubimage(i * 64, 0, 64, 32);
+        }
+        healthBarLoaded = true;
+        }
+    }
+
+    protected void renderHealthBar(Graphics g, int xLvlOffset, int yLvlOffset) {
+        if (!healthBarLoaded) {
+            loadHealthBarSprites();
+        }
+        
+        // Calculate health percentage
+        float healthPercentage = (float) vida / vidaMaxima;
+        
+        // Select the appropriate sprite (0 = full health, 10 = empty)
+        int spriteIndex = Math.min(10, 10 - (int)(healthPercentage * 10));
+        
+        // Position the health bar above the enemy
+        int barX = (int) (hitbox.x + hitbox.width/2 - 32*Juego.SCALE) - xLvlOffset;
+        int barY = (int) (hitbox.y - 20*Juego.SCALE) - yLvlOffset;
+        
+        // Draw the health bar with scaling
+        g.drawImage(healthBarSprites[spriteIndex], 
+                    barX, barY, 
+                    (int)(64*Juego.SCALE), (int)(32*Juego.SCALE), null);
     }
 
     protected float obtenerMultiplicadorDaño(String tipoDaño) {
