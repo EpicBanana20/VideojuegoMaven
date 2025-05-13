@@ -78,6 +78,7 @@ public class Juego {
 
     private ScoreTracker scoreTracker;
     private ScoreboardScreen scoreboardScreen;
+    @SuppressWarnings("unused")
     private EstadoJuego estadoJuegoAnterior;
 
     private MenuLogros menuLogros;
