@@ -25,6 +25,7 @@ public class AudioManager {
     private boolean soundEnabled = true;
     private EstadoJuego estadoAnterior = null;
     private boolean isPaused = false;
+    private String currentMusicId = null;
     
     private AudioManager() {
         initializeMusicMappings();
@@ -77,26 +78,37 @@ public class AudioManager {
         
         System.out.println(">>> Cambiando música a: " + id);
         
-        // Si es la misma música que ya está sonando, no hacer nada
-        if (currentMusic != null && musicTracks.get(id) == currentMusic) {
-            System.out.println("La música ya está sonando, no se cambiará");
-            return;
-        }
+        // Primero detener cualquier música que esté sonando
+        stopAllMusic();
         
-        // Detener la música actual
-        if (currentMusic != null) {
-            currentMusic.stop();
-            currentMusic.cleanup();
+        // Verificamos si es la misma música que ya está asignada
+        if (currentMusic != null && musicTracks.get(id) == currentMusic) {
+            // Si es la misma música pero no está reproduciendo, reiniciarla
+            System.out.println("Reiniciando la música actual: " + id);
+            currentMusic.play();
+            currentMusicId = id;
+            return;
         }
         
         // Iniciar la nueva música
         Music music = musicTracks.get(id);
         if (music != null) {
             currentMusic = music;
+            currentMusicId = id;
             currentMusic.setVolume(musicVolume);
             currentMusic.play();
         } else {
             System.err.println("Música no encontrada: " + id);
+        }
+    }
+    
+    // Método nuevo para detener toda la música
+    public void stopAllMusic() {
+        // Detener todas las pistas de música para evitar superposiciones
+        for (Music music : musicTracks.values()) {
+            if (music != null && music.isPlaying()) {
+                music.pause();
+            }
         }
     }
     
@@ -116,12 +128,11 @@ public class AudioManager {
     public void stopMusic() {
         if (currentMusic != null) {
             currentMusic.stop();
-            currentMusic = null;
         }
     }
     
     public void pauseMusic() {
-        if (currentMusic != null && !isPaused) {
+        if (currentMusic != null && !isPaused && currentMusic.isPlaying()) {
             System.out.println("Pausando música");
             currentMusic.pause();
             isPaused = true;
@@ -191,7 +202,7 @@ public class AudioManager {
         if (enabled && isPaused) {
             resumeMusic();
         } else if (!enabled) {
-            stopMusic();
+            stopAllMusic();
         }
     }
     

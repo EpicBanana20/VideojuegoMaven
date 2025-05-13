@@ -54,7 +54,9 @@ public class Music {
     }
 
     public void play() {
-        if (clip != null && !clip.isRunning()) {
+        if (clip != null) {
+            // Modificado para reproducir siempre, reiniciando la posición
+            clip.stop();
             clip.setMicrosecondPosition(0);
             clip.start();
             isPaused = false;
@@ -95,10 +97,14 @@ public class Music {
         }
     }
 
+    // Método nuevo para verificar si la música está reproduciéndose
+    public boolean isPlaying() {
+        return clip != null && clip.isRunning();
+    }
+
     public void cleanup() {
         if (clip != null) {
             clip.stop();
-            clip.close();
         }
     }
 }
