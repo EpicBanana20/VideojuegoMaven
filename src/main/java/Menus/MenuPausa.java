@@ -122,7 +122,7 @@ public class MenuPausa {
                             juego.setEstadoJuego(EstadoJuego.PLAYING);
                             break;
                         case BOTON_OPCIONES:
-                            System.out.println("Opciones - Por implementar");
+                            juego.setEstadoJuego(EstadoJuego.OPCIONES);
                             break;
                         case BOTON_MENU:
                             juego.setEstadoJuego(EstadoJuego.MENU);
