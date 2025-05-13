@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import Elementos.Bala;
 import Elementos.Enemigo;
 import Elementos.Jugador;
+import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Utilz.LoadSave;
 import Utilz.MetodoAyuda;
@@ -387,7 +388,13 @@ public class BOSS1 extends Enemigo {
         int dañoFinal = (int)(cantidad * multiplicador);
 
         vida -= dañoFinal;
-        
+
+        // Cambiar a animación de herido temporalmente
+        if (animaciones != null && vida > 0) {
+            animaciones.setAccion(HERIDO);
+            animaciones.resetearAnimacion();
+        }
+
         if (vida <= 0) {
             vida = 0;
             morir();
