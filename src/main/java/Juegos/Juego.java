@@ -27,6 +27,7 @@ import Niveles.LevelManager;
 import Utilz.MetodoAyuda;
 import Menus.Menu;
 import Menus.MenuMuerte;
+import Menus.MenuOpciones;
 import Menus.MenuPausa;
 import Menus.SelectorPersonajes;
 import Menus.ScoreboardScreen;
@@ -72,6 +73,7 @@ public class Juego {
     private MenuPausa menuPausa;
     private MenuMuerte menuMuerte;
     private SelectorPersonajes selectorPersonajes;
+    private MenuOpciones menuOpciones;
     private AudioManager audioManager;
     public static Juego INSTANCIA_ACTUAL;
 
@@ -92,36 +94,37 @@ public class Juego {
         audioManager = AudioManager.getInstance();
         cargarAudios();
     }
+
     private void cargarAudios() {
-    // Cargar música
-    audioManager.loadMusic("menu", "recursos/audio/sonido/musica/MENUSONG.wav");
-    audioManager.loadMusic("world1", "recursos/audio/sonido/musica/AMBIENTE-1.wav");
-    audioManager.loadMusic("world2", "recursos/audio/sonido/musica/AMBIENTE-2.wav");
-    audioManager.loadMusic("world3", "recursos/audio/sonido/musica/AMBIENTE-3.wav");
-    
-    audioManager.loadMusic("boss1", "recursos/audio/sonido/musica/BOSS-1.wav");
-    audioManager.loadMusic("boss2", "recursos/audio/sonido/musica/BOSS-2.wav");
-    audioManager.loadMusic("boss3", "recursos/audio/sonido/musica/BOSS-3.wav");
-    
-    // Cargar efectos de sonido
-    audioManager.loadSoundEffect("jump", "recursos/audio/sonido/musica/JUMP.wav");
-    audioManager.loadSoundEffect("bulletenemy", "recursos/audio/sonido/musica/BULLETENEMY.wav");
-    audioManager.loadSoundEffect("shoot", "recursos/audio/sonido/musica/BULLET.wav");
-    audioManager.loadSoundEffect("shootfranco", "recursos/audio/sonido/musica/FRANCOTIRADOR.wav");
-    audioManager.loadSoundEffect("laser", "recursos/audio/sonido/musica/LASER.wav");
-    audioManager.loadSoundEffect("hit", "recursos/audio/sonido/musica/HIT-PLAYER.wav");
-    audioManager.loadSoundEffect("pause", "recursos/audio/sonido/musica/MENUSONG.wav");
-    audioManager.loadSoundEffect("death", "recursos/audio/sonido/musica/DEATH.wav");
-    audioManager.loadSoundEffect("select", "recursos/audio/sonido/musica/SELECT.wav");
-    audioManager.loadSoundEffect("confirm", "recursos/audio/sonido/musica/CONFIRM.wav");
-    audioManager.loadSoundEffect("hitenemy", "recursos/audio/sonido/musica/HIT-ENEMY.wav");
-    audioManager.loadSoundEffect("dash", "recursos/audio/sonido/musica/DASH.wav");
-    audioManager.loadSoundEffect("ultimate", "recursos/audio/sonido/musica/.wav");
-    audioManager.loadSoundEffect("personaje", "recursos/audio/sonido/musica/PERSONAJE.wav");
-    
-    // Reproducir música inicial según el estado
-    audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());
-}
+        // Cargar música
+        audioManager.loadMusic("menu", "recursos/audio/sonido/musica/MENUSONG.wav");
+        audioManager.loadMusic("world1", "recursos/audio/sonido/musica/AMBIENTE-1.wav");
+        audioManager.loadMusic("world2", "recursos/audio/sonido/musica/AMBIENTE-2.wav");
+        audioManager.loadMusic("world3", "recursos/audio/sonido/musica/AMBIENTE-3.wav");
+
+        audioManager.loadMusic("boss1", "recursos/audio/sonido/musica/BOSS-1.wav");
+        audioManager.loadMusic("boss2", "recursos/audio/sonido/musica/BOSS-2.wav");
+        audioManager.loadMusic("boss3", "recursos/audio/sonido/musica/BOSS-3.wav");
+
+        // Cargar efectos de sonido
+        audioManager.loadSoundEffect("jump", "recursos/audio/sonido/musica/JUMP.wav");
+        audioManager.loadSoundEffect("bulletenemy", "recursos/audio/sonido/musica/BULLETENEMY.wav");
+        audioManager.loadSoundEffect("shoot", "recursos/audio/sonido/musica/BULLET.wav");
+        audioManager.loadSoundEffect("shootfranco", "recursos/audio/sonido/musica/FRANCOTIRADOR.wav");
+        audioManager.loadSoundEffect("laser", "recursos/audio/sonido/musica/LASER.wav");
+        audioManager.loadSoundEffect("hit", "recursos/audio/sonido/musica/HIT-PLAYER.wav");
+        audioManager.loadSoundEffect("pause", "recursos/audio/sonido/musica/MENUSONG.wav");
+        audioManager.loadSoundEffect("death", "recursos/audio/sonido/musica/DEATH.wav");
+        audioManager.loadSoundEffect("select", "recursos/audio/sonido/musica/SELECT.wav");
+        audioManager.loadSoundEffect("confirm", "recursos/audio/sonido/musica/CONFIRM.wav");
+        audioManager.loadSoundEffect("hitenemy", "recursos/audio/sonido/musica/HIT-ENEMY.wav");
+        audioManager.loadSoundEffect("dash", "recursos/audio/sonido/musica/DASH.wav");
+        audioManager.loadSoundEffect("ultimate", "recursos/audio/sonido/musica/.wav");
+        audioManager.loadSoundEffect("personaje", "recursos/audio/sonido/musica/PERSONAJE.wav");
+
+        // Reproducir música inicial según el estado
+        audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());
+    }
 
     private void inicializar() {
         levelMan = new LevelManager(this);
@@ -130,6 +133,7 @@ public class Juego {
         adminDecoraciones = new AdministradorDecoraciones();
         scoreTracker = new ScoreTracker();
         scoreboardScreen = new ScoreboardScreen(this, scoreTracker);
+        menuOpciones = new MenuOpciones(this);
 
         NIVEL_ACTUAL_ALTO = levelMan.getCurrentLevel().getLvlData().length * TILES_SIZE;
         NIVEL_ACTUAL_ANCHO = levelMan.getCurrentLevel().getLvlData()[0].length * TILES_SIZE;
@@ -345,32 +349,34 @@ public class Juego {
             case SCOREBOARD:
                 scoreboardScreen.draw(g);
                 break;
+            case OPCIONES:
+                menuOpciones.draw(g);
+                break;
             default:
                 break;
         }
     }
-    
 
     // Método para iniciar un cambio de nivel
     public void cambiarNivel(int nivelIndex) {
-    if (nivelIndex >= 0 && nivelIndex < levelMan.getTotalLevels()) {
-        cambiandoNivel = true;
-        nivelDestino = nivelIndex;
-        
-        // Desactivar controles del jugador durante la transición
-        player.resetDirBooleans();
-        
-        // Reproducir música del nuevo nivel
-        if (estadoJuego == EstadoJuego.PLAYING && audioManager != null) {
-            audioManager.updateGameState(estadoJuego, nivelIndex);
+        if (nivelIndex >= 0 && nivelIndex < levelMan.getTotalLevels()) {
+            cambiandoNivel = true;
+            nivelDestino = nivelIndex;
+
+            // Desactivar controles del jugador durante la transición
+            player.resetDirBooleans();
+
+            // Reproducir música del nuevo nivel
+            if (estadoJuego == EstadoJuego.PLAYING && audioManager != null) {
+                audioManager.updateGameState(estadoJuego, nivelIndex);
+            }
         }
     }
-}
 
     // Cambiar al siguiente nivel
     public void siguienteNivel() {
         int nextLevel = (levelMan.getCurrentLevelIndex() + 1) % levelMan.getTotalLevels();
-        
+
         // Check if this was the final level
         if (levelMan.getCurrentLevelIndex() == levelMan.getTotalLevels() - 1) {
             // Game completed - show scoreboard
@@ -442,6 +448,9 @@ public class Juego {
         levelMan.cargarEntidades(this);
         levelMan.cargarDecoraciones();
 
+        scoreboardScreen.reset();
+        scoreTracker = new ScoreTracker();
+
         necesitaReinicio = false;
     }
 
@@ -464,7 +473,7 @@ public class Juego {
             // Si se presiona un número (1-5) para crear un compuesto
             if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
                 boolean compuestoCreado = estacionQuimicaActiva.procesarTecla(keyCode);
-                
+
                 // Si se creó un compuesto, intentar crear un arma
                 if (compuestoCreado) {
                     intentarCrearArmaDesdeUltimoCompuesto();
@@ -477,27 +486,27 @@ public class Juego {
     }
 
     private void intentarCrearArmaDesdeUltimoCompuesto() {
-    // Iterar sobre los compuestos recién creados
-    SistemaQuimico sistemaQuimico = player.getSistemaQuimico();
-    for (String formula : sistemaQuimico.getInventarioCompuestos().getCompuestos().keySet()) {
-        if (sistemaQuimico.getInventarioCompuestos().tieneCompuestoSuficiente(formula, 1)) {
-            try {
-                // Intentar crear un arma con este compuesto
-                Arma nuevaArma = sistemaQuimico.crearArma(formula, player.getArmaActual().getAdminBalas());
-                if (nuevaArma != null) {
-                    boolean armaNueva = player.agregarArmaAlInventario(nuevaArma);
-                    if (armaNueva) {
-                        // Mensaje de éxito
-                        System.out.println("¡Has creado un arma nueva: " + nuevaArma.getNombre() + "!");
+        // Iterar sobre los compuestos recién creados
+        SistemaQuimico sistemaQuimico = player.getSistemaQuimico();
+        for (String formula : sistemaQuimico.getInventarioCompuestos().getCompuestos().keySet()) {
+            if (sistemaQuimico.getInventarioCompuestos().tieneCompuestoSuficiente(formula, 1)) {
+                try {
+                    // Intentar crear un arma con este compuesto
+                    Arma nuevaArma = sistemaQuimico.crearArma(formula, player.getArmaActual().getAdminBalas());
+                    if (nuevaArma != null) {
+                        boolean armaNueva = player.agregarArmaAlInventario(nuevaArma);
+                        if (armaNueva) {
+                            // Mensaje de éxito
+                            System.out.println("¡Has creado un arma nueva: " + nuevaArma.getNombre() + "!");
+                        }
+                        break;
                     }
-                    break;
+                } catch (Exception e) {
+                    System.err.println("Error al crear arma: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                System.err.println("Error al crear arma: " + e.getMessage());
             }
         }
     }
-}
 
     public void updateAimFromGamepad(float dirX, float dirY) {
         if (player != null) {
@@ -549,10 +558,10 @@ public class Juego {
     public void setEstadoJuego(EstadoJuego estadoJuego) {
         // Si venimos de MUERTE o PLAYING y vamos a MENU, marcar para reiniciar
         if ((this.estadoJuego == EstadoJuego.MUERTE || this.estadoJuego == EstadoJuego.PLAYING
-                || this.estadoJuego == EstadoJuego.PAUSA)
+                || this.estadoJuego == EstadoJuego.PAUSA || this.estadoJuego == EstadoJuego.SCOREBOARD)
                 && estadoJuego == EstadoJuego.MENU) {
             necesitaReinicio = true;
-            
+
         }
 
         // Si iniciamos un nuevo juego desde el menú, asegurar que esté reiniciado
@@ -564,10 +573,9 @@ public class Juego {
 
         this.estadoJuego = estadoJuego;
         if (audioManager != null) {
-        audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());
+            audioManager.updateGameState(estadoJuego, levelMan.getCurrentLevelIndex());
+        }
     }
-}
-    
 
     public void crearPortalEnPosicion(float x, float y) {
         Portal portal = new Portal(x, y);
@@ -577,67 +585,51 @@ public class Juego {
 
     // In Juego.java, update the verificarJefesDerrotados method:
 
-public void verificarJefesDerrotados() {
-    for (Enemigo enemigo : adminEnemigos.getEnemigos()) {
-        if (!enemigo.estaActivo() && 
-            (enemigo instanceof BOSS1 || enemigo instanceof BOSS2 || enemigo instanceof BOSS3) && 
-            !enemigo.hayPortalCreado()) {
-            
-            // Specific coordinates for BOSS2
-            if (enemigo instanceof BOSS2) {
-                // Use exact coordinates for BOSS2 (Zefir)
-                crearPortalEnPosicion(12321.0f, 1130.5f);
-            } else {
-                // Original logic for other bosses
-                float portalX = (float) (enemigo.getHitBox().getX() + enemigo.getHitBox().getWidth()/2 - (16 * Juego.SCALE));
-                float portalY = (float) (enemigo.getHitBox().getY() + enemigo.getHitBox().getHeight() - (64 * Juego.SCALE));
-                crearPortalEnPosicion(portalX, portalY);
+    public void verificarJefesDerrotados() {
+        for (Enemigo enemigo : adminEnemigos.getEnemigos()) {
+            if (!enemigo.estaActivo() &&
+                    (enemigo instanceof BOSS1 || enemigo instanceof BOSS2 || enemigo instanceof BOSS3) &&
+                    !enemigo.hayPortalCreado()) {
+
+                // Specific coordinates for BOSS2
+                if (enemigo instanceof BOSS2) {
+                    // Use exact coordinates for BOSS2 (Zefir)
+                    crearPortalEnPosicion(12321.0f, 1130.5f);
+                } else {
+                    // Original logic for other bosses
+                    float portalX = (float) (enemigo.getHitBox().getX() + enemigo.getHitBox().getWidth() / 2
+                            - (16 * Juego.SCALE));
+                    float portalY = (float) (enemigo.getHitBox().getY() + enemigo.getHitBox().getHeight()
+                            - (64 * Juego.SCALE));
+                    crearPortalEnPosicion(portalX, portalY);
+                }
+
+                // Track enemy kill
+                scoreTracker.enemyKilled();
+
+                enemigo.setPortalCreado(true);
             }
-            
-            // Track enemy kill
-            scoreTracker.enemyKilled();
-            
-            enemigo.setPortalCreado(true);
         }
     }
-}
 
     public void gameCompleted() {
         scoreTracker.pauseTimer();
         // Mark game as completed in score tracker
         scoreTracker.gameCompleted();
-        
+
         // Save previous game state to return to after viewing scores
         estadoJuegoAnterior = estadoJuego;
-        
+
         // Show scoreboard
         setEstadoJuego(EstadoJuego.SCOREBOARD);
     }
 
-    private void renderScoreHUD(Graphics g) {
-        // Draw score in top-right corner
-        g.setColor(new Color(0, 0, 0, 150));
-        g.fillRect(Juego.GAME_WIDTH - 200, 10, 190, 100);
-        
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 14));
-        g.drawString("Kills: " + scoreTracker.getEnemiesKilled(), Juego.GAME_WIDTH - 190, 30);
-        g.drawString("Weapons: " + scoreTracker.getWeaponsCollected(), Juego.GAME_WIDTH - 190, 50);
-        
-        // Format time as MM:SS
-        long seconds = scoreTracker.getElapsedTimeSeconds();
-        long minutes = seconds / 60;
-        seconds = seconds % 60;
-        g.drawString("Time: " + String.format("%02d:%02d", minutes, seconds), Juego.GAME_WIDTH - 190, 70);
+    public void cleanup() {
+        // Si existe un gestor de audio, limpiarlo
+        if (audioManager != null) {
+            audioManager.cleanup();
+        }
     }
-
-
-public void cleanup() {
-    // Si existe un gestor de audio, limpiarlo
-    if (audioManager != null) {
-        audioManager.cleanup();
-    } 
-}
 
     public Menu getMenu() {
         return menu;
@@ -665,5 +657,9 @@ public void cleanup() {
 
     public ScoreboardScreen getScoreboardScreen() {
         return scoreboardScreen;
+    }
+
+    public MenuOpciones getMenuOpciones() {
+        return menuOpciones;
     }
 }

@@ -30,7 +30,7 @@ public class EventoMouse extends MouseAdapter{
                     pan.getGame().getPlayer().usarHabilidadEspecial();
                 break;
             case OPCIONES:
-                //TODO:. Implementar menú de opciones
+                    pan.getGame().getMenuOpciones().mouseMoved(e); 
                 break;
             case LOGROS:
                 //TODO: Implementar menú de LOGROS
@@ -61,7 +61,7 @@ public class EventoMouse extends MouseAdapter{
                 pan.getGame().getPlayer().setAttacking(false);
             break;
         case OPCIONES:
-            //TODO:. Implementar menú de opciones
+                pan.getGame().getMenuOpciones().mouseMoved(e); 
             break;
         case LOGROS:
             //TODO: Implementar menú de LOGROS
@@ -91,8 +91,8 @@ public class EventoMouse extends MouseAdapter{
                 break;
             case PLAYING:
                 break;
-                case OPCIONES:
-                //TODO:. Implementar menú de opciones
+            case OPCIONES:
+                pan.getGame().getMenuOpciones().mouseMoved(e);    
                 break;
             case LOGROS:
                 //TODO: Implementar menú de LOGROS
