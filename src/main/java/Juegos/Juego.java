@@ -123,7 +123,6 @@ public class Juego {
         audioManager.loadSoundEffect("confirm", "recursos/audio/sonido/musica/CONFIRM.wav");
         audioManager.loadSoundEffect("hitenemy", "recursos/audio/sonido/musica/HIT-ENEMY.wav");
         audioManager.loadSoundEffect("dash", "recursos/audio/sonido/musica/DASH.wav");
-        audioManager.loadSoundEffect("ultimate", "recursos/audio/sonido/musica/.wav");
         audioManager.loadSoundEffect("personaje", "recursos/audio/sonido/musica/PERSONAJE.wav");
 
         // Reproducir música inicial según el estado
@@ -266,7 +265,6 @@ public class Juego {
                 // Solo procesamos el impacto si no está en dodgeroll
                 if (!enDodgeroll) {
                     bala.colisionConJugador(false);
-                    System.out.println("¡Jugador recibió impacto de bala enemiga!");
                 }
             }
         }
@@ -596,7 +594,6 @@ public class Juego {
     public void crearPortalEnPosicion(float x, float y) {
         Portal portal = new Portal(x, y);
         adminDecoraciones.agregarDecoracion(portal);
-        System.out.println("¡Portal creado tras derrotar al jefe!");
     }
 
     // In Juego.java, update the verificarJefesDerrotados method:

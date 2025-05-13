@@ -97,7 +97,6 @@ public class EventoTeclado implements KeyListener {
         }
         if (e.getKeyCode() >= KeyEvent.VK_1 && e.getKeyCode() <= KeyEvent.VK_9 || 
             e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                System.out.println(e.getKeyCode());
             pan.getGame().procesarTeclaEstacionQuimica(e.getKeyCode());
         }
     }

@@ -2,14 +2,12 @@ package Elementos.Decoraciones;
 
 import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.image.BufferedImage;
 import Juegos.Juego;
 import Elementos.Quimica.SistemaQuimico;
 import Elementos.Quimica.RecetaCompuesto;
 import Utilz.LoadSave;
 import java.util.List;
-import java.util.Map;
 
 public class EstacionQuimica extends Decoracion {
     private BufferedImage[] sprites; // Array para los dos estados (inactivo/activo)
@@ -114,19 +112,15 @@ public class EstacionQuimica extends Decoracion {
 
         boolean compuestoCreado = false;
 
-        // Teclas del 1 al 9 (49-57) para crear compuestos
         if (keyCode >= 49 && keyCode <= 57) {
             int index = keyCode - 49;
             List<RecetaCompuesto> recetas = sistemaQuimico.getRecetasDisponibles();
             if (index < recetas.size()) {
                 String formula = recetas.get(index).getFormula();
-                System.out.println(formula);
                 compuestoCreado = sistemaQuimico.crearCompuesto(formula);
-                System.out.println(compuestoCreado);
             }
         }
 
-        // ESC para cerrar
         if (keyCode == 27) {
             estacionAbierta = false;
             return false;
