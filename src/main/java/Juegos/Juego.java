@@ -26,6 +26,7 @@ import Elementos.Administradores.AdministradorDecoraciones;
 import Niveles.LevelManager;
 import Utilz.MetodoAyuda;
 import Menus.Menu;
+import Menus.MenuLogros;
 import Menus.MenuMuerte;
 import Menus.MenuOpciones;
 import Menus.MenuPausa;
@@ -80,6 +81,9 @@ public class Juego {
     private ScoreTracker scoreTracker;
     private ScoreboardScreen scoreboardScreen;
     private EstadoJuego estadoJuegoAnterior;
+
+    private MenuLogros menuLogros;
+    private LogrosTracker logrosTracker;
 
     public Juego() {
         inicializar();
@@ -153,6 +157,8 @@ public class Juego {
         menuPausa = new MenuPausa(this);
         menuMuerte = new MenuMuerte(this);
         selectorPersonajes = new SelectorPersonajes(this);
+        logrosTracker = new LogrosTracker();
+        menuLogros = new MenuLogros(this, logrosTracker);
     }
 
     public void updates() {
@@ -351,6 +357,9 @@ public class Juego {
                 break;
             case OPCIONES:
                 menuOpciones.draw(g);
+                break;
+            case LOGROS:
+                menuLogros.draw(g);
                 break;
             default:
                 break;
@@ -621,7 +630,7 @@ public class Juego {
 
     public void gameCompleted() {
         scoreTracker.pauseTimer();
-        // Mark game as completed in score tracker
+
         scoreTracker.gameCompleted();
 
         // Save previous game state to return to after viewing scores
@@ -661,5 +670,9 @@ public class Juego {
 
     public MenuOpciones getMenuOpciones() {
         return menuOpciones;
+    }
+
+    public void playerTookDamage() {
+        logrosTracker.playerTookDamage();
     }
 }

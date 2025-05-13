@@ -101,8 +101,7 @@ public class Menu {
                             juego.setEstadoJuego(EstadoJuego.OPCIONES);
                             break;
                         case BOTON_LOGROS:
-                            // TODO: Implementar menú de LOGROS
-                            System.out.println("Créditos - Por implementar");
+                            juego.setEstadoJuego(EstadoJuego.LOGROS);
                             break;
                         case BOTON_SALIR:
                             System.exit(0);

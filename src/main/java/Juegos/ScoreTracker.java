@@ -182,6 +182,7 @@ public class ScoreTracker {
             return (System.currentTimeMillis() - startTime) / 1000;
         }
     }
+    
     public int getFinalScore() {
         return finalScore;
     }

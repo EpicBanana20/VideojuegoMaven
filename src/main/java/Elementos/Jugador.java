@@ -588,6 +588,9 @@ public void recibirDaño(float cantidad) {
     // Reproducir efecto de sonido
     AudioManager.getInstance().playSoundEffect("hit");
 
+    if (Juego.INSTANCIA_ACTUAL != null) {
+        Juego.INSTANCIA_ACTUAL.playerTookDamage();
+    }
     if (vidaActual <= 0) {
         vidaActual = 0;
         morir();
