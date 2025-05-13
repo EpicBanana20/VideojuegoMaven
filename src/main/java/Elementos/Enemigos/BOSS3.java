@@ -15,7 +15,7 @@ public class BOSS3 extends Enemigo {
     // Constantes específicas
     private static final int ANCHO_DEFAULT = 246;
     private static final int ALTO_DEFAULT = 190;
-    private static final int VIDA_DEFAULT = 20000;
+    private static final int VIDA_DEFAULT = 1600000;
     
     // Estados del jefe
     private static final int FASE_NORMAL = 0;

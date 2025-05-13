@@ -25,7 +25,7 @@ public class ArmaDelta extends Arma {
     private static final int FRAMES_POR_SEGUNDO = 60;
     
     // Propiedades para las balas que rebotan
-    private int rebotesMaximos = 8;
+    private int rebotesMaximos = 4;
 
     public ArmaDelta(AdministradorBalas adminBalas) {
         super("armas/DELTA.png", 30 * Juegos.Juego.SCALE, 2.4f, adminBalas);
