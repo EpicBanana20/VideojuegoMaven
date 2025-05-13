@@ -72,6 +72,9 @@ public class EventoMouse extends MouseAdapter{
         case MUERTE:
             pan.getGame().getMenuMuerte().mouseReleased(e);
             break;
+        case SCOREBOARD:
+                pan.getGame().getScoreboardScreen().mouseReleased(e);
+            break;
     }
 }
 
@@ -99,6 +102,9 @@ public class EventoMouse extends MouseAdapter{
                 break;
             case MUERTE:
                 pan.getGame().getMenuMuerte().mouseMoved(e);
+                break;
+            case SCOREBOARD:
+                pan.getGame().getScoreboardScreen().mouseMoved(e);
                 break;
         }
     }
