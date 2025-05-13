@@ -1,13 +1,14 @@
 package Juegos;
 
 import javax.swing.JPanel;
-
 import Eventos.EventoMouse;
 import Eventos.EventoTeclado;
 import Eventos.EventosNivel;
+import Utilz.LoadSave;
 import Eventos.EventoGamepad;
 
 import java.awt.*;
+import java.awt.image.BufferedImage; // Añadir esta importación
 
 public class PanelJuego extends JPanel {
     private EventoMouse ev;
@@ -15,6 +16,12 @@ public class PanelJuego extends JPanel {
     private EventosNivel en;
     private EventoGamepad eg;
     Juego game;
+    
+    // Añadir estas variables para la barra de vida
+    private BufferedImage[] spritesBarraVida;
+    private final int TOTAL_SPRITES_BARRA = 11;
+    private final int SPRITE_WIDTH = 64;
+    private final int SPRITE_HEIGHT = 32;
 
     public PanelJuego(Juego game) {
         eg = new EventoGamepad(this);
@@ -24,8 +31,9 @@ public class PanelJuego extends JPanel {
         
         this.game = game;
         setPanelSize();
+        cargarSpritesBarraVida(); // Llamar a este método aquí
         addKeyListener(et);
-        addKeyListener(en); // Agregar el listener para cambio de niveles
+        addKeyListener(en); 
         addMouseListener(ev);
         addMouseMotionListener(ev);
     }
@@ -39,7 +47,11 @@ public class PanelJuego extends JPanel {
         super.paint(g);
         Juego game = getGame();
         game.render(g);
-        dibujarBarraVida(g);
+        
+        // Solo dibujar la barra de vida en estado PLAYING
+        if (game.getEstadoJuego() == EstadoJuego.PLAYING) {
+            dibujarBarraVida(g);
+        }
     }
 
     public Juego getGame() {
@@ -52,41 +64,32 @@ public class PanelJuego extends JPanel {
         // La actualización normal del juego continúa en el método update() de la clase Juego
     }
 
+    private void cargarSpritesBarraVida() {
+        BufferedImage img = LoadSave.GetSpriteAtlas(LoadSave.BARRA_VIDA_SPRITES);
+        spritesBarraVida = new BufferedImage[TOTAL_SPRITES_BARRA];
+        
+        for (int i = 0; i < TOTAL_SPRITES_BARRA; i++) {
+            spritesBarraVida[i] = img.getSubimage(i * SPRITE_WIDTH, 0, SPRITE_WIDTH, SPRITE_HEIGHT);
+        }
+    }
+
     private void dibujarBarraVida(Graphics g) {
         int barraX = 20;
-        int barraY = 70;
-        int barraAncho = 200;
-        int barraAlto = 20;
+        int barraY = -10;
         
-        // Fondo de la barra
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(barraX, barraY, barraAncho, barraAlto);
-        
-        // Vida actual
+        // Dimensiones originales: 64x32
+        // Definir un factor de escala o dimensiones específicas
+        int barraWidth = 340; //192
+        int barraHeight = 150; //96
+
         float porcentajeVida = game.getPlayer().getVidaActual() / 
                                game.getPlayer().getVidaMaxima();
-        int vidaAncho = (int)(barraAncho * porcentajeVida);
         
-        // Color según porcentaje
-        if (porcentajeVida > 0.6f)
-            g.setColor(Color.GREEN);
-        else if (porcentajeVida > 0.3f)
-            g.setColor(Color.YELLOW);
-        else
-            g.setColor(Color.RED);
+        // Seleccionar el sprite apropiado (0 = vida completa, 10 = vida vacía)
+        int indiceSprite = Math.min(10, 10 - (int)(porcentajeVida * 10));
         
-        g.fillRect(barraX, barraY, vidaAncho, barraAlto);
-        
-        // Borde
-        g.setColor(Color.BLACK);
-        g.drawRect(barraX, barraY, barraAncho, barraAlto);
-        
-        // Texto
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 14));
-        g.drawString("Vida: " + (int)game.getPlayer().getVidaActual() + 
-                     "/" + (int)game.getPlayer().getVidaMaxima(), 
-                     barraX + 5, barraY + 15);
+        // Dibujar el sprite seleccionado con las nuevas dimensiones
+        g.drawImage(spritesBarraVida[indiceSprite], barraX, barraY, barraWidth, barraHeight, null);
     }
 
     public EventoGamepad getEg() {
