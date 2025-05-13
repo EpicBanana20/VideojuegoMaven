@@ -1,5 +1,7 @@
 package Juegos;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -27,6 +29,7 @@ import Menus.Menu;
 import Menus.MenuMuerte;
 import Menus.MenuPausa;
 import Menus.SelectorPersonajes;
+import Menus.ScoreboardScreen;
 
 public class Juego {
     private VtaJuego vta;
@@ -71,6 +74,10 @@ public class Juego {
     private SelectorPersonajes selectorPersonajes;
     private AudioManager audioManager;
     public static Juego INSTANCIA_ACTUAL;
+
+    private ScoreTracker scoreTracker;
+    private ScoreboardScreen scoreboardScreen;
+    private EstadoJuego estadoJuegoAnterior;
 
     public Juego() {
         inicializar();
@@ -121,6 +128,8 @@ public class Juego {
         adminEnemigos = new AdministradorEnemigos();
         ADMIN_ENEMIGOS = adminEnemigos;
         adminDecoraciones = new AdministradorDecoraciones();
+        scoreTracker = new ScoreTracker();
+        scoreboardScreen = new ScoreboardScreen(this, scoreTracker);
 
         NIVEL_ACTUAL_ALTO = levelMan.getCurrentLevel().getLvlData().length * TILES_SIZE;
         NIVEL_ACTUAL_ANCHO = levelMan.getCurrentLevel().getLvlData()[0].length * TILES_SIZE;
@@ -189,6 +198,9 @@ public class Juego {
                 break;
             case MUERTE:
                 menuMuerte.update();
+                break;
+            case SCOREBOARD:
+                scoreboardScreen.update();
                 break;
             default:
                 break;
@@ -330,6 +342,9 @@ public class Juego {
                 // Dibujamos el menú de muerte
                 menuMuerte.draw(g);
                 break;
+            case SCOREBOARD:
+                scoreboardScreen.draw(g);
+                break;
             default:
                 break;
         }
@@ -354,7 +369,16 @@ public class Juego {
 
     // Cambiar al siguiente nivel
     public void siguienteNivel() {
-        cambiarNivel((levelMan.getCurrentLevelIndex() + 1) % levelMan.getTotalLevels());
+        int nextLevel = (levelMan.getCurrentLevelIndex() + 1) % levelMan.getTotalLevels();
+        
+        // Check if this was the final level
+        if (levelMan.getCurrentLevelIndex() == levelMan.getTotalLevels() - 1) {
+            // Game completed - show scoreboard
+            gameCompleted();
+        } else {
+            // Normal level progression
+            cambiarNivel(nextLevel);
+        }
     }
 
     // Completar el cambio de nivel
@@ -570,10 +594,42 @@ public void verificarJefesDerrotados() {
                 crearPortalEnPosicion(portalX, portalY);
             }
             
+            // Track enemy kill
+            scoreTracker.enemyKilled();
+            
             enemigo.setPortalCreado(true);
         }
     }
 }
+
+    public void gameCompleted() {
+        // Mark game as completed in score tracker
+        scoreTracker.gameCompleted();
+        
+        // Save previous game state to return to after viewing scores
+        estadoJuegoAnterior = estadoJuego;
+        
+        // Show scoreboard
+        setEstadoJuego(EstadoJuego.SCOREBOARD);
+    }
+
+    private void renderScoreHUD(Graphics g) {
+        // Draw score in top-right corner
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(Juego.GAME_WIDTH - 200, 10, 190, 100);
+        
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 14));
+        g.drawString("Kills: " + scoreTracker.getEnemiesKilled(), Juego.GAME_WIDTH - 190, 30);
+        g.drawString("Weapons: " + scoreTracker.getWeaponsCollected(), Juego.GAME_WIDTH - 190, 50);
+        
+        // Format time as MM:SS
+        long seconds = scoreTracker.getElapsedTimeSeconds();
+        long minutes = seconds / 60;
+        seconds = seconds % 60;
+        g.drawString("Time: " + String.format("%02d:%02d", minutes, seconds), Juego.GAME_WIDTH - 190, 70);
+    }
+
 
 public void cleanup() {
     // Si existe un gestor de audio, limpiarlo
@@ -600,5 +656,13 @@ public void cleanup() {
 
     public MenuMuerte getMenuMuerte() {
         return menuMuerte;
+    }
+
+    public ScoreTracker getScoreTracker() {
+        return scoreTracker;
+    }
+
+    public ScoreboardScreen getScoreboardScreen() {
+        return scoreboardScreen;
     }
 }

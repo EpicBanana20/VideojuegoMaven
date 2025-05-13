@@ -41,6 +41,9 @@ public class EventoMouse extends MouseAdapter{
             case MUERTE:
                 pan.getGame().getMenuMuerte().mousePressed(e);
                 break;
+            case SCOREBOARD:
+                pan.getGame().getScoreboardScreen().mousePressed(e);
+                break;
         }
     }
 

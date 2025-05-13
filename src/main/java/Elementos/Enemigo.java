@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 
 import Elementos.Administradores.AdministradorBalas;
+import Elementos.Enemigos.BOSS1;
+import Elementos.Enemigos.BOSS2;
+import Elementos.Enemigos.BOSS3;
 import Juegos.Juego;
 import Utilz.Animaciones;
 import Utilz.LoadSave;
@@ -292,11 +295,18 @@ public abstract class Enemigo extends Cascaron {
     }
 
     protected void morir() {
-        activo = false;
-        if (animaciones != null) {
-            animaciones.setAccion(MUERTE);
-            animaciones.resetearAnimacion();
+    activo = false;
+    if (animaciones != null) {
+        animaciones.setAccion(MUERTE);
+        animaciones.resetearAnimacion();
+    }
+    
+    // Track enemy kill in score system (only if this isn't a boss, since bosses are tracked separately)
+    if (!(this instanceof BOSS1 || this instanceof BOSS2 || this instanceof BOSS3)) {
+        if (Juego.INSTANCIA_ACTUAL != null && Juego.INSTANCIA_ACTUAL.getScoreTracker() != null) {
+            Juego.INSTANCIA_ACTUAL.getScoreTracker().enemyKilled();
         }
+    }
     }
 
     protected void drawHitBox(Graphics g, int xLvlOffset, int yLvlOffset) {

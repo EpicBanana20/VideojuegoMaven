@@ -25,6 +25,11 @@ public class EventoTeclado implements KeyListener {
             gamepadController.toggleGamepad();
             return;
         }
+
+        if (pan.getGame().getEstadoJuego() == EstadoJuego.SCOREBOARD) {
+            pan.getGame().getScoreboardScreen().keyPressed(e);
+            return;
+        }
         switch (pan.getGame().getEstadoJuego()) {
             case SELECCION_PERSONAJE:
                 pan.getGame().getSelectorPersonajes().keyPressed(e);

@@ -306,18 +306,24 @@ public class Jugador extends Cascaron {
     }
 
     public boolean agregarArmaAlInventario(Arma nuevaArma) {
-        if (nuevaArma != null) {
-            // Verificar si ya tenemos esta arma
-            for (Arma arma : inventarioArmas) {
-                if (arma.getClass().equals(nuevaArma.getClass())) {
-                    return false; // Ya tenemos esta arma
-                }
+         if (nuevaArma != null) {
+        // Verificar si ya tenemos esta arma
+        for (Arma arma : inventarioArmas) {
+            if (arma.getClass().equals(nuevaArma.getClass())) {
+                return false; // Ya tenemos esta arma
             }
-            
-            // Añadir la nueva arma
-            inventarioArmas.add(nuevaArma);
-            System.out.println("¡Nueva arma obtenida: " + nuevaArma.getNombre() + "!");
-            return true;
+        }
+        
+        // Añadir la nueva arma
+        inventarioArmas.add(nuevaArma);
+        System.out.println("¡Nueva arma obtenida: " + nuevaArma.getNombre() + "!");
+        
+        // Track weapon collection in score system
+        if (Juego.INSTANCIA_ACTUAL != null && Juego.INSTANCIA_ACTUAL.getScoreTracker() != null) {
+            Juego.INSTANCIA_ACTUAL.getScoreTracker().weaponCollected();
+        }
+        
+        return true;
         }
         return false;
     }

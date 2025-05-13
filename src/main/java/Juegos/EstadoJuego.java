@@ -7,5 +7,6 @@ public enum EstadoJuego {
     OPCIONES,
     LOGROS,
     PAUSA,
-    MUERTE
+    MUERTE,
+    SCOREBOARD
 }
