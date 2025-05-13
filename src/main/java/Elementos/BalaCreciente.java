@@ -19,6 +19,7 @@ public class BalaCreciente extends Bala {
     private int dañoBase;
     
     // Distancia recorrida (para referencia)
+    @SuppressWarnings("unused")
     private float distanciaRecorrida = 0;
 
     public BalaCreciente(float x, float y, float angulo, String tipoSprite, int daño, 

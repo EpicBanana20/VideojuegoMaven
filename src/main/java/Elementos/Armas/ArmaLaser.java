@@ -3,7 +3,6 @@ package Elementos.Armas;
 import Elementos.Arma;
 import Elementos.Enemigo;
 import Elementos.Administradores.AdministradorBalas;
-import Elementos.Audio.AudioManager;
 import Juegos.Juego;
 import Elementos.AimController;
 import java.awt.Graphics;
