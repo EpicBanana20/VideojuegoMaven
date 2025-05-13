@@ -377,7 +377,7 @@ public class BOSS3 extends Enemigo {
         float healthPercentage = (float) vida / vidaMaxima;
         
         // Select the appropriate sprite (0 = full health, 10 = empty)
-        int spriteIndex = Math.min(10, 10 - (int)(healthPercentage * 10));
+        int spriteIndex = Math.min(17, 17 - (int)(healthPercentage * 17));
         
         // Position the health bar above the enemy
         int barX = (int) (hitbox.x + hitbox.width/2 - 32*Juego.SCALE) - xLvlOffset;

@@ -426,9 +426,9 @@ public abstract class Enemigo extends Cascaron {
     protected void loadHealthBarSprites() {
         if (!healthBarLoaded) {
         BufferedImage healthBarsImg = LoadSave.GetSpriteAtlas(LoadSave.BOSS_HEALTH_BAR);
-        healthBarSprites = new BufferedImage[11]; // 11 frames from 100% to 0%
+        healthBarSprites = new BufferedImage[18]; // 11 frames from 100% to 0%
         
-        for (int i = 0; i < 11; i++) {
+        for (int i = 0; i < 17; i++) {
             healthBarSprites[i] = healthBarsImg.getSubimage(i * 64, 0, 64, 32);
         }
         healthBarLoaded = true;
@@ -444,7 +444,7 @@ public abstract class Enemigo extends Cascaron {
         float healthPercentage = (float) vida / vidaMaxima;
         
         // Select the appropriate sprite (0 = full health, 10 = empty)
-        int spriteIndex = Math.min(10, 10 - (int)(healthPercentage * 10));
+        int spriteIndex = Math.min(17, 17 - (int)(healthPercentage * 17));
         
         // Position the health bar above the enemy
         int barX = (int) (hitbox.x + hitbox.width/2 - 32*Juego.SCALE) - xLvlOffset;

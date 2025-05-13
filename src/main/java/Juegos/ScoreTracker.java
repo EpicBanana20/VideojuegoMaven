@@ -27,6 +27,9 @@ public class ScoreTracker {
     private static final int TIME_PENALTY_PER_MINUTE = 50;
     private static final int BASE_SCORE = 5000;
     
+    private boolean paused = false;
+    private long pausedTime = 0;
+
     public ScoreTracker() {
         startTime = System.currentTimeMillis();
         enemiesKilled = 0;
@@ -155,6 +158,13 @@ public class ScoreTracker {
         
         return scores;
     }
+
+    public void pauseTimer() {
+        if (!paused) {
+            pausedTime = System.currentTimeMillis();
+            paused = true;
+        }
+    }
     
     // Getters for displaying stats during and after gameplay
     public int getEnemiesKilled() {
@@ -166,9 +176,12 @@ public class ScoreTracker {
     }
     
     public long getElapsedTimeSeconds() {
-        return (System.currentTimeMillis() - startTime) / 1000;
+        if (paused) {
+            return (pausedTime - startTime) / 1000;
+        } else {
+            return (System.currentTimeMillis() - startTime) / 1000;
+        }
     }
-    
     public int getFinalScore() {
         return finalScore;
     }

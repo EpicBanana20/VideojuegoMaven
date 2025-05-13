@@ -603,6 +603,7 @@ public void verificarJefesDerrotados() {
 }
 
     public void gameCompleted() {
+        scoreTracker.pauseTimer();
         // Mark game as completed in score tracker
         scoreTracker.gameCompleted();
         
