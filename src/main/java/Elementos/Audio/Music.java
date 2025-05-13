@@ -10,23 +10,17 @@ public class Music {
     private FloatControl volumeControl;
     private boolean isPaused;
     private long pausePosition;
-    private String sourcePath; // Guardar la ruta para poder reconstruir si es necesario
 
     public Music(String path) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
-        this.sourcePath = path;
-        loadAudio();
-    }
-
-    private void loadAudio() throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         try {
-            URL url = getClass().getClassLoader().getResource(sourcePath);
+            URL url = getClass().getClassLoader().getResource(path);
             if (url == null) {
-                File file = new File("recursos/" + sourcePath);
+                File file = new File("recursos/" + path);
                 if (file.exists()) {
                     AudioInputStream audioStream = AudioSystem.getAudioInputStream(file);
                     init(audioStream);
                 } else {
-                    throw new IOException("No se pudo encontrar el archivo de audio: " + sourcePath);
+                    throw new IOException("No se pudo encontrar el archivo de audio: " + path);
                 }
             } else {
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(url);
@@ -60,23 +54,10 @@ public class Music {
     }
 
     public void play() {
-        if (clip != null) {
-            if (clip.isActive()) {
-                clip.stop();
-            }
+        if (clip != null && !clip.isRunning()) {
             clip.setMicrosecondPosition(0);
             clip.start();
             isPaused = false;
-        } else {
-            // Si el clip se cerró, intentar recargarlo
-            try {
-                loadAudio();
-                clip.setMicrosecondPosition(0);
-                clip.start();
-                isPaused = false;
-            } catch (Exception e) {
-                System.err.println("Error al reproducir música: " + e.getMessage());
-            }
         }
     }
 
@@ -89,7 +70,7 @@ public class Music {
     }
 
     public void pause() {
-        if (clip != null && clip.isActive()) {
+        if (clip != null && clip.isRunning()) {
             pausePosition = clip.getMicrosecondPosition();
             clip.stop();
             isPaused = true;
@@ -114,31 +95,10 @@ public class Music {
         }
     }
 
-    public boolean isPlaying() {
-        return clip != null && clip.isActive() && !isPaused;
-    }
-
-    public boolean isPaused() {
-        return isPaused;
-    }
-
     public void cleanup() {
-        // No cerramos el clip completamente, solo lo detenemos
-        if (clip != null) {
-            clip.stop();
-            // NO usar clip.close() aquí
-        }
-    }
-
-    
-    
-    public void dispose() {
-        // Método para liberar recursos completamente cuando sea necesario
-        // (por ejemplo, al cerrar el juego)
         if (clip != null) {
             clip.stop();
             clip.close();
-            clip = null;
         }
     }
 }

@@ -1,5 +1,7 @@
 package Juegos;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -388,12 +390,6 @@ public class Juego {
     // Completar el cambio de nivel
     private void completarCambioNivel() {
         // Limpiar balas y otros objetos
-        audioManager.stopMusic();
-        if (audioManager != null) {
-            audioManager.stopMusic();
-            if(estadoJuego == EstadoJuego.PLAYING)
-            audioManager.updateGameState(EstadoJuego.PLAYING, nivelDestino);
-        }
         if (player.getArmaActual() != null) {
             player.getArmaActual().getAdminBalas().limpiarBalas();
         }
@@ -419,7 +415,6 @@ public class Juego {
 
     private void volverAlMenu() {
         estadoJuego = EstadoJuego.MUERTE;
-        audioManager.stopMusic();
     }
 
     public void reiniciarJuego() {
@@ -457,9 +452,10 @@ public class Juego {
         scoreTracker = new ScoreTracker();
 
         if (audioManager != null) {
-            audioManager.stopMusic();
-            if(estadoJuego == EstadoJuego.PLAYING)
-            audioManager.updateGameState(EstadoJuego.PLAYING, 0);
+        // Detener completamente cualquier música anterior
+        audioManager.stopMusic();
+        // Forzar la actualización de música para el nivel 0
+        audioManager.updateGameState(EstadoJuego.PLAYING, 0);
         }
 
         necesitaReinicio = false;
@@ -574,6 +570,8 @@ public class Juego {
             necesitaReinicio = true;
 
         }
+
+        // Si iniciamos un nuevo juego desde el menú, asegurar que esté reiniciado
         if (this.estadoJuego == EstadoJuego.MENU && estadoJuego == EstadoJuego.SELECCION_PERSONAJE) {
             if (necesitaReinicio) {
                 reiniciarJuego();
@@ -632,7 +630,7 @@ public class Juego {
         // Show scoreboard
         setEstadoJuego(EstadoJuego.SCOREBOARD);
     }
-
+    
     public Menu getMenu() {
         return menu;
     }
