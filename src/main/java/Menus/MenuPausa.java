@@ -13,7 +13,7 @@ import Utilz.LoadSave;
 
 public class MenuPausa {
     private Juego juego;
-    private Boton[] botones = new Boton[3];
+    private Boton[] botones = new Boton[2];
     private BufferedImage[][] botonesImgs;
 
     // Constantes para posiciones de botones
@@ -23,12 +23,10 @@ public class MenuPausa {
 
     // Índices de botones en el menú de pausa
     private static final int BOTON_REINTENTAR = 0;
-    private static final int BOTON_OPCIONES = 1;
-    private static final int BOTON_MENU = 2;
+    private static final int BOTON_MENU = 1;
 
     // Índices reales en el sprite sheet
     private static final int SPRITE_REINTENTAR = 4;
-    private static final int SPRITE_OPCIONES = 1;
     private static final int SPRITE_MENU = 5;
 
     private int botonSeleccionadoIndex = 0;
@@ -64,14 +62,6 @@ public class MenuPausa {
                 ALTURA_PRIMER_BOTON,
                 BOTON_REINTENTAR, // Cambiar de SPRITE_REINTENTAR a BOTON_REINTENTAR
                 botonesImgs[SPRITE_REINTENTAR]);
-
-        // Botón Opciones
-        botones[BOTON_OPCIONES] = new Boton(
-                BOTON_X_POSICION,
-                ALTURA_PRIMER_BOTON + BOTON_SPACING,
-                BOTON_OPCIONES, // Cambiar de SPRITE_OPCIONES a BOTON_OPCIONES
-                botonesImgs[SPRITE_OPCIONES]);
-
         // Botón Menú
         botones[BOTON_MENU] = new Boton(
                 BOTON_X_POSICION,
@@ -120,9 +110,6 @@ public class MenuPausa {
                         case BOTON_REINTENTAR:
                             juego.reiniciarJuego();
                             juego.setEstadoJuego(EstadoJuego.PLAYING);
-                            break;
-                        case BOTON_OPCIONES:
-                            juego.setEstadoJuego(EstadoJuego.OPCIONES);
                             break;
                         case BOTON_MENU:
                             juego.setEstadoJuego(EstadoJuego.MENU);
