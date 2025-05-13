@@ -121,7 +121,6 @@ public class LoadSave {
     // Método para limpiar la caché si es necesario (por ejemplo al cambiar de nivel)
     public static void clearCache() {
         imageCache.clear();
-        System.out.println("Caché de imágenes limpiada");
     }
     
     // Método para obtener el tamaño actual de la caché

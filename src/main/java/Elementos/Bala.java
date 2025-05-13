@@ -71,12 +71,8 @@ public class Bala extends Cascaron {
     private void cargarAnimaciones() {
         // Cargamos el atlas de sprites para las balas
         BufferedImage img = LoadSave.GetSpriteAtlas(tipoSprite);
-        
-        // Suponemos que la hoja tiene 2 animaciones (bala normal e impacto)
-        // con 4 frames cada una
         spritesBala = new BufferedImage[3][4];
         
-        // Extraer cada frame (asumimos que cada frame es 16x16 píxeles)
         for (int j = 0; j < spritesBala.length; j++) {
             for (int i = 0; i < spritesBala[j].length; i++) {
                 spritesBala[j][i] = img.getSubimage(i * 17, j * 16, 17, 16);
@@ -105,14 +101,12 @@ public class Bala extends Cascaron {
         
         // Actualizar animación
         animacionBala.actualizarAnimacion();
-        
-        // NUEVO: Detectar cuando termina la animación de inicio
+
         if (animacionBala.getAccionActual() == ANIMACION_INICIO_BALA && 
             animacionBala.esUltimoFrame()) {
             animacionBala.setAccion(ANIMACION_BALA);
         }
-        
-        // Código existente para detectar fin de impacto
+
         if (enImpacto && animacionBala.esUltimoFrame()) {
             desactivar();
         }
@@ -146,9 +140,6 @@ public class Bala extends Cascaron {
             // Restaurar transformación original
             g2d.setTransform(originalTransform);
         }
-        
-        // Para debugging
-        // drawHitBox(g, xLvlOffset, ylvlOffset);
     }
     
     // Método adicional para dibujar el hitbox con offset
@@ -189,8 +180,6 @@ public class Bala extends Cascaron {
         if (!jugadorInvulnerable) {
             iniciarImpacto();
         }
-        // Si es invulnerable (en dodgeroll), no hacemos nada
-        // y la bala continúa su trayectoria
     }
     
     // Método para iniciar la animación de impacto

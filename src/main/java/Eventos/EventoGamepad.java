@@ -54,7 +54,6 @@ public class EventoGamepad {
             return; // Si el gamepad está deshabilitado, no procesar entradas
         }
 
-        // Comprobar si el mando sigue conectado
         if (!glfwJoystickPresent(gamepadID)) {
             System.out.println("Mando desconectado");
             gamepadID = -1;
@@ -86,7 +85,6 @@ public class EventoGamepad {
                 break;
         }
         
-        // Actualizar estado anterior
         for (int i = 0; i < GLFW_GAMEPAD_BUTTON_LAST; i++) {
             prevButtonState[i] = gamepadState.buttons(i) == 1;
         }
@@ -130,7 +128,6 @@ public class EventoGamepad {
             panelJuego.getGame().procesarTeclaEstacionQuimica(51);
         }
 
-        // Interactuar (botón X - solo al presionar)
         if (gamepadState.buttons(GLFW_GAMEPAD_BUTTON_X) == 1 && !prevButtonState[GLFW_GAMEPAD_BUTTON_X]) {
             panelJuego.getGame().procesarTeclaEstacionQuimica(52);
         }

@@ -69,7 +69,6 @@ public abstract class Arma {
             g2d.drawImage(sprite, -halfWidth, -halfHeight, null);
 
         } finally {
-            // CRÍTICO: Siempre restaurar la transformación original
             g2d.setTransform(originalTransform);
         }
     }

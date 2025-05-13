@@ -8,7 +8,7 @@ public class LogrosTracker {
     private boolean[] achievementsUnlocked;
     private static final int TOTAL_ACHIEVEMENTS = 7;
     
-    // Achievement indices
+    // logros indices
     public static final int LAST_HOPE = 0;
     public static final int CABALLERO_CAIDO = 1;
     public static final int AULLIDO_INTERNO = 2;
@@ -17,7 +17,7 @@ public class LogrosTracker {
     public static final int COLECCIONISTA = 5;
     public static final int INTOCABLE = 6;
     
-    // Track if player has taken damage
+
     private boolean hasTakenDamage = false;
     
     public LogrosTracker() {
@@ -29,7 +29,7 @@ public class LogrosTracker {
         try {
             File file = new File(SAVE_FILE);
             if (!file.exists()) {
-                return; // No save file yet
+                return; 
             }
             
             FileInputStream fis = new FileInputStream(file);
@@ -93,9 +93,8 @@ public class LogrosTracker {
         }
     }
     
-    // Game completion tracking methods
+
     public void gameCompleted(Personaje.TipoPersonaje personajeType, long completionTimeSeconds) {
-        // Character-specific achievements
         switch (personajeType) {
             case ECLIPSA: 
                 unlockAchievement(AULLIDO_INTERNO);
@@ -108,24 +107,23 @@ public class LogrosTracker {
                 break;
         }
         
-        // Speed achievement (less than 10 minutes)
+        // VELOCIDAD LETAL
         if (completionTimeSeconds < 600) {
             unlockAchievement(VELOCIDAD_LETAL);
         }
         
-        // No Damage achievement
+        // INTOCABLE
         if (!hasTakenDamage) {
             unlockAchievement(INTOCABLE);
         }
         
-        // Last Hope (all other achievements)
+        // Last Hope
         if (areAllOthersUnlocked()) {
             unlockAchievement(LAST_HOPE);
         }
     }
     
     private boolean areAllOthersUnlocked() {
-        // Check if all achievements except LAST_HOPE are unlocked
         for (int i = 1; i < TOTAL_ACHIEVEMENTS; i++) {
             if (!achievementsUnlocked[i]) {
                 return false;
@@ -134,12 +132,11 @@ public class LogrosTracker {
         return true;
     }
     
-    // Weapon collection tracking
+
     public void allWeaponsCollected() {
         unlockAchievement(COLECCIONISTA);
     }
-    
-    // Damage tracking
+
     public void playerTookDamage() {
         hasTakenDamage = true;
     }

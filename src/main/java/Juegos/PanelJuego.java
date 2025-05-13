@@ -20,7 +20,6 @@ public class PanelJuego extends JPanel {
     private EventoGamepad eg;
     Juego game;
     
-    // Añadir sprites para la barra de vida
     private BufferedImage[] spritesBarraVida;
     private final int TOTAL_SPRITES_BARRA = 11;
     private final int SPRITE_WIDTH = 64;
@@ -36,7 +35,7 @@ public class PanelJuego extends JPanel {
         setPanelSize();
         cargarSpritesBarraVida(); // Cargar los sprites
         addKeyListener(et);
-        addKeyListener(en); // Agregar el listener para cambio de niveles
+        addKeyListener(en);
         addMouseListener(ev);
         addMouseMotionListener(ev);
     }
@@ -59,8 +58,7 @@ public class PanelJuego extends JPanel {
         super.paint(g);
         Juego game = getGame();
         game.render(g);
-        
-        // Solo dibujar la barra de vida en estado PLAYING
+
         if (game.getEstadoJuego() == EstadoJuego.PLAYING) {
             dibujarBarraVida(g);
         }
@@ -71,17 +69,13 @@ public class PanelJuego extends JPanel {
     }
     
     void updateGame() {
-        // Actualiza la información del mouse en el jugador antes de la actualización general
         game.updateMouseInfo(ev.getMouseX(), ev.getMouseY());
-        // La actualización normal del juego continúa en el método update() de la clase Juego
     }
 
 private void dibujarBarraVida(Graphics g) {
     int barraX = 20;
     int barraY = 30;
     
-    // Dimensiones originales: 64x32
-    // Definir un factor de escala o dimensiones específicas
     int barraWidth = 192;
     int barraHeight = 96;
 

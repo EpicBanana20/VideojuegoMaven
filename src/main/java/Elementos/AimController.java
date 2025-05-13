@@ -28,7 +28,7 @@ public class AimController {
             dy *= scale;
         }
 
-        // Guardar la posición final “clampeada” al radio
+        // Guardar la posición final al radio
         aimedX = playerX + dx;
         aimedY = playerY + dy;
     }

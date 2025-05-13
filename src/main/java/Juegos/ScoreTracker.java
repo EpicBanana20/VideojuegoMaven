@@ -21,7 +21,6 @@ public class ScoreTracker {
     private boolean gameCompleted;
     private static final String SCORES_FILE = "scores.txt";
     
-    // Scoring constants
     private static final int POINTS_PER_ENEMY = 100;
     private static final int POINTS_PER_WEAPON = 500;
     private static final int TIME_PENALTY_PER_MINUTE = 50;
@@ -80,22 +79,18 @@ public class ScoreTracker {
         
         try {
             File file = new File(SCORES_FILE);
-            
-            // Create file if it doesn't exist
+
             if (!file.exists()) {
                 file.createNewFile();
             }
             
-            // Format date for record
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = dateFormat.format(new Date());
-            
-            // Create the score entry
+
             String scoreEntry = String.format("%s,%d,%d,%d,%d,%s\n", 
                 playerName, finalScore, enemiesKilled, weaponsCollected, 
                 (System.currentTimeMillis() - startTime) / 1000, date);
-            
-            // Write to file (append mode)
+
             FileWriter fw = new FileWriter(file, true);
             BufferedWriter bw = new BufferedWriter(fw);
             bw.write(scoreEntry);
@@ -138,16 +133,14 @@ public class ScoreTracker {
             }
             
             br.close();
-            
-            // Sort by score (descending)
+
             Collections.sort(scores, new Comparator<ScoreEntry>() {
                 @Override
                 public int compare(ScoreEntry s1, ScoreEntry s2) {
                     return Integer.compare(s2.getScore(), s1.getScore());
                 }
             });
-            
-            // Limit results
+
             if (scores.size() > limit) {
                 scores = scores.subList(0, limit);
             }
@@ -165,8 +158,7 @@ public class ScoreTracker {
             paused = true;
         }
     }
-    
-    // Getters for displaying stats during and after gameplay
+
     public int getEnemiesKilled() {
         return enemiesKilled;
     }
@@ -190,8 +182,7 @@ public class ScoreTracker {
     public boolean isGameCompleted() {
         return gameCompleted;
     }
-    
-    // Static inner class to represent a score entry
+
     public static class ScoreEntry {
         private String playerName;
         private int score;

@@ -25,6 +25,7 @@ public class AudioManager {
     private boolean soundEnabled = true;
     private EstadoJuego estadoAnterior = null;
     private boolean isPaused = false;
+    @SuppressWarnings("unused")
     private String currentMusicId = null;
     
     private AudioManager() {

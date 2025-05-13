@@ -342,8 +342,6 @@ public class Jugador extends Cascaron {
         // Hacer al jugador invencible
         invulnerable = true;
         invulnerabilidadTimer = Integer.MAX_VALUE; // Duración "infinita"
-
-        System.out.println("¡Valthor activa su espada boomerang y se vuelve invencible!");
     }
 
     private void desactivarHabilidadValthor() {
@@ -481,7 +479,6 @@ public class Jugador extends Cascaron {
                         // Si estamos colisionando con una plataforma atravesable y queremos bajar,
                         // movemos el jugador un poco más hacia abajo para salir de la colisión
                         hitbox.y += Math.max(1, airSpeed);
-                        System.out.println("Atravesando plataforma...");
                     } else {
                         // Si no es una plataforma atravesable, nos detenemos como normalmente
                         hitbox.y = GetEntityYPosUnderRoofOrAboveFloor(hitbox, airSpeed, true);

@@ -62,9 +62,7 @@ public class LevelManager {
         int maxTileIndex = LoadSave.LEVEL_INFO[levelIndex][0];
         int numFilas = LoadSave.LEVEL_INFO[levelIndex][2];
         int numColumnas = LoadSave.LEVEL_INFO[levelIndex][3];
-        
-        System.out.println("Cargando atlas nivel " + (levelIndex + 1) + 
-                          ": " + numFilas + " filas x " + numColumnas + " columnas");
+    
         
         // Inicializamos el array de sprites
         levelSprite = new BufferedImage[maxTileIndex];
@@ -84,8 +82,6 @@ public class LevelManager {
                 }
             }
         }
-        
-        System.out.println("Cargados " + index + " tiles para el nivel " + (levelIndex + 1));
     }
 
     public void cargarEntidades(Juego game) {
@@ -263,10 +259,6 @@ public class LevelManager {
             cargarEntidades(game);
             cargarDecoraciones();
             
-            // Resetear jugador y otros elementos si es necesario
-            // (esto puede variar según la implementación específica)
-            
-            System.out.println("Cambiado al nivel " + (currentLevelIndex + 1));
         }
     }
     

@@ -107,7 +107,6 @@ public abstract class Enemigo extends Cascaron {
             atravesarPlataformaCooldown--;
         }
 
-        // Decidir si queremos atravesar la plataforma (puedes personalizar esta lógica)
         if (sobrePlataforma && !enAire && atravesarPlataformaCooldown == 0) {
             iniciarAtravesarPlataforma();
         }
@@ -208,7 +207,6 @@ public abstract class Enemigo extends Cascaron {
             return;
         }
 
-        // Verificar dirección actual
         boolean hayPared = MetodoAyuda.hayParedAdelante(
                 hitbox,
                 Juego.NIVEL_ACTUAL_DATA,
@@ -227,7 +225,7 @@ public abstract class Enemigo extends Cascaron {
     protected boolean puedeMoverseEnAlgunaDireccion() {
         if (firstUpdate) {
             firstUpdate = false;
-            return true; // Permitir movimiento en el primer update
+            return true;
         }
         // Verificar movimiento a la izquierda
         boolean puedeIzquierda = !MetodoAyuda.hayParedAdelante(hitbox, Juego.NIVEL_ACTUAL_DATA, -checkOffset)
@@ -300,8 +298,6 @@ public abstract class Enemigo extends Cascaron {
         animaciones.setAccion(MUERTE);
         animaciones.resetearAnimacion();
     }
-    
-    // Track enemy kill in score system (only if this isn't a boss, since bosses are tracked separately)
     if (!(this instanceof BOSS1 || this instanceof BOSS2 || this instanceof BOSS3)) {
         if (Juego.INSTANCIA_ACTUAL != null && Juego.INSTANCIA_ACTUAL.getScoreTracker() != null) {
             Juego.INSTANCIA_ACTUAL.getScoreTracker().enemyKilled();
@@ -360,7 +356,6 @@ public abstract class Enemigo extends Cascaron {
     }
 
     protected boolean esSeguroMoverse() {
-        // Verificar dirección según orientación
         boolean haciaIzquierda = movimientoHaciaIzquierda;
 
         // Verificar si hay pared adelante
@@ -379,7 +374,7 @@ public abstract class Enemigo extends Cascaron {
         return !hayPared && haySuelo;
     }
 
-    // Método abstracto que implementarán las subclases
+    // Método abstracto que implementarán
     protected abstract void disparar(float angulo);
 
     protected void manejarDisparo(Jugador jugador) {
@@ -394,10 +389,7 @@ public abstract class Enemigo extends Cascaron {
 
         // Verificar si el jugador está en rango
         if (puedeVerJugador(jugador)) {
-            // Orientar el enemigo hacia el jugador
             orientarHaciaJugador(jugador);
-
-            // Calcular ángulo y disparar
             float angulo = calcularAnguloHaciaJugador(jugador);
             disparar(angulo);
             disparoCooldown = disparoMaxCooldown;
@@ -426,7 +418,7 @@ public abstract class Enemigo extends Cascaron {
     protected void loadHealthBarSprites() {
         if (!healthBarLoaded) {
         BufferedImage healthBarsImg = LoadSave.GetSpriteAtlas(LoadSave.BOSS_HEALTH_BAR);
-        healthBarSprites = new BufferedImage[18]; // 11 frames from 100% to 0%
+        healthBarSprites = new BufferedImage[18];
         
         for (int i = 0; i < 17; i++) {
             healthBarSprites[i] = healthBarsImg.getSubimage(i * 64, 0, 64, 32);
@@ -439,18 +431,14 @@ public abstract class Enemigo extends Cascaron {
         if (!healthBarLoaded) {
             loadHealthBarSprites();
         }
-        
-        // Calculate health percentage
+
         float healthPercentage = (float) vida / vidaMaxima;
-        
-        // Select the appropriate sprite (0 = full health, 10 = empty)
+
         int spriteIndex = Math.min(17, 17 - (int)(healthPercentage * 17));
-        
-        // Position the health bar above the enemy
+
         int barX = (int) (hitbox.x + hitbox.width/2 - 32*Juego.SCALE) - xLvlOffset;
         int barY = (int) (hitbox.y - 20*Juego.SCALE) - yLvlOffset;
         
-        // Draw the health bar with scaling
         g.drawImage(healthBarSprites[spriteIndex], 
                     barX, barY, 
                     (int)(64*Juego.SCALE), (int)(32*Juego.SCALE), null);
@@ -508,7 +496,6 @@ public abstract class Enemigo extends Cascaron {
         return adminBalas;
     }
 
-    // Add these methods
     public boolean hayPortalCreado() {
         return portalCreado;
     }

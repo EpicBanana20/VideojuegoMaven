@@ -1,7 +1,5 @@
 package Juegos;
 
-import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -238,8 +236,6 @@ public class Juego {
                 for (Bala bala : balas) {
                     if (bala.estaActiva() && bala.getHitBox().intersects(player.getHitBox())) {
                         boolean enDodgeroll = player.isDodgeInvulnerable();
-
-                        // Usar el nuevo método para manejar la colisión
                         bala.colisionConJugador(enDodgeroll);
 
                         // Solo aplicar daño si no está invulnerable
@@ -289,7 +285,6 @@ public class Juego {
                 selectorPersonajes.draw(g);
                 break;
             case PLAYING:
-                // Todo el código existente de render va aquí
                 background.draw(g, camera.getxLvlOffset());
 
                 if (levelMan.getCurrentLevelIndex() != 2) {
@@ -308,10 +303,6 @@ public class Juego {
 
                 if (!cambiandoNivel) {
                     hudQuimico.render(g);
-                }
-
-                if (cambiandoNivel) {
-                    // Por ejemplo, dibujar una pantalla de carga o un efecto de fade
                 }
                 break;
             case PAUSA:
@@ -336,7 +327,6 @@ public class Juego {
             case MUERTE:
                 background.draw(g, camera.getxLvlOffset());
 
-                // Dibujamos otros elementos del juego
                 if (levelMan.getCurrentLevelIndex() != 2) {
                     adminDecoraciones.render(g, camera.getxLvlOffset(), camera.getyLvlOffset());
                     levelMan.draw(g, camera.getxLvlOffset(), camera.getyLvlOffset());
@@ -347,7 +337,6 @@ public class Juego {
                 adminEnemigos.render(g, camera.getxLvlOffset(), camera.getyLvlOffset());
                 player.render(g, camera.getxLvlOffset(), camera.getyLvlOffset());
 
-                // Dibujamos el menú de muerte
                 menuMuerte.draw(g);
                 break;
             case SCOREBOARD:
@@ -372,8 +361,6 @@ public class Juego {
 
             // Desactivar controles del jugador durante la transición
             player.resetDirBooleans();
-
-            // Reproducir música del nuevo nivel
             if (estadoJuego == EstadoJuego.PLAYING && audioManager != null) {
                 audioManager.updateGameState(estadoJuego, nivelIndex);
             }
@@ -384,12 +371,10 @@ public class Juego {
     public void siguienteNivel() {
         int nextLevel = (levelMan.getCurrentLevelIndex() + 1) % levelMan.getTotalLevels();
 
-        // Check if this was the final level
         if (levelMan.getCurrentLevelIndex() == levelMan.getTotalLevels() - 1) {
-            // Game completed - show scoreboard
+
             gameCompleted();
         } else {
-            // Normal level progression
             cambiarNivel(nextLevel);
         }
     }
@@ -402,15 +387,9 @@ public class Juego {
         }
         adminEnemigos.limpiarEnemigos();
         adminDecoraciones.limpiarDecoraciones();
-
-        // Cambiar nivel a través del LevelManager
         levelMan.changeLevel(nivelDestino);
         background = new Background(levelMan.getCurrentLevelIndex());
-
-        // Actualizar cámara para el nuevo nivel
         camera = new Camera(GAME_WIDTH, GAME_HEIGHT, NIVEL_ACTUAL_ANCHO, NIVEL_ACTUAL_ALTO);
-
-        // Cargar datos del nivel para el jugador
         player.loadLvlData(NIVEL_ACTUAL_DATA);
 
         levelMan.cargarEntidades(this);
@@ -425,17 +404,14 @@ public class Juego {
     }
 
     public void reiniciarJuego() {
-        // Limpiar recursos
         if (player.getArmaActual() != null) {
             player.getArmaActual().getAdminBalas().limpiarBalas();
         }
         adminEnemigos.limpiarEnemigos();
         adminDecoraciones.limpiarDecoraciones();
 
-        // Reiniciar al nivel 0
         levelMan.changeLevel(0);
 
-        // Actualizar variables globales
         NIVEL_ACTUAL_DATA = levelMan.getCurrentLevel().getLvlData();
         NIVEL_ACTUAL_ALTO = NIVEL_ACTUAL_DATA.length * TILES_SIZE;
         NIVEL_ACTUAL_ANCHO = NIVEL_ACTUAL_DATA[0].length * TILES_SIZE;
@@ -459,9 +435,7 @@ public class Juego {
         scoreTracker = new ScoreTracker();
 
         if (audioManager != null) {
-            // Detener completamente cualquier música anterior
             audioManager.stopMusic();
-            // Forzar la actualización de música para el nivel 0
             audioManager.updateGameState(EstadoJuego.PLAYING, 0);
         }
 
@@ -469,7 +443,6 @@ public class Juego {
     }
 
     public void interactuarConEstacionQuimica() {
-        // Buscar estaciones químicas en las decoraciones
         for (Decoracion decoracion : adminDecoraciones.getDecoraciones()) {
             if (decoracion instanceof EstacionQuimica) {
                 EstacionQuimica estacion = (EstacionQuimica) decoracion;
@@ -484,7 +457,7 @@ public class Juego {
 
     public void procesarTeclaEstacionQuimica(int keyCode) {
         if (estacionQuimicaActiva != null && estacionQuimicaActiva.isEstacionAbierta()) {
-            // Si se presiona un número (1-5) para crear un compuesto
+            // Si se presiona un número (1-9) para crear un compuesto
             if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
                 boolean compuestoCreado = estacionQuimicaActiva.procesarTecla(keyCode);
 
@@ -524,11 +497,10 @@ public class Juego {
 
     public void updateAimFromGamepad(float dirX, float dirY) {
         if (player != null) {
-            // Get player's screen position instead of using screen center
+
             float playerScreenX = player.getXCenter() - camera.getxLvlOffset();
             float playerScreenY = player.getYCenter() - camera.getyLvlOffset();
 
-            // Calculate aim position relative to player's screen position
             int mouseX = (int) (playerScreenX + (dirX * 1000));
             int mouseY = (int) (playerScreenY + (dirY * 1000));
 
@@ -549,7 +521,6 @@ public class Juego {
     }
 
     public void updateMouseInfo(int mouseX, int mouseY) {
-        // Almacena o pasa directamente la información del mouse al jugador
         player.updateMouseInfo(mouseX, mouseY);
     }
 
@@ -596,28 +567,21 @@ public class Juego {
         adminDecoraciones.agregarDecoracion(portal);
     }
 
-    // In Juego.java, update the verificarJefesDerrotados method:
-
     public void verificarJefesDerrotados() {
         for (Enemigo enemigo : adminEnemigos.getEnemigos()) {
             if (!enemigo.estaActivo() &&
                     (enemigo instanceof BOSS1 || enemigo instanceof BOSS2 || enemigo instanceof BOSS3) &&
                     !enemigo.hayPortalCreado()) {
 
-                // Specific coordinates for BOSS2
                 if (enemigo instanceof BOSS2) {
-                    // Use exact coordinates for BOSS2 (Zefir)
                     crearPortalEnPosicion(12321.0f, 1130.5f);
                 } else {
-                    // Original logic for other bosses
                     float portalX = (float) (enemigo.getHitBox().getX() + enemigo.getHitBox().getWidth() / 2
                             - (16 * Juego.SCALE));
                     float portalY = (float) (enemigo.getHitBox().getY() + enemigo.getHitBox().getHeight()
                             - (64 * Juego.SCALE));
                     crearPortalEnPosicion(portalX, portalY);
                 }
-
-                // Track enemy kill
                 scoreTracker.enemyKilled();
 
                 enemigo.setPortalCreado(true);
@@ -633,10 +597,8 @@ public class Juego {
         logrosTracker.gameCompleted(
                 player.getPersonaje().getTipo(),
                 scoreTracker.getElapsedTimeSeconds());
-        // Save previous game state to return to after viewing scores
         estadoJuegoAnterior = estadoJuego;
 
-        // Show scoreboard
         setEstadoJuego(EstadoJuego.SCOREBOARD);
     }
 

@@ -61,7 +61,6 @@ public class BOSS1 extends Enemigo {
     public void update() {
 
         if (!activated && Juego.jugadorActual != null) {
-            // Check if player is within detection range
             float playerX = Juego.jugadorActual.getXCenter();
             float playerY = Juego.jugadorActual.getYCenter();
             float bossX = hitbox.x + hitbox.width/2;
@@ -279,7 +278,7 @@ public class BOSS1 extends Enemigo {
             origenX, 
             origenY, 
             angulo, 
-            LoadSave.BULLET_BOSS1, // Puedes crear un sprite específico para el jefe
+            LoadSave.BULLET_BOSS1,
             daño,
             velocidad
         );

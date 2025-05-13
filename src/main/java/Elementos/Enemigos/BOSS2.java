@@ -13,8 +13,6 @@ import Utilz.Animaciones;
 import Elementos.Administradores.AdministradorEnemigos;
 import Elementos.Audio.AudioManager;
 
-// Zefir, el jefe del segundo nivel (FANTASMA)
-// Basado en Cesio (Cs) kriptón (Kr) Fosforo (P32)
 public class BOSS2 extends Enemigo {
 
     // Estado de activación
@@ -62,7 +60,7 @@ public class BOSS2 extends Enemigo {
     
     // Para invocación
     private int invocacionCooldown = 0;
-    private int invocacionMaxCooldown = 600; // 10 segundos a 60 FPS
+    private int invocacionMaxCooldown = 600; 
     private int numEnemigosAInvocar = 2;
     private boolean invocando = false;
     
@@ -115,15 +113,12 @@ public class BOSS2 extends Enemigo {
         // Si no está activado, no hacer nada más
         if (!activado) return;
         
-        // Skip normal update if teleporting
         if (teletransportandose) {
             actualizarTeletransporte();
-            // Still update animations
             animaciones.actualizarAnimacion();
             return;
         }
         
-        // Instead of super.update() we'll customize the behavior
         if (!activo) {
             if (animaciones != null) {
                 animaciones.actualizarAnimacion();
@@ -154,8 +149,6 @@ public class BOSS2 extends Enemigo {
         
         // Intentar teletransportarse
         intentarTeletransporte();
-        
-        // Intentar invocar enemigos en fases avanzadas
         if (faseActual >= FASE_AVANZADA) {
             intentarInvocarEnemigos();
         }
@@ -247,9 +240,6 @@ public class BOSS2 extends Enemigo {
             x = hitbox.x;
             y = hitbox.y;
         } else {
-            // Si no encontramos posición válida después de varios intentos,
-            // quedarnos donde estamos
-            System.out.println("Zefir no pudo encontrar un lugar válido para teletransportarse");
         }
     }
     
@@ -324,9 +314,7 @@ public class BOSS2 extends Enemigo {
     }
     
     private void cambiarPatron() {
-        // Diferentes patrones según la fase
-        int numPatrones = 2 + faseActual; // Más patrones en fases avanzadas
-        
+        int numPatrones = 2 + faseActual; 
         int nuevoPatron = (patronAtaqueActual + 1) % numPatrones;
         patronAtaqueActual = nuevoPatron;
         
@@ -373,7 +361,6 @@ public class BOSS2 extends Enemigo {
     }
     
     private void intentarTeletransporte() {
-        // Solo intentar si no estamos ya teletransportándonos y el cooldown está listo
         if (!teletransportandose && teletransporteCooldown <= 0) {
             // Probabilidad basada en la fase
             float probabilidad = 0.005f; // 0.5% por update en fase normal
@@ -386,7 +373,7 @@ public class BOSS2 extends Enemigo {
             
             // En la fase final, también teletransportarse cuando la salud es baja
             if (faseActual == FASE_FINAL && vida < vidaMaxima * 0.2f) {
-                probabilidad *= 2; // Doble probabilidad cuando está muy dañado
+                probabilidad *= 2;
             }
             
             // Intentar teletransporte
@@ -399,7 +386,6 @@ public class BOSS2 extends Enemigo {
     private void iniciarTeletransporte() {
         teletransportandose = true;
         teletransporteAnimacionTick = 0;
-        // Usar la animación específica de teletransporte
         animaciones.setAccion(TELETRANSPORTE);
         animaciones.resetearAnimacion();
     }
@@ -443,8 +429,7 @@ public class BOSS2 extends Enemigo {
         for (int i = 0; i < numEnemigosAInvocar; i++) {
             // Calcular posición aleatoria cercana
             float offsetX = (float) ((Math.random() * 200 - 100) * Juego.SCALE);
-            
-            // Invocar al enemigo usando la referencia directa
+
             adminEnemigos.crearEnemigoSkeler(
                 origenX + offsetX, 
                 origenY);
@@ -510,7 +495,7 @@ public class BOSS2 extends Enemigo {
             origenX, 
             origenY, 
             angulo, 
-            LoadSave.BULLET_ZEFIR, // Podría ser reemplazado por un sprite específico para Zefir
+            LoadSave.BULLET_ZEFIR,
             daño,
             velocidad
         );
@@ -627,7 +612,6 @@ public class BOSS2 extends Enemigo {
                         (float)(teletransporteAnimacionDuracion / 2);
             }
             
-            // Aplicar transparencia (en un juego real usarías AlphaComposite)
             // Aquí solo simulamos el efecto
             if (alpha < 0.3f) {
                 return; // No dibujar si es muy transparente
