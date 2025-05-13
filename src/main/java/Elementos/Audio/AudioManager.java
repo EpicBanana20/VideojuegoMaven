@@ -1,48 +1,54 @@
 package Elementos.Audio;
 
-import java.io.IOException;
-import javax.sound.sampled.*;
 import java.util.HashMap;
 import java.util.Map;
-
 import Juegos.EstadoJuego;
 
 public class AudioManager {
-
     private static AudioManager instance;
-
+    
+    // Música actual y tracks
     private Music currentMusic;
     private Map<String, Music> musicTracks = new HashMap<>();
     private Map<String, SoundEffect> soundEffects = new HashMap<>();
-
+    
+    // Volúmenes
     private float musicVolume = 0.1f;
     private float sfxVolume = 0.05f;
-
+    
+    // Mapeo de estados y niveles a música
     private Map<EstadoJuego, String> gameStateMusicMap = new HashMap<>();
     private Map<Integer, String> levelMusicMap = new HashMap<>();
-
+    
+    // Control de estados
     private boolean musicEnabled = true;
     private boolean soundEnabled = true;
-
+    private EstadoJuego estadoAnterior = null;
+    private boolean isPaused = false;
+    
     private AudioManager() {
         initializeMusicMappings();
     }
-
+    
     private void initializeMusicMappings() {
+        // Música para estados específicos
         gameStateMusicMap.put(EstadoJuego.MENU, "menu");
-
+        gameStateMusicMap.put(EstadoJuego.OPCIONES, "menu");
+        gameStateMusicMap.put(EstadoJuego.SELECCION_PERSONAJE, "menu");
+        
+        // Música para niveles
         levelMusicMap.put(0, "world1");
         levelMusicMap.put(1, "world2");
         levelMusicMap.put(2, "world3");
     }
-
+    
     public static AudioManager getInstance() {
         if (instance == null) {
             instance = new AudioManager();
         }
         return instance;
     }
-
+    
     public void loadMusic(String id, String path) {
         try {
             Music music = new Music(path);
@@ -52,7 +58,7 @@ public class AudioManager {
             System.err.println("Error al cargar música '" + id + "': " + e.getMessage());
         }
     }
-
+    
     public void loadSoundEffect(String id, String path) {
         try {
             SoundEffect sound = new SoundEffect(path);
@@ -62,19 +68,28 @@ public class AudioManager {
             System.err.println("Error al cargar efecto '" + id + "': " + e.getMessage());
         }
     }
-
+    
     public void playMusic(String id) {
-        if (!musicEnabled)
+        if (!musicEnabled) {
+            System.out.println("Música deshabilitada, no se reproducirá: " + id);
             return;
-
-        System.out.println(">>> Cambiando música a: " + id); // para depuración
-
-        // Detener la música actual si existe
-        if (currentMusic != null) {
-            currentMusic.stop(); // Esto asegura que la anterior se detenga
-            currentMusic.cleanup(); // Cierra completamente el clip anterior
         }
-
+        
+        System.out.println(">>> Cambiando música a: " + id);
+        
+        // Si es la misma música que ya está sonando, no hacer nada
+        if (currentMusic != null && musicTracks.get(id) == currentMusic) {
+            System.out.println("La música ya está sonando, no se cambiará");
+            return;
+        }
+        
+        // Detener la música actual
+        if (currentMusic != null) {
+            currentMusic.stop();
+            currentMusic.cleanup();
+        }
+        
+        // Iniciar la nueva música
         Music music = musicTracks.get(id);
         if (music != null) {
             currentMusic = music;
@@ -84,11 +99,11 @@ public class AudioManager {
             System.err.println("Música no encontrada: " + id);
         }
     }
-
+    
     public void playSoundEffect(String id) {
         if (!soundEnabled)
             return;
-
+            
         SoundEffect sound = soundEffects.get(id);
         if (sound != null) {
             sound.setVolume(sfxVolume);
@@ -97,84 +112,108 @@ public class AudioManager {
             System.err.println("Efecto de sonido no encontrado: " + id);
         }
     }
-
+    
     public void stopMusic() {
         if (currentMusic != null) {
             currentMusic.stop();
             currentMusic = null;
         }
     }
-
+    
     public void pauseMusic() {
-        if (currentMusic != null) {
+        if (currentMusic != null && !isPaused) {
+            System.out.println("Pausando música");
             currentMusic.pause();
+            isPaused = true;
         }
     }
-
+    
     public void resumeMusic() {
-        if (currentMusic != null && musicEnabled) {
+        if (currentMusic != null && isPaused && musicEnabled) {
+            System.out.println("Reanudando música");
             currentMusic.resume();
+            isPaused = false;
         }
     }
-
+    
     public void updateGameState(EstadoJuego state, int currentLevel) {
-        if (state == EstadoJuego.PLAYING) {
+        System.out.println("Cambiando estado de juego: " + state + " (anterior: " + estadoAnterior + ")");
+        
+        // Caso especial: volviendo de PAUSA a PLAYING
+        if (state == EstadoJuego.PLAYING && estadoAnterior == EstadoJuego.PAUSA) {
+            resumeMusic();
+        }
+        // PLAYING (primer inicio o cambio de nivel)
+        else if (state == EstadoJuego.PLAYING) {
+            isPaused = false;
             String musicId = levelMusicMap.get(currentLevel);
             if (musicId != null) {
                 playMusic(musicId);
             }
-        } else {
+        }
+        // PAUSA
+        else if (state == EstadoJuego.PAUSA) {
+            pauseMusic();
+        }
+        // MUERTE
+        else if (state == EstadoJuego.MUERTE) {
+            playSoundEffect("death");
+            pauseMusic();
+        }
+        // Otros estados (MENU, OPCIONES, etc.)
+        else {
+            isPaused = false;
             String musicId = gameStateMusicMap.get(state);
             if (musicId != null) {
                 playMusic(musicId);
-            } else if (state == EstadoJuego.PAUSA) {
-                pauseMusic();
-            } else if (state == EstadoJuego.MUERTE) {
-                playSoundEffect("death");
-                pauseMusic();
             }
         }
+        
+        // Actualizar estado anterior
+        estadoAnterior = state;
     }
-
+    
     public void setMusicVolume(float volume) {
         this.musicVolume = Math.max(0.0f, Math.min(1.0f, volume));
         if (currentMusic != null) {
             currentMusic.setVolume(musicVolume);
         }
     }
-
+    
     public void setSfxVolume(float volume) {
         this.sfxVolume = Math.max(0.0f, Math.min(1.0f, volume));
     }
-
+    
     public void setMusicEnabled(boolean enabled) {
+        System.out.println("Música " + (enabled ? "habilitada" : "deshabilitada"));
         this.musicEnabled = enabled;
-        if (!enabled) {
+        
+        if (enabled && isPaused) {
+            resumeMusic();
+        } else if (!enabled) {
             stopMusic();
         }
     }
-
+    
     public void setSoundEnabled(boolean enabled) {
+        System.out.println("Efectos " + (enabled ? "habilitados" : "deshabilitados"));
         this.soundEnabled = enabled;
     }
-
-    public void cleanup() {
-        stopMusic();
-        for (Music music : musicTracks.values()) {
-            music.cleanup();
-        }
-        for (SoundEffect sound : soundEffects.values()) {
-            sound.cleanup();
-        }
-        musicTracks.clear();
-        soundEffects.clear();
-    }
-
+    
+    
     public float getMusicVolume() {
         return musicVolume;
     }
-
+    
     public float getSfxVolume() {
         return sfxVolume;
+    }
+    
+    public boolean isMusicEnabled() {
+        return musicEnabled;
+    }
+    
+    public boolean isSoundEnabled() {
+        return soundEnabled;
     }
 }

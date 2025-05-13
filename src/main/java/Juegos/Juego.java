@@ -451,6 +451,13 @@ public class Juego {
         scoreboardScreen.reset();
         scoreTracker = new ScoreTracker();
 
+        if (audioManager != null) {
+        // Detener completamente cualquier música anterior
+        audioManager.stopMusic();
+        // Forzar la actualización de música para el nivel 0
+        audioManager.updateGameState(EstadoJuego.PLAYING, 0);
+        }
+
         necesitaReinicio = false;
     }
 
@@ -623,14 +630,7 @@ public class Juego {
         // Show scoreboard
         setEstadoJuego(EstadoJuego.SCOREBOARD);
     }
-
-    public void cleanup() {
-        // Si existe un gestor de audio, limpiarlo
-        if (audioManager != null) {
-            audioManager.cleanup();
-        }
-    }
-
+    
     public Menu getMenu() {
         return menu;
     }
