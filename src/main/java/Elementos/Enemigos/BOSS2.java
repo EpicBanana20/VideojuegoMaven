@@ -38,6 +38,8 @@ public class BOSS2 extends Enemigo {
     private int patronAtaqueActual = 0;
     private int contadorPatron = 0;
     private int duracionPatron = 180; // 3 segundos a 60 FPS
+    private int totalEnemigosInvocados = 0;
+    private int limiteEnemigosInvocados = 15;
     
     // Para disparos
     private boolean disparoEnProceso = false;
@@ -418,25 +420,31 @@ public class BOSS2 extends Enemigo {
     }
     
     private void invocarEnemigos() {
-        // Verificar que tenemos acceso al administrador de enemigos
-        if (adminEnemigos == null || Juego.jugadorActual == null) return;
-        
-        // Posición para la invocación
-        float origenX = hitbox.x + hitbox.width/2;
-        float origenY = hitbox.y + hitbox.height/2;
-        
-        // Invocar enemigos Skeler
-        for (int i = 0; i < numEnemigosAInvocar; i++) {
-            // Calcular posición aleatoria cercana
-            float offsetX = (float) ((Math.random() * 200 - 100) * Juego.SCALE);
+    // Verificar que tenemos acceso al administrador de enemigos y no hemos alcanzado el límite
+    if (adminEnemigos == null || Juego.jugadorActual == null || totalEnemigosInvocados >= limiteEnemigosInvocados) return;
+    
+    // Posición para la invocación
+    float origenX = hitbox.x + hitbox.width/2;
+    float origenY = hitbox.y + hitbox.height/2;
+    
+    // Número de esqueletos a invocar en esta oleada (limitado por cuántos podemos invocar aún)
+    int enemigosAInvocarAhora = Math.min(numEnemigosAInvocar, limiteEnemigosInvocados - totalEnemigosInvocados);
+    
+    // Invocar enemigos Skeler
+    for (int i = 0; i < enemigosAInvocarAhora; i++) {
+        // Calcular posición aleatoria cercana
+        float offsetX = (float) ((Math.random() * 200 - 100) * Juego.SCALE);
 
-            adminEnemigos.crearEnemigoSkeler(
-                origenX + offsetX, 
-                origenY);
-        }
-        
-        System.out.println("¡Zefir ha invocado " + numEnemigosAInvocar + " Skelers!");
+        adminEnemigos.crearEnemigoSkeler(
+            origenX + offsetX, 
+            origenY);
+            
+        // Incrementar el contador
+        totalEnemigosInvocados++;
     }
+    
+    System.out.println("¡Zefir ha invocado " + enemigosAInvocarAhora + " Skelers! (" + totalEnemigosInvocados + "/" + limiteEnemigosInvocados + ")");
+}
     
     @Override
     protected void disparar(float angulo) {
@@ -680,5 +688,13 @@ public class BOSS2 extends Enemigo {
     
     public boolean isActivated() {
         return activo;
+    }
+
+    public int getLimiteEnemigosInvocados() {
+    return limiteEnemigosInvocados;
+}
+
+public void setLimiteEnemigosInvocados(int limite) {
+    this.limiteEnemigosInvocados = limite;
     }
 }
