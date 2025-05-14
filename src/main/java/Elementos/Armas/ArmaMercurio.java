@@ -23,7 +23,7 @@ public class ArmaMercurio extends Arma {
 
     public ArmaMercurio(AdministradorBalas adminBalas) {
         super("armas/PISTOLAPRO.png", 30 * Juegos.Juego.SCALE, 1.4f, adminBalas);
-        this.nombre = "MachineGun";
+        this.nombre = "Decaoxido de tetrafósforo";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";
     }

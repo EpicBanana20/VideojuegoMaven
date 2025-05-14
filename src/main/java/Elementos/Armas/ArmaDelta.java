@@ -29,7 +29,7 @@ public class ArmaDelta extends Arma {
 
     public ArmaDelta(AdministradorBalas adminBalas) {
         super("armas/DELTA.png", 30 * Juegos.Juego.SCALE, 2.4f, adminBalas);
-        this.nombre = "Eclipse";
+        this.nombre = "Tetacloruro de carbono";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Mutagenico";
     }

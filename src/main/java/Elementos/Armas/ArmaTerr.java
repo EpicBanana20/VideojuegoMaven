@@ -29,7 +29,7 @@ public class ArmaTerr extends Arma {
 
     public ArmaTerr(AdministradorBalas adminBalas) {
         super("armas/TERR.png", 30 * Juegos.Juego.SCALE, 3.0f, adminBalas);
-        this.nombre = "Eclipse";
+        this.nombre = "Tribromuro de boro";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";
     }

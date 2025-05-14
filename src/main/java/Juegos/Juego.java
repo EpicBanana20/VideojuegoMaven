@@ -1,5 +1,6 @@
 package Juegos;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import Elementos.Enemigo;
 import Elementos.Jugador;
 import Elementos.Personaje;
 import Elementos.Administradores.AdministradorEnemigos;
+import Elementos.Administradores.AdministradorMensajes;
 import Elementos.Audio.AudioManager;
 import Elementos.Decoraciones.Decoracion;
 import Elementos.Decoraciones.EstacionQuimica;
@@ -57,6 +59,7 @@ public class Juego {
     public final static int GAME_HEIGHT = TILES_SIZE * TILES_HEIGHT;
 
     private AdministradorEnemigos adminEnemigos;
+    private AdministradorMensajes adminMensajes;
 
     // Para control de niveles
     private boolean cambiandoNivel = false;
@@ -133,6 +136,7 @@ public class Juego {
         adminEnemigos = new AdministradorEnemigos();
         ADMIN_ENEMIGOS = adminEnemigos;
         adminDecoraciones = new AdministradorDecoraciones();
+        adminMensajes = new AdministradorMensajes();
         scoreTracker = new ScoreTracker();
         scoreboardScreen = new ScoreboardScreen(this, scoreTracker);
         menuOpciones = new MenuOpciones(this);
@@ -187,6 +191,7 @@ public class Juego {
                 }
                 levelMan.update();
                 pan.updateGame();
+                adminMensajes.update();
                 adminEnemigos.update();
                 comprobarColisionEnemigosConJugador();
                 administrarDañoBalasEnemigas();
@@ -301,7 +306,7 @@ public class Juego {
                 if (estacionQuimicaActiva != null && estacionQuimicaActiva.isEstacionAbierta()) {
                     estacionQuimicaActiva.render(g, camera.getxLvlOffset(), camera.getyLvlOffset());
                 }
-
+                adminMensajes.render(g, camera.getxLvlOffset(), camera.getyLvlOffset());
                 if (!cambiandoNivel) {
                     hudQuimico.render(g);
                 }
@@ -457,23 +462,35 @@ public class Juego {
     }
 
     public void procesarTeclaEstacionQuimica(int keyCode) {
-        if (estacionQuimicaActiva != null && estacionQuimicaActiva.isEstacionAbierta()) {
-            // Si se presiona un número (1-9) para crear un compuesto
-            if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
-                boolean compuestoCreado = estacionQuimicaActiva.procesarTecla(keyCode);
+    if (estacionQuimicaActiva != null && estacionQuimicaActiva.isEstacionAbierta()) {
+        // Si se presiona un número (1-9) para crear un compuesto
+        if (keyCode >= KeyEvent.VK_1 && keyCode <= KeyEvent.VK_9) {
+            boolean compuestoCreado = estacionQuimicaActiva.procesarTecla(keyCode);
 
-                // Si se creó un compuesto, intentar crear un arma
-                if (compuestoCreado) {
-                    intentarCrearArmaDesdeUltimoCompuesto();
-                }
-            } else if (keyCode == KeyEvent.VK_ESCAPE) {
-                estacionQuimicaActiva.procesarTecla(keyCode);
+            // Si se creó un compuesto, intentar crear un arma
+            if (compuestoCreado) {
+                intentarCrearArmaDesdeUltimoCompuesto();
+            } else {
+                // Mostrar mensaje de fallo
+                float jugadorX = player.getXCenter();
+                float jugadorY = (float) (player.getHitBox().getY() - 20);
+                adminMensajes.agregarMensaje("No se pudo crear el compuesto", jugadorX, jugadorY, Color.RED, 120);
+                
+                // Cerrar la estación
+                estacionQuimicaActiva.procesarTecla(KeyEvent.VK_ESCAPE);
                 estacionQuimicaActiva = null;
             }
+        } else if (keyCode == KeyEvent.VK_ESCAPE) {
+            estacionQuimicaActiva.procesarTecla(keyCode);
+            estacionQuimicaActiva = null;
         }
     }
+}
 
     private void intentarCrearArmaDesdeUltimoCompuesto() {
+        boolean armaNueva = false;
+        String mensajeResultado = "";
+
         // Iterar sobre los compuestos recién creados
         SistemaQuimico sistemaQuimico = player.getSistemaQuimico();
         for (String formula : sistemaQuimico.getInventarioCompuestos().getCompuestos().keySet()) {
@@ -482,17 +499,40 @@ public class Juego {
                     // Intentar crear un arma con este compuesto
                     Arma nuevaArma = sistemaQuimico.crearArma(formula, player.getArmaActual().getAdminBalas());
                     if (nuevaArma != null) {
-                        boolean armaNueva = player.agregarArmaAlInventario(nuevaArma);
+                        armaNueva = player.agregarArmaAlInventario(nuevaArma);
                         if (armaNueva) {
                             // Mensaje de éxito
-                            System.out.println("¡Has creado un arma nueva: " + nuevaArma.getNombre() + "!");
+                            mensajeResultado = "¡Arma creada: " + nuevaArma.getNombre() + "!";
+                        } else {
+                            mensajeResultado = "Ya tienes esta arma";
                         }
                         break;
                     }
                 } catch (Exception e) {
+                    mensajeResultado = "Error al crear arma";
                     System.err.println("Error al crear arma: " + e.getMessage());
                 }
             }
+        }
+
+        if (mensajeResultado.isEmpty()) {
+            mensajeResultado = "No se pudo crear un arma";
+        }
+
+        // Mostrar mensaje flotante sobre el jugador
+        float jugadorX = player.getXCenter();
+        float jugadorY = (float) (player.getHitBox().getY() - 20); // Por encima de la cabeza
+
+        // Color verde para éxito, rojo para fracaso
+        Color color = armaNueva ? Color.GREEN : Color.RED;
+
+        // Añadir mensaje
+        adminMensajes.agregarMensaje(mensajeResultado, jugadorX, jugadorY, color, 120); // 2 segundos a 60fps
+
+        // Cerrar la estación química
+        if (estacionQuimicaActiva != null) {
+            estacionQuimicaActiva.procesarTecla(KeyEvent.VK_ESCAPE);
+            estacionQuimicaActiva = null;
         }
     }
 

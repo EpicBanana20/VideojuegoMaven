@@ -27,7 +27,7 @@ public class ArmaEscopeta extends Arma {
 
     public ArmaEscopeta(AdministradorBalas adminBalas) {
         super("armas/escopeta.png", 30 * Juego.SCALE, 3.0f, adminBalas);
-        this.nombre = "Escopeta";
+        this.nombre = "Yoduro de plata";
         this.tipoDaño = "Luz";
     }
     

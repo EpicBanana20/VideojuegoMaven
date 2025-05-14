@@ -26,7 +26,7 @@ public class ArmaIon extends Arma {
 
     public ArmaIon(AdministradorBalas adminBalas) {
         super("armas/ION.png", 30 * Juegos.Juego.SCALE, 2.6f,adminBalas);
-        this.nombre = "Eclipse";
+        this.nombre = "Arsenito de sodio";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Mutagenico";
     }

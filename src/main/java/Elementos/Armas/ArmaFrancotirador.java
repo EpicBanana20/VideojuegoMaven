@@ -21,7 +21,7 @@ public class ArmaFrancotirador extends Arma {
     
     public ArmaFrancotirador(AdministradorBalas adminBalas) {
         super("armas/francotirador.png", 35 * Juego.SCALE, 2.0f, adminBalas);
-        this.nombre = "Francotirador";
+        this.nombre = "Cloruro de platino(II)";
         this.tipoDaño = "Mutagenico";
     }
     

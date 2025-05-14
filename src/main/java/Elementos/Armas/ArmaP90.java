@@ -26,7 +26,7 @@ public class ArmaP90 extends Arma {
 
     public ArmaP90(AdministradorBalas adminBalas) {
         super("armas/P90p.png", 30 * Juegos.Juego.SCALE, 1.8f,adminBalas);
-        this.nombre = "Eclipse";
+        this.nombre = "Trióxido de azufre";
         this.armaCooldown = Math.round(FRAMES_POR_SEGUNDO / cadenciaDisparo);
         this.tipoDaño = "Corrosivo";
     }
