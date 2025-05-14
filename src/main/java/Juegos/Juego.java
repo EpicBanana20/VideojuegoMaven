@@ -527,7 +527,7 @@ public class Juego {
         Color color = armaNueva ? Color.GREEN : Color.RED;
 
         // Añadir mensaje
-        adminMensajes.agregarMensaje(mensajeResultado, jugadorX, jugadorY, color, 120); // 2 segundos a 60fps
+        adminMensajes.agregarMensaje(mensajeResultado, jugadorX, jugadorY, color, 240); // 2 segundos a 60fps
 
         // Cerrar la estación química
         if (estacionQuimicaActiva != null) {
