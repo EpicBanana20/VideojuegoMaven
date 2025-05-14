@@ -4,7 +4,7 @@ import java.io.*;
 import Elementos.Personaje;
 
 public class LogrosTracker {
-    private static final String SAVE_FILE = "logros.dat";
+    private static final String SAVE_FILE = "logros.txt";
     private boolean[] achievementsUnlocked;
     private static final int TOTAL_ACHIEVEMENTS = 7;
     

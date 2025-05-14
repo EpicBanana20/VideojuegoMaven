@@ -438,7 +438,8 @@ public class Juego {
         levelMan.cargarDecoraciones();
 
         scoreboardScreen.reset();
-        scoreTracker = new ScoreTracker();
+        scoreTracker.resetTimer();
+        logrosTracker.resetDamageTracking();
 
         if (audioManager != null) {
             audioManager.stopMusic();

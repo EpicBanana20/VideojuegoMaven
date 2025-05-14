@@ -145,6 +145,7 @@ public class SelectorPersonajes {
 
     public void iniciarJuegoConPersonaje() {
         juego.configurarJugadorConPersonaje(getTipoPersonajeSeleccionado());
+        juego.getScoreTracker().resetTimer();
         juego.setEstadoJuego(EstadoJuego.PLAYING);
     }
     
