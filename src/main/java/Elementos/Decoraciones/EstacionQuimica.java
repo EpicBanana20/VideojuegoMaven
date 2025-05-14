@@ -58,7 +58,7 @@ public class EstacionQuimica extends Decoracion {
         // Indicar visualmente que se puede interactuar
         if (jugadorCerca) {
             g.setColor(Color.WHITE);
-            String mensaje = "Presiona E para interactuar";
+            String mensaje = "Presiona E o LB para interactuar";
             int textX = (int) (x + width / 2 - g.getFontMetrics().stringWidth(mensaje) / 2) - xLvlOffset;
             int textY = (int) (y - 20) - yLvlOffset;
             g.drawString(mensaje, textX, textY);
