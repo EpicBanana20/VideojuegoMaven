@@ -101,7 +101,6 @@ public class BOSS2 extends Enemigo {
             // Verificar si el jugador está dentro del rango de detección
             if (puedeVerJugador(Juego.jugadorActual)) {
                 activado = true;
-                System.out.println("¡Zefir ha sido despertado!");
                 AudioManager.getInstance().playMusic("boss2");
             } else {
                 // Si aún no está activado, solo actualizar animación básica
@@ -442,8 +441,6 @@ public class BOSS2 extends Enemigo {
         // Incrementar el contador
         totalEnemigosInvocados++;
     }
-    
-    System.out.println("¡Zefir ha invocado " + enemigosAInvocarAhora + " Skelers! (" + totalEnemigosInvocados + "/" + limiteEnemigosInvocados + ")");
 }
     
     @Override
