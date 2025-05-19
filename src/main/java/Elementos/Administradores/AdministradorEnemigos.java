@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import Elementos.Bala;
 import Elementos.Enemigo;
+import Elementos.Audio.AudioManager;
 import Elementos.Enemigos.BOSS1;
 import Elementos.Enemigos.BOSS2;
 import Elementos.Enemigos.BOSS3;
@@ -78,6 +79,7 @@ public class AdministradorEnemigos {
                     if (enemigo.estaActivo() && bala.getHitBox().intersects(enemigo.getHitBox())) {
                         // La bala impactó en el enemigo
                         enemigo.recibirDaño(bala.getDaño(), bala.getTipoDaño());
+                        AudioManager.getInstance().playSoundEffect("hitenemy");
                         bala.desactivar();
                         break; // Una bala solo puede impactar a un enemigo
                     }

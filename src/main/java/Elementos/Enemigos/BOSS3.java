@@ -31,13 +31,29 @@ public class BOSS3 extends Enemigo {
     private int explosion_duracion = 15;
     private int explosion_velocidad = 50; // Controla la velocidad de la animación (más alto = más lento)
     
+    // Para ataques de rayo vertical
+    private BufferedImage[] rayoMagico_sprites; // Para la animación del rayo
+    private int rayoDuracion = 10; // Duración de la animación del rayo
+    private int rayoVelocidad = 10; // Velocidad de la animación del rayo
+    
     // Control de ataques
     private int cooldownExplosion = 0;
     private int maxCooldownExplosion = 120; // 2 segundos a 60 FPS
+    
+    // Para controlar el cooldown del ataque de rayo
+    private int cooldownRayo = 0;
+    private int maxCooldownRayo = 180; // 3 segundos a 60 FPS
+    
     private Random random = new Random();
     
     // Lista para manejar múltiples explosiones
     private ArrayList<ExplosionData> explosiones = new ArrayList<>();
+    
+    // Para manejar los rayos verticales
+    private ArrayList<RayoData> rayos = new ArrayList<>();
+    private boolean mostrandoAdvertencia = false;
+    private int tiempoAdvertencia = 60; // 1 segundo a 60 FPS
+    private int contadorAdvertencia = 0;
     
     // Clase interna para manejar múltiples explosiones
     private class ExplosionData {
@@ -49,6 +65,19 @@ public class BOSS3 extends Enemigo {
         public ExplosionData(float x, float y) {
             this.x = x;
             this.y = y;
+        }
+    }
+    
+    // Clase interna para manejar los rayos
+    private class RayoData {
+        float x;
+        int frame = 0;
+        int tickCount = 0;
+        boolean damageApplied = false;
+        boolean warningPhase = true; // Fase de advertencia
+        
+        public RayoData(float x) {
+            this.x = x;
         }
     }
 
@@ -66,6 +95,9 @@ public class BOSS3 extends Enemigo {
         // Cargar sprites de explosión
         cargarSpritesExplosion();
         
+        // Cargar sprites de rayo
+        cargarSpritesRayo();
+        
         // Cargar animaciones
         cargarAnimaciones();
     }
@@ -82,6 +114,30 @@ public class BOSS3 extends Enemigo {
                 i * frameWidth, 0, frameWidth, frameHeight);
         }
     }
+    
+    private void cargarSpritesRayo() {
+    try {
+        BufferedImage spriteSheet = LoadSave.GetSpriteAtlas("balas/RAYO.png");
+        // If file doesn't exist, this will throw an exception
+        
+        rayoMagico_sprites = new BufferedImage[rayoDuracion];
+        
+        int frameWidth = 100;
+        int frameHeight = 500;
+        
+        for (int i = 0; i < rayoDuracion; i++) {
+            rayoMagico_sprites[i] = spriteSheet.getSubimage(
+                i * frameWidth, 0, frameWidth, frameHeight);
+        }
+    } catch (Exception e) {
+        // Create a simple placeholder sprite if the real one fails to load
+        System.out.println("Error cargando sprites de rayo: " + e.getMessage());
+        rayoMagico_sprites = new BufferedImage[rayoDuracion];
+        for (int i = 0; i < rayoDuracion; i++) {
+            rayoMagico_sprites[i] = new BufferedImage(100, 500, BufferedImage.TYPE_INT_ARGB);
+        }
+    }
+}
     
     @Override
     protected void cargarAnimaciones() {
@@ -150,8 +206,6 @@ public class BOSS3 extends Enemigo {
         }
 
         if (!activo) return;
-
-
         
         // Actualizar fase según vida restante
         actualizarFase();
@@ -172,9 +226,16 @@ public class BOSS3 extends Enemigo {
         // Actualizar explosiones
         actualizarExplosiones();
         
+        // Actualizar rayos
+        actualizarRayos();
+        
         // Actualizar cooldowns
         if (cooldownExplosion > 0) {
             cooldownExplosion--;
+        }
+        
+        if (cooldownRayo > 0) {
+            cooldownRayo--;
         }
         
         // Actualizar animación según fase
@@ -199,12 +260,15 @@ public class BOSS3 extends Enemigo {
         switch (faseActual) {
             case FASE_NORMAL:
                 this.maxCooldownExplosion = 120;
+                this.maxCooldownRayo = 0; // No usa rayos en fase normal
                 break;
             case FASE_ENOJADO:
                 this.maxCooldownExplosion = 90;
+                this.maxCooldownRayo = 180;
                 break;
             case FASE_FURIOSO:
                 this.maxCooldownExplosion = 60;
+                this.maxCooldownRayo = 120; // Más frecuente en fase furiosa
                 break;
         }
     }
@@ -226,6 +290,11 @@ public class BOSS3 extends Enemigo {
                 lanzarExplosionAleatoria();
             }
         }
+        
+        // Nuevo comportamiento: ataque de rayos verticales
+        if (cooldownRayo <= 0 && random.nextFloat() < 0.02) {
+            iniciarAtaqueRayosVerticales();
+        }
     }
     
     private void comportamientoFaseFuriosa() {
@@ -238,6 +307,11 @@ public class BOSS3 extends Enemigo {
                 lanzarExplosionAleatoria();
                 lanzarExplosionAleatoria();
             }
+        }
+        
+        // Ataque de rayos más frecuente en fase furiosa
+        if (cooldownRayo <= 0 && random.nextFloat() < 0.04) {
+            iniciarAtaqueRayosVerticales();
         }
     }
     
@@ -270,6 +344,32 @@ public class BOSS3 extends Enemigo {
         explosiones.add(new ExplosionData(jugadorX + offsetX, jugadorY + offsetY));
     }
     
+    private void iniciarAtaqueRayosVerticales() {
+        if (Juego.jugadorActual == null) return;
+        
+        float jugadorX = Juego.jugadorActual.getXCenter();
+        
+        // Crear 3 rayos verticales
+        // Uno centrado en el jugador, y dos a los lados
+        float anchoEspacio = 200 * Juego.SCALE;
+        
+        // Rayo central (cerca del jugador)
+        rayos.add(new RayoData(jugadorX));
+        
+        // Rayo a la izquierda
+        rayos.add(new RayoData(jugadorX - anchoEspacio));
+        
+        // Rayo a la derecha
+        rayos.add(new RayoData(jugadorX + anchoEspacio));
+        
+        // Iniciar fase de advertencia
+        mostrandoAdvertencia = true;
+        contadorAdvertencia = 0;
+        
+        // Reiniciar cooldown
+        cooldownRayo = maxCooldownRayo;
+    }
+    
     private void actualizarExplosiones() {
         ArrayList<ExplosionData> explosionesTerminadas = new ArrayList<>();
         
@@ -297,6 +397,55 @@ public class BOSS3 extends Enemigo {
         
         // Eliminar explosiones terminadas
         explosiones.removeAll(explosionesTerminadas);
+    }
+    
+    private void actualizarRayos() {
+        ArrayList<RayoData> rayosTerminados = new ArrayList<>();
+        
+        // Si estamos en fase de advertencia
+        if (mostrandoAdvertencia) {
+            contadorAdvertencia++;
+            
+            // Cuando termine la advertencia, iniciar los rayos reales
+            if (contadorAdvertencia >= tiempoAdvertencia) {
+                mostrandoAdvertencia = false;
+                
+                // Cambiar todos los rayos a fase de ataque
+                for (RayoData rayo : rayos) {
+                    rayo.warningPhase = false;
+                }
+                
+                // Reproducir sonido del rayo (opcional)
+                // AudioManager.getInstance().playSFX("rayo_magico");
+            }
+        }
+        
+        // Actualizar cada rayo
+        for (RayoData rayo : rayos) {
+            // Si ya no está en fase de advertencia, avanzar animación
+            if (!rayo.warningPhase) {
+                rayo.tickCount++;
+                
+                if (rayo.tickCount >= rayoVelocidad) {
+                    rayo.frame++;
+                    rayo.tickCount = 0;
+                    
+                    // Aplicar daño en frame específico (por ejemplo, frame 3)
+                    if (rayo.frame == 3 && !rayo.damageApplied) {
+                        aplicarDañoRayo(rayo);
+                        rayo.damageApplied = true;
+                    }
+                }
+                
+                // Marcar para eliminar si terminó
+                if (rayo.frame >= rayoDuracion) {
+                    rayosTerminados.add(rayo);
+                }
+            }
+        }
+        
+        // Eliminar rayos terminados
+        rayos.removeAll(rayosTerminados);
     }
     
     private void aplicarDañoExplosion(ExplosionData explosion) {
@@ -335,6 +484,33 @@ public class BOSS3 extends Enemigo {
         }
     }
     
+    private void aplicarDañoRayo(RayoData rayo) {
+        if (Juego.jugadorActual == null) return;
+        
+        // Ancho del hitbox del rayo
+        float anchoRayo = 80 * Juego.SCALE;
+        
+        // Posición del jugador
+        float jugadorX = Juego.jugadorActual.getXCenter();
+        
+        // Comprobar si el jugador está dentro del rayo
+        if (Math.abs(jugadorX - rayo.x) <= anchoRayo / 2) {
+            int dañoBase = 25;
+            
+            // Aumentar daño según fase
+            switch (faseActual) {
+                case FASE_ENOJADO:
+                    dañoBase = 25;
+                    break;
+                case FASE_FURIOSO:
+                    dañoBase = 35;
+                    break;
+            }
+            
+            Juego.jugadorActual.recibirDaño(dañoBase);
+        }
+    }
+    
     @Override
     public void render(Graphics g, int xLvlOffset, int yLvlOffset) {
         // Renderizar al jefe
@@ -352,6 +528,35 @@ public class BOSS3 extends Enemigo {
         g.drawImage(animaciones.getImagenActual(),
             drawX, drawY,
             w, h, null);
+        
+        // Renderizar rayos verticales
+        for (RayoData rayo : rayos) {
+            // Altura del nivel (ajustar según tu juego)
+            int alturaNivel = 1080; // Ajusta esta altura según tu juego
+            
+            if (rayo.warningPhase) {
+                // Dibujar línea de advertencia (roja semitransparente)
+                g.setColor(new java.awt.Color(255, 0, 0, 150));
+                int anchoAdvertencia = (int)(80 * Juego.SCALE);
+                g.fillRect(
+                    (int)(rayo.x - anchoAdvertencia/2) - xLvlOffset,
+                    0 - yLvlOffset,
+                    anchoAdvertencia,
+                    alturaNivel);
+            } else {
+                // Dibujar el rayo mágico
+                if (rayo.frame < rayoDuracion) {
+                    int rayoWidth = (int)(100 * Juego.SCALE);
+                    
+                    g.drawImage(rayoMagico_sprites[rayo.frame],
+                        (int)(rayo.x - rayoWidth/2) - xLvlOffset,
+                        0 - yLvlOffset,
+                        rayoWidth,
+                        alturaNivel,
+                        null);
+                }
+            }
+        }
         
         // Renderizar explosiones activas
         for (ExplosionData explosion : explosiones) {
@@ -399,7 +604,6 @@ public class BOSS3 extends Enemigo {
 
         vida -= dañoFinal;
 
-
         if (vida <= 0) {
             vida = 0;
             morir();
@@ -431,7 +635,6 @@ public class BOSS3 extends Enemigo {
                 return 1.0f;
         }
     }
-
     
     public boolean isActivated() {
         return activated;
