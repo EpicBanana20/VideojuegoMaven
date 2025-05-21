@@ -1,5 +1,7 @@
 package Elementos.Enemigos;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -44,6 +46,11 @@ public class BOSS3 extends Enemigo {
     private int cooldownRayo = 0;
     private int maxCooldownRayo = 180; // 3 segundos a 60 FPS
     
+    // Para el nuevo ataque de rayo vertical con advertencia
+    private int rayoDamagePerSecond = 10; // Daño por segundo del rayo vertical
+    private int rayoAdvertenciaDuracion = 120; // 2 segundos a 60 FPS
+    private int rayoDuracionAtaque = 240; // Duración del ataque en frames (4 segundos)
+    
     private Random random = new Random();
     
     // Lista para manejar múltiples explosiones
@@ -75,9 +82,14 @@ public class BOSS3 extends Enemigo {
         int tickCount = 0;
         boolean damageApplied = false;
         boolean warningPhase = true; // Fase de advertencia
+        int tiempoAdvertencia; // Tiempo restante de advertencia
+        int tiempoDamage = 0; // Para controlar el daño por segundo
         
-        public RayoData(float x) {
+        public RayoData(float x, int tiempoAdvertencia) {
             this.x = x;
+            this.tiempoAdvertencia = tiempoAdvertencia;
+            // Imprimir mensaje de debug al crear el rayo
+            System.out.println("Nuevo RayoData creado en X: " + x + " con tiempo advertencia: " + tiempoAdvertencia);
         }
     }
 
@@ -265,10 +277,15 @@ public class BOSS3 extends Enemigo {
             case FASE_ENOJADO:
                 this.maxCooldownExplosion = 90;
                 this.maxCooldownRayo = 180;
+                System.out.println("¡BOSS3 entró a FASE ENOJADO! Iniciando ataque de rayos...");
+                // Forzar un ataque de rayos al iniciar esta fase
+                cooldownRayo = 0;
+                iniciarAtaqueRayosVerticales();
                 break;
             case FASE_FURIOSO:
                 this.maxCooldownExplosion = 60;
                 this.maxCooldownRayo = 120; // Más frecuente en fase furiosa
+                System.out.println("¡BOSS3 entró a FASE FURIOSA!");
                 break;
         }
     }
@@ -291,8 +308,9 @@ public class BOSS3 extends Enemigo {
             }
         }
         
-        // Nuevo comportamiento: ataque de rayos verticales
-        if (cooldownRayo <= 0 && random.nextFloat() < 0.02) {
+        // Ataque de rayos verticales - aumentado a 10% de probabilidad para que sea más frecuente
+        if (cooldownRayo <= 0 && random.nextFloat() < 0.15) { // Aumentado a 15% para que sea más frecuente
+            System.out.println("BOSS3: Iniciando ataque de rayos verticales en fase enojado");
             iniciarAtaqueRayosVerticales();
         }
     }
@@ -349,22 +367,33 @@ public class BOSS3 extends Enemigo {
         
         float jugadorX = Juego.jugadorActual.getXCenter();
         
-        // Crear 3 rayos verticales
-        // Uno centrado en el jugador, y dos a los lados
-        float anchoEspacio = 200 * Juego.SCALE;
+        // Crear 3 rayos verticales bien separados para cubrir gran parte del área
+        // Separación basada en el ancho de la pantalla para garantizar cobertura
+        float pantallaAncho = Juego.GAME_WIDTH;
+        float separacion = pantallaAncho / 4; // Dividimos la pantalla en cuartos
         
-        // Rayo central (cerca del jugador)
-        rayos.add(new RayoData(jugadorX));
+        System.out.println("BOSS3: Creando rayos verticales. Ancho pantalla: " + pantallaAncho);
         
-        // Rayo a la izquierda
-        rayos.add(new RayoData(jugadorX - anchoEspacio));
+        // Rayo a la izquierda (1/4 de la pantalla desde el lateral izquierdo)
+        float xIzquierda = jugadorX - separacion;
+        rayos.add(new RayoData(xIzquierda, rayoAdvertenciaDuracion));
+        System.out.println("- Rayo izquierda en X: " + xIzquierda);
         
-        // Rayo a la derecha
-        rayos.add(new RayoData(jugadorX + anchoEspacio));
+        // Rayo central (centrado en el jugador)
+        rayos.add(new RayoData(jugadorX, rayoAdvertenciaDuracion));
+        System.out.println("- Rayo central en X: " + jugadorX);
         
-        // Iniciar fase de advertencia
-        mostrandoAdvertencia = true;
-        contadorAdvertencia = 0;
+        // Rayo a la derecha (1/4 de la pantalla desde el lateral derecho)
+        float xDerecha = jugadorX + separacion;
+        rayos.add(new RayoData(xDerecha, rayoAdvertenciaDuracion));
+        System.out.println("- Rayo derecha en X: " + xDerecha);
+        
+        // Reproducir un efecto de sonido si está disponible
+        try {
+            AudioManager.getInstance().playSoundEffect("laser");
+        } catch (Exception e) {
+            // Ignorar si el sonido no existe
+        }
         
         // Reiniciar cooldown
         cooldownRayo = maxCooldownRayo;
@@ -402,50 +431,70 @@ public class BOSS3 extends Enemigo {
     private void actualizarRayos() {
         ArrayList<RayoData> rayosTerminados = new ArrayList<>();
         
-        // Si estamos en fase de advertencia
-        if (mostrandoAdvertencia) {
-            contadorAdvertencia++;
-            
-            // Cuando termine la advertencia, iniciar los rayos reales
-            if (contadorAdvertencia >= tiempoAdvertencia) {
-                mostrandoAdvertencia = false;
-                
-                // Cambiar todos los rayos a fase de ataque
-                for (RayoData rayo : rayos) {
-                    rayo.warningPhase = false;
-                }
-                
-                // Reproducir sonido del rayo (opcional)
-                // AudioManager.getInstance().playSFX("rayo_magico");
-            }
+        // Imprimir número de rayos activos para depuración
+        if (!rayos.isEmpty()) {
+            System.out.println("Rayos activos: " + rayos.size());
         }
         
-        // Actualizar cada rayo
         for (RayoData rayo : rayos) {
-            // Si ya no está en fase de advertencia, avanzar animación
-            if (!rayo.warningPhase) {
-                rayo.tickCount++;
+            if (rayo.warningPhase) {
+                // Fase de advertencia (hitbox roja)
+                rayo.tiempoAdvertencia--;
                 
-                if (rayo.tickCount >= rayoVelocidad) {
-                    rayo.frame++;
-                    rayo.tickCount = 0;
+                // Cuando termine la advertencia, cambiar a la fase de ataque
+                if (rayo.tiempoAdvertencia <= 0) {
+                    rayo.warningPhase = false;
+                    rayo.frame = 0; // Reiniciar frame para fase de ataque
+                    System.out.println("BOSS3: Rayo en X:" + rayo.x + " cambia de advertencia a ataque");
                     
-                    // Aplicar daño en frame específico (por ejemplo, frame 3)
-                    if (rayo.frame == 3 && !rayo.damageApplied) {
-                        aplicarDañoRayo(rayo);
-                        rayo.damageApplied = true;
+                    // Reproducir un efecto de sonido para el ataque
+                    try {
+                        AudioManager.getInstance().playSoundEffect("shootfranco");
+                    } catch (Exception e) {
+                        // Ignorar si el sonido no existe
                     }
                 }
+            } else {
+                // Fase de ataque (rayo blanco)
+                rayo.tickCount++;
+                rayo.frame++;
                 
-                // Marcar para eliminar si terminó
-                if (rayo.frame >= rayoDuracion) {
+                // El daño se aplica continuamente basado en el tiempo
+                rayo.tiempoDamage++;
+                
+                // Aplicar daño cada 60 frames (1 segundo)
+                if (rayo.tiempoDamage >= 60) {
+                    aplicarDañoRayo(rayo);
+                    rayo.tiempoDamage = 0;
+                } else {
+                    // Comprobar si el jugador está en el rayo para feedback visual
+                    // incluso si no es momento de hacer daño
+                    comprobarJugadorEnRayo(rayo);
+                }
+                
+                // El rayo dura 4 segundos como ataque (o el tiempo configurado)
+                if (rayo.frame >= rayoDuracionAtaque) {
                     rayosTerminados.add(rayo);
+                    System.out.println("BOSS3: Rayo en X:" + rayo.x + " finalizado");
                 }
             }
         }
         
         // Eliminar rayos terminados
-        rayos.removeAll(rayosTerminados);
+        if (!rayosTerminados.isEmpty()) {
+            rayos.removeAll(rayosTerminados);
+            System.out.println("Rayos eliminados: " + rayosTerminados.size() + ", quedan: " + rayos.size());
+        }
+    }
+    
+    // Método auxiliar para verificar si el jugador está en el rayo (para feedback)
+    private boolean comprobarJugadorEnRayo(RayoData rayo) {
+        if (Juego.jugadorActual == null) return false;
+        
+        float anchoRayo = 80 * Juego.SCALE;
+        float jugadorX = Juego.jugadorActual.getXCenter();
+        
+        return Math.abs(jugadorX - rayo.x) <= anchoRayo / 2;
     }
     
     private void aplicarDañoExplosion(ExplosionData explosion) {
@@ -495,19 +544,16 @@ public class BOSS3 extends Enemigo {
         
         // Comprobar si el jugador está dentro del rayo
         if (Math.abs(jugadorX - rayo.x) <= anchoRayo / 2) {
-            int dañoBase = 25;
+            // Aplicar daño por segundo configurado
+            Juego.jugadorActual.recibirDaño(rayoDamagePerSecond);
+            System.out.println("BOSS3: ¡Rayo impacta al jugador! Daño: " + rayoDamagePerSecond);
             
-            // Aumentar daño según fase
-            switch (faseActual) {
-                case FASE_ENOJADO:
-                    dañoBase = 25;
-                    break;
-                case FASE_FURIOSO:
-                    dañoBase = 35;
-                    break;
+            // Reproducir efecto de sonido de impacto
+            try {
+                AudioManager.getInstance().playSoundEffect("hit");
+            } catch (Exception e) {
+                // Ignorar si el sonido no existe
             }
-            
-            Juego.jugadorActual.recibirDaño(dañoBase);
         }
     }
     
@@ -529,34 +575,8 @@ public class BOSS3 extends Enemigo {
             drawX, drawY,
             w, h, null);
         
-        // Renderizar rayos verticales
-        for (RayoData rayo : rayos) {
-            // Altura del nivel (ajustar según tu juego)
-            int alturaNivel = 1080; // Ajusta esta altura según tu juego
-            
-            if (rayo.warningPhase) {
-                // Dibujar línea de advertencia (roja semitransparente)
-                g.setColor(new java.awt.Color(255, 0, 0, 150));
-                int anchoAdvertencia = (int)(80 * Juego.SCALE);
-                g.fillRect(
-                    (int)(rayo.x - anchoAdvertencia/2) - xLvlOffset,
-                    0 - yLvlOffset,
-                    anchoAdvertencia,
-                    alturaNivel);
-            } else {
-                // Dibujar el rayo mágico
-                if (rayo.frame < rayoDuracion) {
-                    int rayoWidth = (int)(100 * Juego.SCALE);
-                    
-                    g.drawImage(rayoMagico_sprites[rayo.frame],
-                        (int)(rayo.x - rayoWidth/2) - xLvlOffset,
-                        0 - yLvlOffset,
-                        rayoWidth,
-                        alturaNivel,
-                        null);
-                }
-            }
-        }
+        // PRIMERO, renderizar los rayos verticales (para que estén detrás de otros elementos)
+        renderizarRayosVerticales(g, xLvlOffset, yLvlOffset);
         
         // Renderizar explosiones activas
         for (ExplosionData explosion : explosiones) {
@@ -568,6 +588,90 @@ public class BOSS3 extends Enemigo {
                     (int)(explosion.x - explosionSize/2) - xLvlOffset,
                     (int)(explosion.y - explosionSize/2) - yLvlOffset,
                     explosionSize, explosionSize, null);
+            }
+        }
+    }
+    
+    /**
+     * Método específico para renderizar los rayos verticales.
+     * Dibuja grandes líneas que cubren toda la pantalla de arriba a abajo.
+     */
+    private void renderizarRayosVerticales(Graphics g, int xLvlOffset, int yLvlOffset) {
+        // Solo dibujamos los rayos si hay alguno
+        if (rayos.isEmpty()) {
+            return;
+        }
+        
+        // Altura que cubra toda la pantalla más extra para asegurar que se vea
+        int alturaTotal = Juego.GAME_HEIGHT * 3; // Triplicamos para asegurar visibilidad
+        
+        // Necesitamos dibujar desde arriba de la pantalla
+        int yStart = -alturaTotal/3 - yLvlOffset;
+        
+        // Dibujar cada rayo
+        for (RayoData rayo : rayos) {
+            // Ancho del rayo (importante que sea visible)
+            int anchoRayo = (int)(100 * Juego.SCALE);
+            
+            // Posición X central del rayo, ajustada por el offset del nivel
+            int rayoX = (int)(rayo.x - xLvlOffset);
+            
+            // Si está en fase de advertencia, dibujar un rectángulo rojo translúcido
+            if (rayo.warningPhase) {
+                // Rojo semi-transparente
+                g.setColor(new Color(255, 0, 0, 180));
+                g.fillRect(rayoX - anchoRayo/2, yStart, anchoRayo, alturaTotal);
+                
+                // Añadir un borde más visible
+                g.setColor(Color.RED);
+                g.drawRect(rayoX - anchoRayo/2, yStart, anchoRayo, alturaTotal);
+                
+                // Añadir un texto de advertencia
+                g.setColor(Color.WHITE);
+                Font originalFont = g.getFont();
+                g.setFont(new Font("Arial", Font.BOLD, 30));
+                String warning = "¡CUIDADO!";
+                int warningWidth = g.getFontMetrics().stringWidth(warning);
+                
+                // Dibujar el texto en varios puntos a lo largo del rayo
+                for (int y = yStart + 100; y < yStart + alturaTotal; y += 200) {
+                    if (y >= 0 && y <= Juego.GAME_HEIGHT) {
+                        g.drawString(warning, rayoX - warningWidth/2, y);
+                    }
+                }
+                g.setFont(originalFont);
+                
+                // Debug message
+                System.out.println("Dibujando advertencia de rayo en X:" + rayoX + ", tiempo restante: " + rayo.tiempoAdvertencia);
+            } 
+            // Si está en fase de ataque, dibujar un rayo blanco brillante
+            else {
+                // Primero dibujamos un aura exterior para que destaque
+                g.setColor(new Color(100, 100, 255, 150));
+                g.fillRect(rayoX - anchoRayo/2 - 5, yStart, anchoRayo + 10, alturaTotal);
+                
+                // Ahora el rayo principal
+                g.setColor(new Color(255, 255, 255, 200));
+                g.fillRect(rayoX - anchoRayo/2, yStart, anchoRayo, alturaTotal);
+                
+                // Añadir un núcleo central más brillante
+                g.setColor(Color.WHITE);
+                g.fillRect(rayoX - 10, yStart, 20, alturaTotal);
+                
+                // Debug message
+                System.out.println("Dibujando ataque de rayo en X:" + rayoX + ", frame: " + rayo.frame);
+                
+                // Si el jugador está dentro del rayo, mostrar efecto de impacto
+                if (comprobarJugadorEnRayo(rayo) && Juego.jugadorActual != null) {
+                    int jugadorX = (int)(Juego.jugadorActual.getXCenter() - xLvlOffset);
+                    int jugadorY = (int)(Juego.jugadorActual.getYCenter() - yLvlOffset);
+                    
+                    // Dibujar un círculo brillante alrededor del jugador
+                    g.setColor(Color.WHITE);
+                    g.fillOval(jugadorX - 30, jugadorY - 30, 60, 60);
+                    g.setColor(Color.RED);
+                    g.drawOval(jugadorX - 30, jugadorY - 30, 60, 60);
+                }
             }
         }
     }
@@ -634,6 +738,19 @@ public class BOSS3 extends Enemigo {
             default:
                 return 1.0f;
         }
+    }
+    
+    // Setters para configuración del rayo
+    public void setRayoDamagePerSecond(int damage) {
+        this.rayoDamagePerSecond = damage;
+    }
+    
+    public void setRayoAdvertenciaDuracion(int frames) {
+        this.rayoAdvertenciaDuracion = frames;
+    }
+    
+    public void setRayoDuracionAtaque(int frames) {
+        this.rayoDuracionAtaque = frames;
     }
     
     public boolean isActivated() {
